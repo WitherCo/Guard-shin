@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - Guard-shin Discord Bot</title>
+  <meta name="description" content="Get help and support for Guard-shin, the advanced Discord moderation and security bot.">
+  <meta name="author" content="WitherCo">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <style>
+    /* Custom properties for theming */
+    :root {
+      --color-bg-primary: #121212;
+      --color-bg-secondary: #1e1e1e; 
+      --color-bg-tertiary: #2a2a2a;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #b0b0b0;
+      --color-accent-primary: #5865f2; /* Discord Blurple */
+      --color-accent-secondary: #3a46c3;
+      --color-success: #57F287;
+      --color-warning: #FEE75C;
+      --color-danger: #ED4245;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    /* Base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    
+    a:hover {
+      color: var(--color-accent-secondary);
+    }
+    
+    /* Layout */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--color-bg-secondary);
+      position: fixed;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    
+    .sidebar-header {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h1 {
+      font-size: 1.75rem;
+      color: var(--color-accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-header p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .nav-list {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 0.25rem;
+    }
+    
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: var(--color-text-primary);
+      transition: background-color var(--transition-speed);
+      position: relative;
+    }
+    
+    .nav-link:hover {
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .nav-link.active {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+    
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .add-bot-btn {
+      display: block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+    }
+    
+    .add-bot-btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 2rem;
+      width: calc(100% - 250px);
+    }
+    
+    .page-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1rem;
+    }
+    
+    .page-header h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+    
+    /* Card Components */
+    .card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    /* Support Options */
+    .support-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .support-option {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-speed);
+      height: 100%;
+    }
+    
+    .support-option:hover {
+      transform: translateY(-5px);
+    }
+    
+    .support-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--color-accent-primary);
+    }
+    
+    .support-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .support-description {
+      color: var(--color-text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    
+    .support-link {
+      margin-top: auto;
+      display: inline-block;
+      padding: 0.75rem 1rem;
+      background-color: var(--color-accent-primary);
+      color: white;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      text-align: center;
+      transition: background-color var(--transition-speed);
+    }
+    
+    .support-link:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+    }
+    
+    /* Form elements */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--color-bg-tertiary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 16px;
+      padding-right: 2.5rem;
+    }
+    
+    /* Button styles */
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--color-accent-secondary);
+      transform: translateY(-2px);
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+      margin-top: 3rem;
+    }
+    
+    .faq-item {
+      margin-bottom: 1rem;
+    }
+    
+    .faq-question {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      padding: 1rem;
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .faq-question:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .faq-question::after {
+      content: '+';
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    
+    .faq-question.active::after {
+      content: '-';
+    }
+    
+    .faq-answer {
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      margin-top: -5px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    
+    .faq-answer.active {
+      display: block;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.5rem;
+      }
+      
+      .sidebar-nav {
+        max-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Guard-shin</h1>
+        <p>Discord Moderation Bot</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="gh-pages-index.html" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="gh-pages-commands.html" class="nav-link">Commands</a>
+          </li>
+          <li class="nav-item">
+            <a href="gh-pages-settings.html" class="nav-link">Settings</a>
+          </li>
+          <li class="nav-item">
+            <a href="gh-pages-premium.html" class="nav-link">Premium</a>
+          </li>
+          <li class="nav-item">
+            <a href="gh-pages-support.html" class="nav-link active">Support</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">
+          Add to Discord
+        </a>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="page-header">
+        <h2>Support</h2>
+        <p>Get help with Guard-shin and resolve any issues you might encounter</p>
+      </header>
+      
+      <!-- Support Options -->
+      <div class="card">
+        <h3>Support Options</h3>
+        <p>Choose the best way to get assistance with Guard-shin:</p>
+        
+        <div class="support-options">
+          <div class="support-option">
+            <div class="support-icon">💬</div>
+            <div class="support-title">Discord Support Server</div>
+            <p class="support-description">
+              Join our official Discord server to get real-time help from our team and community members.
+            </p>
+            <a href="https://discord.gg/guardshin" class="support-link" target="_blank" rel="noopener noreferrer">Join Server</a>
+          </div>
+          
+          <div class="support-option">
+            <div class="support-icon">📚</div>
+            <div class="support-title">Documentation</div>
+            <p class="support-description">
+              Browse our comprehensive guides and documentation for detailed information about commands and features.
+            </p>
+            <a href="gh-pages-commands.html" class="support-link">View Docs</a>
+          </div>
+          
+          <div class="support-option">
+            <div class="support-icon">📧</div>
+            <div class="support-title">Email Support</div>
+            <p class="support-description">
+              Contact our support team directly via email for more complex issues or private inquiries.
+            </p>
+            <a href="mailto:support@guardshin.com" class="support-link">Email Us</a>
+          </div>
+          
+          <div class="support-option">
+            <div class="support-icon">🐛</div>
+            <div class="support-title">Bug Reports</div>
+            <p class="support-description">
+              Found a bug? Report it on our GitHub repository so we can fix it as soon as possible.
+            </p>
+            <a href="https://github.com/WitherCo/Guard-shin/issues" class="support-link" target="_blank" rel="noopener noreferrer">Report Bug</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contact Form -->
+      <div class="card">
+        <h3>Contact Us</h3>
+        <p>Have a question or need help? Fill out the form below and we'll get back to you as soon as possible.</p>
+        
+        <form style="margin-top: 1.5rem;">
+          <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" class="form-input" placeholder="Your name">
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-input" placeholder="Your email address">
+          </div>
+          
+          <div class="form-group">
+            <label for="topic" class="form-label">Topic</label>
+            <select id="topic" class="form-select">
+              <option value="">Select a topic</option>
+              <option value="general">General Question</option>
+              <option value="technical">Technical Support</option>
+              <option value="billing">Billing & Subscription</option>
+              <option value="feature">Feature Request</option>
+              <option value="bug">Bug Report</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-textarea" placeholder="Describe your issue or question in detail..."></textarea>
+          </div>
+          
+          <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- FAQ Section -->
+      <div class="card faq-section">
+        <h3>Frequently Asked Questions</h3>
+        
+        <div class="faq-item">
+          <div class="faq-question active">How do I add Guard-shin to my server?</div>
+          <div class="faq-answer active">
+            <p>You can add Guard-shin to your Discord server by clicking the "Add to Discord" button in the sidebar. This will redirect you to Discord's authorization page where you can select your server and grant the necessary permissions.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">What permissions does Guard-shin need?</div>
+          <div class="faq-answer">
+            <p>Guard-shin requires certain permissions to function properly, including:</p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li>Read Messages & View Channels - to see and respond to commands</li>
+              <li>Send Messages - to respond to commands and send notifications</li>
+              <li>Manage Messages - for moderation features</li>
+              <li>Kick Members & Ban Members - for moderation actions</li>
+              <li>Manage Roles - for auto-role and moderation features</li>
+            </ul>
+            <p style="margin-top: 0.5rem;">For full functionality, Administrator permission is recommended, but you can customize permissions based on your needs.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">How do I change the bot's prefix?</div>
+          <div class="faq-answer">
+            <p>You can change Guard-shin's command prefix using the <code>!prefix</code> command. For example, to change the prefix to <code>?</code>, type <code>!prefix ?</code> in any channel where the bot can see your messages.</p>
+            <p style="margin-top: 0.5rem;">Alternatively, you can change the prefix in the Settings page on this dashboard.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">What's the difference between the free and premium versions?</div>
+          <div class="faq-answer">
+            <p>The free version of Guard-shin includes essential moderation and security features, while Premium adds:</p>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li>Music commands</li>
+              <li>Custom welcome images</li>
+              <li>Advanced auto-moderation</li>
+              <li>Auto-role assignment</li>
+              <li>Advanced analytics</li>
+              <li>Priority support</li>
+            </ul>
+            <p style="margin-top: 0.5rem;">Check out our <a href="gh-pages-premium.html">Premium page</a> for more details and subscription options.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">How do I report a bug or suggest a feature?</div>
+          <div class="faq-answer">
+            <p>You can report bugs or suggest features through our <a href="https://github.com/WitherCo/Guard-shin/issues" target="_blank" rel="noopener noreferrer">GitHub repository</a>, by joining our <a href="https://discord.gg/guardshin" target="_blank" rel="noopener noreferrer">Discord support server</a>, or by using the contact form on this page.</p>
+            <p style="margin-top: 0.5rem;">When reporting bugs, please provide as much detail as possible, including steps to reproduce the issue, expected behavior, and screenshots if applicable.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <footer style="margin-top: 3rem; text-align: center; color: var(--color-text-secondary); font-size: 0.875rem;">
+        <p>Guard-shin © 2025 | <a href="https://github.com/WitherCo/Guard-shin" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+      </footer>
+    </main>
+  </div>
+  
+  <script>
+    // Simple FAQ toggle functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const answer = question.nextElementSibling;
+          
+          // Toggle the active class on the question and answer
+          question.classList.toggle('active');
+          answer.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
