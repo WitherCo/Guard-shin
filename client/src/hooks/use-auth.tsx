@@ -1,207 +1,222 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+// Define user state type
 interface User {
   id: number;
   username: string;
   email?: string;
-  discordId?: string;
   avatar?: string;
-  role: 'admin' | 'user';
-  premium: boolean;
-  premiumTier?: string;
+  discordId?: string;
+  isAdmin: boolean;
 }
 
-interface AuthContextValue {
+// Auth context state type
+interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
   isAuthenticated: boolean;
-  isPremium: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  loginWithDiscord: () => void;
-  checkAuth: () => Promise<boolean>;
+  refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+// Create the auth context with a default value
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  login: async () => false,
+  register: async () => false,
+  logout: async () => {},
+  refreshUser: async () => {}
+});
 
-export function useAuth(): AuthContextValue {
-  const context = useContext(AuthContext);
-  
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  
-  return context;
-}
-
+// AuthProvider props type
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+// Auth Provider component
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
-  
-  // Check if user is authenticated on component mount
+
+  // Check if user is authenticated on mount
   useEffect(() => {
-    const checkAuthentication = async () => {
-      await checkAuth();
-      setIsLoading(false);
+    const checkAuth = async () => {
+      try {
+        const response = await apiRequest("GET", "/api/auth/me");
+        
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    
-    checkAuthentication();
+
+    checkAuth();
   }, []);
-  
+
   // Login function
-  const login = async (username: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
+      const response = await apiRequest("POST", "/api/auth/login", { email, password });
       
-      const response = await apiRequest('POST', '/api/auth/login', {
-        username,
-        password
-      });
-      
-      if (!response.ok) {
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+        
+        toast({
+          title: "Login successful",
+          description: `Welcome back, ${userData.username}!`,
+        });
+        
+        return true;
+      } else {
         const error = await response.json();
+        
         toast({
           title: "Login failed",
-          description: error.message || "Invalid username or password",
+          description: error.message || "Invalid email or password",
           variant: "destructive",
         });
+        
         return false;
       }
-      
-      const userData = await response.json();
-      setUser(userData);
-      
-      toast({
-        title: "Login successful",
-        description: `Welcome back, ${userData.username}!`,
-      });
-      
-      return true;
     } catch (error) {
+      console.error("Login error:", error);
+      
       toast({
         title: "Login failed",
-        description: "Something went wrong. Please try again later.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+      
       return false;
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   // Register function
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
+      const response = await apiRequest("POST", "/api/auth/register", { username, email, password });
       
-      const response = await apiRequest('POST', '/api/auth/register', {
-        username,
-        email,
-        password
-      });
-      
-      if (!response.ok) {
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+        
+        toast({
+          title: "Registration successful",
+          description: `Welcome, ${userData.username}!`,
+        });
+        
+        return true;
+      } else {
         const error = await response.json();
+        
         toast({
           title: "Registration failed",
-          description: error.message || "Unable to register. Please try a different username or email.",
+          description: error.message || "Could not create account",
           variant: "destructive",
         });
+        
         return false;
       }
-      
-      const userData = await response.json();
-      setUser(userData);
-      
-      toast({
-        title: "Registration successful",
-        description: `Welcome, ${userData.username}!`,
-      });
-      
-      return true;
     } catch (error) {
+      console.error("Registration error:", error);
+      
       toast({
         title: "Registration failed",
-        description: "Something went wrong. Please try again later.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+      
       return false;
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   // Logout function
   const logout = async (): Promise<void> => {
     try {
-      setIsLoading(true);
-      
-      await apiRequest('POST', '/api/auth/logout');
-      
+      await apiRequest("POST", "/api/auth/logout");
       setUser(null);
       
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",
       });
+      
+      setLocation("/");
     } catch (error) {
+      console.error("Logout error:", error);
+      
       toast({
         title: "Logout failed",
-        description: "Something went wrong. Please try again later.",
+        description: "An error occurred during logout.",
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
-  
-  // Discord login function
-  const loginWithDiscord = () => {
-    window.location.href = '/api/auth/discord';
-  };
-  
-  // Check authentication status
-  const checkAuth = async (): Promise<boolean> => {
+
+  // Refresh user data
+  const refreshUser = async (): Promise<void> => {
     try {
-      const response = await apiRequest('GET', '/api/auth/me');
+      const response = await apiRequest("GET", "/api/auth/me");
       
-      if (!response.ok) {
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      } else {
+        // If the session has expired, log the user out
         setUser(null);
-        return false;
+        setLocation("/login");
       }
-      
-      const userData = await response.json();
-      setUser(userData);
-      return true;
     } catch (error) {
-      setUser(null);
-      return false;
+      console.error("User refresh error:", error);
     }
   };
-  
+
   const value = {
     user,
-    isLoading,
     isAuthenticated: !!user,
-    isPremium: user?.premium || false,
+    isLoading,
     login,
     register,
     logout,
-    loginWithDiscord,
-    checkAuth
+    refreshUser
   };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+// Custom hook to use the auth context
+export function useAuth() {
+  const context = useContext(AuthContext);
   
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  
+  return context;
 }

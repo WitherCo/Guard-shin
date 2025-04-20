@@ -1,64 +1,132 @@
 /**
  * Contact Module
  * 
- * This module provides functionality for handling contact form submissions.
- * It includes validation, processing, and response handling for contact requests.
+ * This module handles contact form submissions from the web dashboard
+ * It provides endpoints to submit contact forms and process support requests
  */
 
 import { Request, Response } from 'express';
 import { z } from 'zod';
 import { log } from './vite';
-import { logUpdate } from './update-logger';
 import { storage } from './storage';
+import { logUpdate } from './update-logger';
 
-// Validation schema for contact form
-const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name is too long"),
+// Contact form fields validation schema
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name must be less than 100 characters"),
   email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(3, "Subject must be at least 3 characters").max(100, "Subject is too long"),
-  message: z.string().min(10, "Message must be at least 10 characters").max(2000, "Message is too long"),
-  recaptcha: z.string().optional()
+  subject: z.string().min(3, "Subject must be at least 3 characters").max(150, "Subject must be less than 150 characters"),
+  message: z.string().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
+  userId: z.number().optional(),
+  recaptchaToken: z.string().optional()
 });
 
-// Validation schema for contact form when authenticated
-const authenticatedContactSchema = contactSchema.partial({
-  name: true,
-  email: true
+// Support request validation schema
+const supportRequestSchema = z.object({
+  userId: z.number(),
+  category: z.string().min(2, "Category must be at least 2 characters"),
+  subject: z.string().min(3, "Subject must be at least 3 characters").max(150, "Subject must be less than 150 characters"), 
+  description: z.string().min(10, "Description must be at least 10 characters").max(2000, "Description must be less than 2000 characters"),
+  priority: z.enum(["low", "medium", "high", "urgent"]),
+  attachments: z.array(z.string()).optional()
 });
 
 /**
- * Handle contact form submissions from authenticated users
+ * Handle public contact form submissions
  */
-export function handleAuthenticatedContact(req: Request, res: Response) {
+export async function handlePublicContact(req: Request, res: Response) {
+  try {
+    // Validate the request data
+    const validatedData = contactFormSchema.parse(req.body);
+    
+    // Log the contact form submission
+    log(`Contact form submission from ${validatedData.name} (${validatedData.email}): ${validatedData.subject}`, 'contact');
+    
+    // TODO: In a real application, send an email or create a ticket in a support system
+    // For now, we'll just log it
+
+    // If user ID is provided, link the contact to a user account
+    if (validatedData.userId) {
+      const user = await storage.getUser(validatedData.userId);
+      if (user) {
+        log(`Contact form linked to user ${user.username} (${user.email}), ID: ${user.id}, Discord ID: ${user.discordId || 'None'}`, 'contact');
+      }
+    }
+    
+    // Log to webhook
+    logUpdate(`Contact form submission - Subject: ${validatedData.subject}, From: ${validatedData.name} (${validatedData.email})`, 'contact');
+    
+    // Send success response
+    res.status(200).json({
+      success: true,
+      message: "Your message has been received. We'll get back to you soon!"
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({
+        success: false,
+        errors: error.errors.map(e => ({
+          field: e.path.join('.'),
+          message: e.message
+        }))
+      });
+    }
+    
+    log(`Error processing contact form: ${error}`, 'error');
+    res.status(500).json({
+      success: false,
+      message: "There was an error processing your request. Please try again later."
+    });
+  }
+}
+
+/**
+ * Handle authenticated support requests
+ * These come from logged-in users and are linked to their accounts
+ */
+export async function handleAuthenticatedContact(req: Request, res: Response) {
   try {
     if (!req.isAuthenticated()) {
       return res.status(401).json({
         success: false,
-        message: "You must be logged in to use this form"
+        message: "You must be logged in to submit a support request."
       });
     }
-
-    // Get logged in user
-    const user = req.user;
-
-    // Validate form data
-    const { subject, message, recaptcha } = authenticatedContactSchema.parse(req.body);
-
-    // Process the contact request
-    processContactRequest({
-      name: user.username,
-      email: user.email || 'No email provided',
-      subject,
-      message,
-      userId: user.id,
-      discordId: user.discordId,
-      authenticated: true
-    });
-
+    
+    // Validate the request data
+    const validatedData = supportRequestSchema.parse(req.body);
+    
+    // Ensure the user ID matches the authenticated user
+    if (validatedData.userId !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: "User ID mismatch. You can only submit support requests for your own account."
+      });
+    }
+    
+    // Get the user
+    const user = await storage.getUser(validatedData.userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found."
+      });
+    }
+    
+    // Log the support request
+    log(`Support request from ${user.username} (${user.email}): ${validatedData.subject} (Priority: ${validatedData.priority})`, 'support');
+    
+    // TODO: In a real application, create a ticket in a support system
+    // For now, we'll just log it
+    
+    // Log to webhook
+    logUpdate(`Support request - Category: ${validatedData.category}, Subject: ${validatedData.subject}, Priority: ${validatedData.priority}, User: ${user.username} (ID: ${user.id})`, 'support');
+    
     // Send success response
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: "Thank you for your message. We'll get back to you soon!"
+      message: "Your support request has been submitted. Our team will respond as soon as possible.",
+      ticketId: `SR-${Date.now().toString(36).toUpperCase()}` // Generate a fake ticket ID
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -70,81 +138,11 @@ export function handleAuthenticatedContact(req: Request, res: Response) {
         }))
       });
     }
-
-    log(`Error processing authenticated contact form: ${error}`, 'contact');
-    return res.status(500).json({
+    
+    log(`Error processing support request: ${error}`, 'error');
+    res.status(500).json({
       success: false,
-      message: "Failed to process your request. Please try again later."
+      message: "There was an error processing your request. Please try again later."
     });
   }
-}
-
-/**
- * Handle contact form submissions from unauthenticated users
- */
-export function handlePublicContact(req: Request, res: Response) {
-  try {
-    // Validate form data
-    const { name, email, subject, message, recaptcha } = contactSchema.parse(req.body);
-
-    // TODO: Add reCAPTCHA validation here
-    // if (process.env.RECAPTCHA_SECRET_KEY) { ... }
-
-    // Process the contact request
-    processContactRequest({
-      name,
-      email,
-      subject,
-      message,
-      authenticated: false
-    });
-
-    // Send success response
-    return res.status(200).json({
-      success: true,
-      message: "Thank you for your message. We'll get back to you soon!"
-    });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return res.status(400).json({
-        success: false,
-        errors: error.errors.map(e => ({
-          field: e.path.join('.'),
-          message: e.message
-        }))
-      });
-    }
-
-    log(`Error processing public contact form: ${error}`, 'contact');
-    return res.status(500).json({
-      success: false,
-      message: "Failed to process your request. Please try again later."
-    });
-  }
-}
-
-/**
- * Process a contact request
- * @param data The contact request data
- */
-function processContactRequest(data: {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  userId?: number;
-  discordId?: string;
-  authenticated: boolean;
-}) {
-  // Log the contact request
-  log(`New contact form submission from ${data.name} (${data.email}): ${data.subject}`, 'contact');
-  
-  // TODO: Save to database or send email notification
-  
-  // Log details for monitoring
-  const userInfo = data.authenticated 
-    ? `User ID: ${data.userId}, Discord ID: ${data.discordId || 'None'}`
-    : 'Unauthenticated user';
-  
-  logUpdate(`Contact form submission: ${data.subject} | From: ${data.name} | ${userInfo}`, 'contact');
 }

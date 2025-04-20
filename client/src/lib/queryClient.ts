@@ -19,6 +19,51 @@ export const queryClient = new QueryClient({
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 /**
+ * Options for the getQueryFn factory
+ */
+interface GetQueryFnOptions {
+  /** What to do on 401 status code */
+  on401?: "throw" | "returnNull";
+}
+
+/**
+ * Factory function that returns a query function for React Query
+ * Allows customizing behavior for different scenarios like auth errors
+ * 
+ * @param options - Configuration options for the query function
+ * @returns A query function that can be used with useQuery
+ */
+export function getQueryFn<T = any>(options: GetQueryFnOptions = {}) {
+  const { on401 = "throw" } = options;
+  
+  return async ({ queryKey }: { queryKey: (string | null)[] }): Promise<T | null> => {
+    // Filter out null/undefined values and construct the URL
+    const pathParts = queryKey.filter(Boolean) as string[];
+    const url = pathParts.length > 1 
+      ? `${pathParts[0]}/${pathParts.slice(1).join("/")}`
+      : pathParts[0];
+      
+    try {
+      const response = await apiRequest("GET", url);
+      
+      // Handle unauthorized based on options
+      if (response.status === 401 && on401 === "returnNull") {
+        return null;
+      }
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+      
+      return await response.json() as T;
+    } catch (error) {
+      console.error(`Query error for ${url}:`, error);
+      throw error;
+    }
+  };
+}
+
+/**
  * Makes an API request with the specified method and data
  *
  * @param method - The HTTP method to use

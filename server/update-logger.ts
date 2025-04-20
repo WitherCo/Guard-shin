@@ -11,6 +11,11 @@ import { log } from './vite';
 // Default webhook URL (will be overridden by environment variable if available)
 const DEFAULT_WEBHOOK_URL = '';
 
+// Queue for batching updates
+const updateQueue: { message: string; category?: string }[] = [];
+let flushTimeout: NodeJS.Timeout | null = null;
+const FLUSH_INTERVAL = 5000; // 5 seconds
+
 /**
  * Log an update to Discord webhook
  * 
@@ -19,15 +24,82 @@ const DEFAULT_WEBHOOK_URL = '';
  * @returns Promise that resolves when the message is sent
  */
 export async function logUpdate(message: string, category?: string): Promise<void> {
+  // Add to queue
+  updateQueue.push({ message, category });
+  
+  // Schedule flush if not already scheduled
+  if (!flushTimeout) {
+    flushTimeout = setTimeout(() => {
+      flushUpdates();
+    }, FLUSH_INTERVAL);
+  }
+}
+
+/**
+ * Force flush all pending updates
+ * 
+ * @returns Promise that resolves when all updates are sent
+ */
+export async function forceFlushUpdates(): Promise<void> {
+  if (flushTimeout) {
+    clearTimeout(flushTimeout);
+    flushTimeout = null;
+  }
+  
+  return flushUpdates();
+}
+
+/**
+ * Flush the update queue
+ * 
+ * @returns Promise that resolves when all updates are sent
+ */
+async function flushUpdates(): Promise<void> {
+  // Reset the flush timeout
+  flushTimeout = null;
+  
+  // If queue is empty, do nothing
+  if (updateQueue.length === 0) {
+    return;
+  }
+  
   try {
     // Get webhook URL from environment variable
     const webhookUrl = process.env.UPDATE_WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
     
     if (!webhookUrl) {
       log('No webhook URL configured for update logging', 'warn');
+      // Clear the queue even if we can't send
+      updateQueue.length = 0;
       return;
     }
     
+    // If only one update, send it as normal
+    if (updateQueue.length === 1) {
+      const { message, category } = updateQueue[0];
+      await sendSingleUpdate(message, category, webhookUrl);
+    } else {
+      // If multiple updates, batch them
+      await sendBatchUpdates(webhookUrl);
+    }
+    
+    // Clear the queue
+    updateQueue.length = 0;
+  } catch (error) {
+    log(`Error flushing updates: ${error}`, 'error');
+  }
+}
+
+/**
+ * Send a single update to Discord webhook
+ * 
+ * @param message The message to log
+ * @param category Optional category for the message
+ * @param webhookUrl The webhook URL
+ * @returns Promise that resolves when the message is sent
+ */
+async function sendSingleUpdate(message: string, category: string | undefined, webhookUrl: string): Promise<void> {
+  try {
     // Format message with category if provided
     const formattedMessage = category ? `[${category.toUpperCase()}] ${message}` : message;
     
@@ -55,8 +127,86 @@ export async function logUpdate(message: string, category?: string): Promise<voi
       log(`Failed to send update to webhook: ${response.status} ${errorText}`, 'error');
     }
   } catch (error) {
-    log(`Error logging update: ${error}`, 'error');
+    log(`Error sending single update: ${error}`, 'error');
   }
+}
+
+/**
+ * Send batch updates to Discord webhook
+ * 
+ * @param webhookUrl The webhook URL
+ * @returns Promise that resolves when all updates are sent
+ */
+async function sendBatchUpdates(webhookUrl: string): Promise<void> {
+  try {
+    // Group updates by category
+    const categoryMap = new Map<string, string[]>();
+    
+    // Add all updates to their respective categories
+    for (const { message, category } of updateQueue) {
+      const cat = category || 'general';
+      if (!categoryMap.has(cat)) {
+        categoryMap.set(cat, []);
+      }
+      categoryMap.get(cat)!.push(message);
+    }
+    
+    // Create embed fields for each category
+    const fields = Array.from(categoryMap.entries()).map(([category, messages]) => ({
+      name: category.toUpperCase(),
+      value: messages.join('\n'),
+    }));
+    
+    // Create embed for Discord webhook
+    const embed = {
+      title: "Lifeless rose updated:",
+      fields,
+      color: 0x7289DA, // Discord blurple color
+      timestamp: new Date().toISOString(),
+    };
+    
+    // Send to webhook
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        embeds: [embed],
+      }),
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      log(`Failed to send batch updates to webhook: ${response.status} ${errorText}`, 'error');
+    }
+  } catch (error) {
+    log(`Error sending batch updates: ${error}`, 'error');
+  }
+}
+
+/**
+ * Log a feature update to Discord webhook
+ * 
+ * @param feature The feature that was updated
+ * @param description What was updated
+ * @returns Promise that resolves when the message is sent
+ */
+export async function logFeatureUpdate(feature: string, description: string): Promise<void> {
+  const message = `Feature update: ${feature} - ${description}`;
+  return logUpdate(message, 'feature');
+}
+
+/**
+ * Log a bug fix to Discord webhook
+ * 
+ * @param bug The bug that was fixed
+ * @param description How it was fixed
+ * @returns Promise that resolves when the message is sent
+ */
+export async function logBugFix(bug: string, description: string): Promise<void> {
+  const message = `Bug fix: ${bug} - ${description}`;
+  return logUpdate(message, 'bugfix');
 }
 
 /**
