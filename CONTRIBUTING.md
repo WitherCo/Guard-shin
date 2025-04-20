@@ -1,69 +1,101 @@
 # Contributing to Guard-shin
 
-We love your input! We want to make contributing to Guard-shin as easy and transparent as possible, whether it's:
+Thank you for considering contributing to Guard-shin! This document provides guidelines and instructions for contributing to this project.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+## Code of Conduct
 
-## Development Process
+By participating in this project, you agree to abide by our Code of Conduct. Please be respectful and considerate of others when contributing.
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
+## How Can I Contribute?
 
-### Pull Requests
+### Reporting Bugs
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+This section guides you through submitting a bug report. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
-### Pull Request Guidelines
+- Use the bug report template provided
+- Include detailed steps to reproduce the issue
+- Describe the behavior you observed and what you expected to see
+- Include screenshots if possible
+- Mention the browser/environment where you encountered the issue
 
-- Update the README.md with details of changes to the interface, if appropriate
-- Update the documentation with details of any changes
-- The PR should work on the main development branch
-- Include tests that verify your changes if applicable
-- Follow the existing code style and formatting conventions
+### Suggesting Enhancements
 
-## Development Setup
+This section guides you through submitting an enhancement suggestion, including completely new features and minor improvements to existing functionality.
 
-1. Clone the repository and install dependencies:
-   ```bash
-   git clone https://github.com/yourusername/guard-shin.git
+- Use the feature request template provided
+- Provide a clear and detailed explanation of the feature you want
+- Explain why this enhancement would be useful to most Guard-shin users
+- List examples of how this enhancement would work, if possible
+
+### Code Contributions
+
+#### Local Development
+
+Want to contribute to the code? Here's how to set up Guard-shin for local development:
+
+1. Fork the repository on GitHub
+2. Clone your fork locally:
+   ```
+   git clone https://github.com/your-username/guard-shin.git
    cd guard-shin
+   ```
+3. Install dependencies:
+   ```
    npm install
    ```
-
-2. Create a `.env` file based on `.env.example` and fill in the required credentials
-
-3. Set up the database:
-   ```bash
-   npm run db:push
+4. Create a branch for your feature or fix:
    ```
-
-4. Start the development server:
-   ```bash
-   npm run dev
+   git checkout -b feature/amazing-feature
    ```
+5. Make your changes
+6. Run tests and ensure your code follows the style guidelines:
+   ```
+   npm run test
+   npm run lint
+   ```
+7. Commit your changes:
+   ```
+   git commit -m "Add amazing feature"
+   ```
+8. Push to your fork:
+   ```
+   git push origin feature/amazing-feature
+   ```
+9. Submit a pull request to the main repository
 
-## Project Structure
+#### Pull Request Process
 
-- `/client` - Frontend React application
-- `/server` - Backend Express application
-- `/discord-bot` - Discord bot implementation
-- `/shared` - Shared types, schemas, and utilities
-- `/migrations` - Database migrations
+1. Update the README.md or documentation with details of changes if appropriate
+2. The PR should work in all supported browsers and environments
+3. PRs will be merged once reviewed and approved by maintainers
+4. You may merge the Pull Request once you have the sign-off of two other developers, or if you do not have permission to do that, you may request the second reviewer to merge it for you
 
-## Coding Style
+## Styleguides
 
-- TypeScript: Follow the ESLint configuration
-- React components: Use function components with hooks
-- CSS: Use Tailwind CSS utilities when possible
-- Database: Use Drizzle ORM for database operations
+### Git Commit Messages
 
-## License
+* Use the present tense ("Add feature" not "Added feature")
+* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+* Limit the first line to 72 characters or less
+* Reference issues and pull requests liberally after the first line
 
-By contributing, you agree that your contributions will be licensed under the project's MIT License.
+### JavaScript/TypeScript Styleguide
+
+* Use 2 spaces for indentation
+* Prefer `const` over `let` and avoid `var`
+* Use JSDoc style comments for functions and classes
+* Follow the ESLint configuration provided in the project
+
+### CSS/SCSS Styleguide
+
+* Follow the existing styling patterns in the codebase
+* Use TailwindCSS classes where possible
+* Avoid using !important unless absolutely necessary
+
+## Additional Resources
+
+* [Discord Server](https://discord.gg/g3rFbaW6gw)
+* [Issue Tracker](https://github.com/yourusername/guard-shin/issues)
+* [Set up guide for GuardShin](./docs/SETUP.md)
+
+Thank you for contributing to Guard-shin!

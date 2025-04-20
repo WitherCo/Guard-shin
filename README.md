@@ -45,7 +45,7 @@ Comprehensive documentation is available in the [docs](./docs) directory:
 ## Installation
 
 ### Prerequisites
-- Node.js 18+ and npm
+- Node.js 20+ and npm
 - Python 3.9+
 - PostgreSQL database
 - Discord Developer Application credentials
@@ -77,6 +77,30 @@ Comprehensive documentation is available in the [docs](./docs) directory:
    ```bash
    npm run dev
    ```
+
+## Deployment
+
+The Guard-shin dashboard is automatically deployed through GitHub Actions. When changes are pushed to the main branch, the following happens:
+
+1. The code is built and tested
+2. The application is deployed to GitHub Pages
+3. A notification is sent to Discord via webhook
+
+### Setting up GitHub Actions
+
+To set up the GitHub Actions workflow for deployment, you need to configure the following secrets in your repository:
+
+- `UPDATE_WEBHOOK_URL`: Discord webhook URL for deployment notifications
+- `GITHUB_TOKEN`: Automatically provided by GitHub
+
+### Continuous Integration
+
+The `.github/workflows/deploy.yml` file defines our CI/CD pipeline, which:
+
+1. Builds the application
+2. Runs tests
+3. Deploys to GitHub Pages
+4. Sends a webhook notification to Discord with deployment status
 
 ## Bot Setup
 

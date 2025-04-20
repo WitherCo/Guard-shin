@@ -1,292 +1,139 @@
-/**
- * Update Logger
- * 
- * This module handles logging updates to a Discord webhook.
- * It can be used to monitor changes and activities in the application.
- */
-
 import fetch from 'node-fetch';
-import { log } from './vite';
-
-// Default webhook URL (will be overridden by environment variable if available)
-const DEFAULT_WEBHOOK_URL = '';
-
-// Queue for batching updates
-const updateQueue: { message: string; category?: string }[] = [];
-let flushTimeout: NodeJS.Timeout | null = null;
-const FLUSH_INTERVAL = 5000; // 5 seconds
 
 /**
- * Log an update to Discord webhook
+ * Update Logger for Guard-shin
  * 
- * @param message The message to log
- * @param category Optional category for the message
- * @returns Promise that resolves when the message is sent
+ * This module handles sending consolidated update notifications to Discord
+ * via webhook. It batches updates to prevent webhook spam and formats
+ * messages consistently.
  */
-export async function logUpdate(message: string, category?: string): Promise<void> {
-  // Add to queue
-  updateQueue.push({ message, category });
-  
-  // Schedule flush if not already scheduled
-  if (!flushTimeout) {
-    flushTimeout = setTimeout(() => {
-      flushUpdates();
-    }, FLUSH_INTERVAL);
-  }
+
+// Webhook URL for sending update notifications
+const UPDATE_WEBHOOK_URL = process.env.UPDATE_WEBHOOK_URL;
+
+// Queue to hold pending updates for batching
+interface QueuedUpdate {
+  message: string;
+  timestamp: Date;
+  details?: Record<string, any>;
 }
 
-/**
- * Force flush all pending updates
- * 
- * @returns Promise that resolves when all updates are sent
- */
-export async function forceFlushUpdates(): Promise<void> {
-  if (flushTimeout) {
-    clearTimeout(flushTimeout);
-    flushTimeout = null;
-  }
-  
-  return flushUpdates();
-}
+// Batch updates to prevent webhook spam
+let updateQueue: QueuedUpdate[] = [];
+let timeoutId: NodeJS.Timeout | null = null;
+const BATCH_DELAY_MS = 60000; // 1 minute
 
 /**
- * Flush the update queue
+ * Log an update to be sent via webhook
  * 
- * @returns Promise that resolves when all updates are sent
+ * @param message Main update message
+ * @param details Additional details to include
  */
-async function flushUpdates(): Promise<void> {
-  // Reset the flush timeout
-  flushTimeout = null;
-  
-  // If queue is empty, do nothing
-  if (updateQueue.length === 0) {
+export async function logUpdate(message: string, details?: Record<string, any>): Promise<void> {
+  if (!UPDATE_WEBHOOK_URL) {
+    console.warn('[update-logger] No webhook URL configured, skipping update notification');
     return;
   }
-  
-  try {
-    // Get webhook URL from environment variable
-    const webhookUrl = process.env.UPDATE_WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
-    
-    if (!webhookUrl) {
-      log('No webhook URL configured for update logging', 'warn');
-      // Clear the queue even if we can't send
-      updateQueue.length = 0;
-      return;
-    }
-    
-    // If only one update, send it as normal
-    if (updateQueue.length === 1) {
-      const { message, category } = updateQueue[0];
-      await sendSingleUpdate(message, category, webhookUrl);
-    } else {
-      // If multiple updates, batch them
-      await sendBatchUpdates(webhookUrl);
-    }
-    
-    // Clear the queue
-    updateQueue.length = 0;
-  } catch (error) {
-    log(`Error flushing updates: ${error}`, 'error');
+
+  // Add update to queue
+  updateQueue.push({
+    message,
+    timestamp: new Date(),
+    details
+  });
+
+  // Schedule sending if not already scheduled
+  if (!timeoutId) {
+    timeoutId = setTimeout(sendBatchedUpdates, BATCH_DELAY_MS);
   }
 }
 
 /**
- * Send a single update to Discord webhook
- * 
- * @param message The message to log
- * @param category Optional category for the message
- * @param webhookUrl The webhook URL
- * @returns Promise that resolves when the message is sent
+ * Force send all queued updates immediately
  */
-async function sendSingleUpdate(message: string, category: string | undefined, webhookUrl: string): Promise<void> {
-  try {
-    // Format message with category if provided
-    const formattedMessage = category ? `[${category.toUpperCase()}] ${message}` : message;
-    
-    // Create embed for Discord webhook
-    const embed = {
-      title: "Lifeless rose updated:",
-      description: formattedMessage,
-      color: 0x7289DA, // Discord blurple color
-      timestamp: new Date().toISOString(),
-    };
-    
-    // Send to webhook
-    const response = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        embeds: [embed],
-      }),
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      log(`Failed to send update to webhook: ${response.status} ${errorText}`, 'error');
-    }
-  } catch (error) {
-    log(`Error sending single update: ${error}`, 'error');
+export async function flushUpdates(): Promise<void> {
+  if (updateQueue.length > 0) {
+    clearTimeout(timeoutId as NodeJS.Timeout);
+    timeoutId = null;
+    await sendBatchedUpdates();
   }
 }
 
 /**
- * Send batch updates to Discord webhook
- * 
- * @param webhookUrl The webhook URL
- * @returns Promise that resolves when all updates are sent
+ * Send all batched updates in a single webhook message
  */
-async function sendBatchUpdates(webhookUrl: string): Promise<void> {
+async function sendBatchedUpdates(): Promise<void> {
+  if (updateQueue.length === 0) {
+    timeoutId = null;
+    return;
+  }
+
   try {
-    // Group updates by category
-    const categoryMap = new Map<string, string[]>();
-    
-    // Add all updates to their respective categories
-    for (const { message, category } of updateQueue) {
-      const cat = category || 'general';
-      if (!categoryMap.has(cat)) {
-        categoryMap.set(cat, []);
+    // Create embed fields for each update
+    const fields = updateQueue.map(update => {
+      let value = update.message;
+      
+      // Add details if available
+      if (update.details) {
+        const detailsString = Object.entries(update.details)
+          .map(([key, val]) => `**${key}**: ${val}`)
+          .join('\n');
+          
+        if (detailsString) {
+          value += '\n' + detailsString;
+        }
       }
-      categoryMap.get(cat)!.push(message);
-    }
-    
-    // Create embed fields for each category
-    const fields = Array.from(categoryMap.entries()).map(([category, messages]) => ({
-      name: category.toUpperCase(),
-      value: messages.join('\n'),
-    }));
-    
-    // Create embed for Discord webhook
-    const embed = {
-      title: "Lifeless rose updated:",
-      fields,
-      color: 0x7289DA, // Discord blurple color
-      timestamp: new Date().toISOString(),
+      
+      return {
+        name: `Update at ${update.timestamp.toLocaleTimeString()}`,
+        value
+      };
+    });
+
+    // Send consolidated embed
+    const payload = {
+      content: "Lifeless rose updated:",
+      embeds: [{
+        title: "Guard-shin Updates",
+        description: `${updateQueue.length} updates received in the last batch`,
+        color: 0x7289DA,
+        fields,
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: "Guard-shin Bot"
+        }
+      }]
     };
-    
-    // Send to webhook
-    const response = await fetch(webhookUrl, {
+
+    const response = await fetch(UPDATE_WEBHOOK_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        embeds: [embed],
-      }),
+      body: JSON.stringify(payload)
     });
-    
+
     if (!response.ok) {
+      console.error(`[update-logger] Failed to send webhook: ${response.status} ${response.statusText}`);
       const errorText = await response.text();
-      log(`Failed to send batch updates to webhook: ${response.status} ${errorText}`, 'error');
+      console.error(errorText);
+    } else {
+      console.log(`[update-logger] Successfully sent ${updateQueue.length} updates via webhook`);
     }
   } catch (error) {
-    log(`Error sending batch updates: ${error}`, 'error');
+    console.error('[update-logger] Error sending webhook:', error);
   }
+
+  // Clear queue and reset timeout
+  updateQueue = [];
+  timeoutId = null;
 }
 
-/**
- * Log a feature update to Discord webhook
- * 
- * @param feature The feature that was updated
- * @param description What was updated
- * @returns Promise that resolves when the message is sent
- */
-export async function logFeatureUpdate(feature: string, description: string): Promise<void> {
-  const message = `Feature update: ${feature} - ${description}`;
-  return logUpdate(message, 'feature');
-}
-
-/**
- * Log a bug fix to Discord webhook
- * 
- * @param bug The bug that was fixed
- * @param description How it was fixed
- * @returns Promise that resolves when the message is sent
- */
-export async function logBugFix(bug: string, description: string): Promise<void> {
-  const message = `Bug fix: ${bug} - ${description}`;
-  return logUpdate(message, 'bugfix');
-}
-
-/**
- * Log a server action to Discord webhook
- * 
- * @param action The action performed
- * @param serverId The server ID
- * @param serverName The server name
- * @param performedBy Who performed the action (username or Discord ID)
- * @returns Promise that resolves when the message is sent
- */
-export async function logServerAction(
-  action: string,
-  serverId: string,
-  serverName: string,
-  performedBy: string
-): Promise<void> {
-  const message = `${action} for server "${serverName}" (${serverId}) by ${performedBy}`;
-  return logUpdate(message, 'server');
-}
-
-/**
- * Log a premium subscription action to Discord webhook
- * 
- * @param action The action performed (subscribe, upgrade, cancel, etc.)
- * @param userId The user ID
- * @param username The username
- * @param tier The subscription tier
- * @returns Promise that resolves when the message is sent
- */
-export async function logSubscriptionAction(
-  action: string,
-  userId: number,
-  username: string,
-  tier: string
-): Promise<void> {
-  const message = `${action} subscription (tier: ${tier}) for user "${username}" (ID: ${userId})`;
-  return logUpdate(message, 'subscription');
-}
-
-/**
- * Log an authentication action to Discord webhook
- * 
- * @param action The action performed (login, register, logout, etc.)
- * @param userId The user ID
- * @param username The username
- * @param method The authentication method (local, discord, etc.)
- * @returns Promise that resolves when the message is sent
- */
-export async function logAuthAction(
-  action: string,
-  userId: number | string,
-  username: string,
-  method: string
-): Promise<void> {
-  const message = `${action} (method: ${method}) for user "${username}" (ID: ${userId})`;
-  return logUpdate(message, 'auth');
-}
-
-/**
- * Log a moderation action to Discord webhook
- * 
- * @param action The action performed (ban, kick, mute, etc.)
- * @param targetId The target user ID
- * @param targetName The target username
- * @param serverId The server ID
- * @param serverName The server name
- * @param moderatorId The moderator ID
- * @param moderatorName The moderator name
- * @returns Promise that resolves when the message is sent
- */
-export async function logModerationAction(
-  action: string,
-  targetId: string,
-  targetName: string,
-  serverId: string,
-  serverName: string,
-  moderatorId: string,
-  moderatorName: string
-): Promise<void> {
-  const message = `${action} user "${targetName}" (${targetId}) in server "${serverName}" (${serverId}) by moderator "${moderatorName}" (${moderatorId})`;
-  return logUpdate(message, 'moderation');
-}
+// Send any pending updates when the process exits
+process.on('beforeExit', () => {
+  if (updateQueue.length > 0) {
+    flushUpdates().catch(err => {
+      console.error('[update-logger] Error flushing updates on exit:', err);
+    });
+  }
+});

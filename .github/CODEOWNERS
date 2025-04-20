@@ -1,0 +1,18 @@
+# These owners will be the default owners for everything in the repo.
+* @witherco
+
+# Bot code owners
+/bot/ @witherco
+/discord-bot/ @witherco
+
+# Client/frontend code owners
+/client/ @witherco
+
+# Server/backend code owners
+/server/ @witherco
+
+# Documentation owners
+/docs/ @witherco
+
+# Deployment configuration
+/.github/workflows/ @witherco

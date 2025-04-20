@@ -1,30 +1,25 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { useLocation } from "wouter";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { queryClient } from '@/lib/queryClient';
 
-// Define user state type
 interface User {
   id: number;
   username: string;
   email?: string;
-  avatar?: string;
   discordId?: string;
-  isAdmin: boolean;
+  discordUsername?: string;
+  discordAvatar?: string;
+  premiumType?: number;
 }
 
-// Auth context state type
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   register: (username: string, email: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
 }
 
-// Create the auth context with a default value
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
@@ -32,36 +27,24 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => false,
   register: async () => false,
   logout: async () => {},
-  refreshUser: async () => {}
 });
 
-// AuthProvider props type
-interface AuthProviderProps {
-  children: ReactNode;
-}
+export const useAuth = () => useContext(AuthContext);
 
-// Auth Provider component
-export function AuthProvider({ children }: AuthProviderProps) {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [, setLocation] = useLocation();
-  const { toast } = useToast();
 
-  // Check if user is authenticated on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await apiRequest("GET", "/api/auth/me");
-        
+        const response = await fetch('/api/auth/user');
         if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
-          setUser(null);
+          const data = await response.json();
+          setUser(data);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
-        setUser(null);
+        console.error('Auth check error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -70,153 +53,78 @@ export function AuthProvider({ children }: AuthProviderProps) {
     checkAuth();
   }, []);
 
-  // Login function
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      const response = await apiRequest("POST", "/api/auth/login", { email, password });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        
-        toast({
-          title: "Login successful",
-          description: `Welcome back, ${userData.username}!`,
-        });
-        
-        return true;
-      } else {
-        const error = await response.json();
-        
-        toast({
-          title: "Login failed",
-          description: error.message || "Invalid email or password",
-          variant: "destructive",
-        });
-        
-        return false;
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      
-      toast({
-        title: "Login failed",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Register function
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
-    
     try {
-      const response = await apiRequest("POST", "/api/auth/register", { username, email, password });
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-        
-        toast({
-          title: "Registration successful",
-          description: `Welcome, ${userData.username}!`,
-        });
-        
-        return true;
-      } else {
-        const error = await response.json();
-        
-        toast({
-          title: "Registration failed",
-          description: error.message || "Could not create account",
-          variant: "destructive",
-        });
-        
-        return false;
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
-      
-      toast({
-        title: "Registration failed",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
       });
-      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      return true;
+    } catch (error) {
+      console.error('Registration error:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // Logout function
   const logout = async (): Promise<void> => {
     try {
-      await apiRequest("POST", "/api/auth/logout");
+      await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
-      
-      toast({
-        title: "Logged out",
-        description: "You have been successfully logged out.",
-      });
-      
-      setLocation("/");
+      queryClient.clear();
     } catch (error) {
-      console.error("Logout error:", error);
-      
-      toast({
-        title: "Logout failed",
-        description: "An error occurred during logout.",
-        variant: "destructive",
-      });
+      console.error('Logout error:', error);
     }
   };
 
-  // Refresh user data
-  const refreshUser = async (): Promise<void> => {
-    try {
-      const response = await apiRequest("GET", "/api/auth/me");
-      
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      } else {
-        // If the session has expired, log the user out
-        setUser(null);
-        setLocation("/login");
-      }
-    } catch (error) {
-      console.error("User refresh error:", error);
-    }
-  };
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        register,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-  const value = {
-    user,
-    isAuthenticated: !!user,
-    isLoading,
-    login,
-    register,
-    logout,
-    refreshUser
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-// Custom hook to use the auth context
-export function useAuth() {
-  const context = useContext(AuthContext);
-  
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  
-  return context;
-}
+export default AuthProvider;
