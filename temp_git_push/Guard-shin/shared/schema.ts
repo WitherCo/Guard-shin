@@ -35,6 +35,10 @@ export const users = pgTable("users", {
   refreshToken: text("refresh_token"),
   premiumType: integer("premium_type").default(0),
   role: text("role").default("user"), // Options: user, admin, owner
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  premiumStatus: text("premium_status").default("none"), // Options: none, regular, plus, lifetime, lifetime_plus
+  premiumExpiresAt: timestamp("premium_expires_at"),
 });
 
 export const insertUserSchema = createInsertSchema(users);

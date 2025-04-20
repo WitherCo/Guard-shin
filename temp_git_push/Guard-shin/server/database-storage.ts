@@ -63,6 +63,36 @@ export class DatabaseStorage implements IStorage {
     }
   }
   
+  async updateStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ stripeCustomerId })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+  
+  async updateUserStripeInfo(userId: number, stripeInfo: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ 
+        stripeCustomerId: stripeInfo.stripeCustomerId,
+        stripeSubscriptionId: stripeInfo.stripeSubscriptionId
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+  
+  async updateUserPremiumStatus(userId: number, premiumStatus: string, premiumExpiresAt?: Date): Promise<User> {
+    const [user] = await db.update(users)
+      .set({ 
+        premiumStatus,
+        premiumExpiresAt: premiumExpiresAt || null
+      })
+      .where(eq(users.id, userId))
+      .returning();
+    return user;
+  }
+  
   // Server methods
   async getServer(id: string): Promise<Server | undefined> {
     const [server] = await db.select().from(servers).where(eq(servers.id, id));

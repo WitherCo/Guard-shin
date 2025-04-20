@@ -17,6 +17,9 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   createDiscordUser(user: any): Promise<User>;
   updateUserTokens(discordId: string, accessToken: string, refreshToken: string): Promise<boolean>;
+  updateStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User>;
+  updateUserStripeInfo(userId: number, stripeInfo: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User>;
+  updateUserPremiumStatus(userId: number, premiumStatus: string, premiumExpiresAt?: Date): Promise<User>;
   
   // Server methods
   getServer(id: string): Promise<Server | undefined>;
@@ -95,6 +98,9 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> { throw new Error("Not implemented"); }
   async createDiscordUser(user: any): Promise<User> { throw new Error("Not implemented"); }
   async updateUserTokens(discordId: string, accessToken: string, refreshToken: string): Promise<boolean> { return false; }
+  async updateStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User> { throw new Error("Not implemented"); }
+  async updateUserStripeInfo(userId: number, stripeInfo: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User> { throw new Error("Not implemented"); }
+  async updateUserPremiumStatus(userId: number, premiumStatus: string, premiumExpiresAt?: Date): Promise<User> { throw new Error("Not implemented"); }
   async getServer(id: string): Promise<Server | undefined> { return undefined; }
   async getServers(): Promise<Server[]> { return []; }
   async createServer(server: InsertServer): Promise<Server> { throw new Error("Not implemented"); }

@@ -16,6 +16,8 @@ import { setupAuth, isAuthenticated } from "./auth";
 import { handleContactFormSubmission } from "./contact";
 import { requestPasswordReset, resetPassword } from "./password-reset";
 import { sendWebhookMessage } from "./webhook";
+import { createPaymentIntent, getOrCreateSubscription, handleStripeWebhook } from "./stripe";
+import Stripe from "stripe";
 
 // Discord client interface
 type DiscordClient = {
@@ -620,6 +622,84 @@ export async function registerRoutes(app: Express, discord?: DiscordClient): Pro
   
   // Webhook message endpoint - available to both authenticated and unauthenticated users
   app.post("/api/webhook/send", sendWebhookMessage);
+
+  // Stripe payment routes
+  app.post("/api/create-payment-intent", isAuthenticated, createPaymentIntent);
+  app.post("/api/get-or-create-subscription", isAuthenticated, getOrCreateSubscription);
+  
+  // Verify payment endpoint
+  app.get("/api/verify-payment", isAuthenticated, async (req: Request, res: Response) => {
+    try {
+      if (!process.env.STRIPE_SECRET_KEY) {
+        throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+      }
+      
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: "2023-10-16",
+      });
+      
+      const paymentIntentId = req.query.payment_intent as string;
+      
+      if (!paymentIntentId) {
+        return res.status(400).json({ error: "Payment intent ID is required" });
+      }
+      
+      // Retrieve the payment intent
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      
+      if (paymentIntent.status !== 'succeeded') {
+        return res.status(400).json({ 
+          error: "Payment not successful", 
+          status: paymentIntent.status 
+        });
+      }
+      
+      // Get user information
+      const user = req.user;
+      
+      // Determine premium type from metadata
+      let premiumType = 'regular';
+      let expiresAt = null;
+      
+      if (paymentIntent.metadata && paymentIntent.metadata.tier) {
+        premiumType = paymentIntent.metadata.tier;
+      }
+      
+      // For subscription payments, get the subscription details
+      if (user.stripeSubscriptionId) {
+        const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+        
+        if (subscription.status === 'active') {
+          // Set expiration date to the end of the current period
+          if (subscription.current_period_end) {
+            expiresAt = new Date(subscription.current_period_end * 1000);
+          }
+        }
+      }
+      
+      // Return payment details
+      res.json({
+        paymentId: paymentIntent.id,
+        amount: paymentIntent.amount / 100,  // Convert from cents to dollars
+        premiumType,
+        status: "active",
+        expiresAt
+      });
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      res.status(500).json({ error: "Failed to verify payment" });
+    }
+  });
+  
+  // Stripe webhook - this needs to process the raw body, so it should bypass express.json() middleware
+  app.post("/api/stripe-webhook", (req, res) => {
+    const contentType = req.headers['content-type'] || '';
+    if (contentType.includes('application/json')) {
+      handleStripeWebhook(req, res);
+    } else {
+      res.status(400).json({ error: 'Invalid content type' });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
