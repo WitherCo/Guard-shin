@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -23,23 +24,23 @@ jobs:
         working-directory: ./discord-bot
         run: pip install -r requirements.txt
       
-      - name: Install Railway CLI
-        run: npm i -g @railway/cli
-      
-      - name: Login to Railway
-        run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
-      
       - name: Deploy to Railway
-        working-directory: ./discord-bot
-        run: |
-          echo "Deploying bot with environment variables..."
-          railway link
-          railway up --detach
+        uses: bervProject/railway-deploy@main
+        with:
+          railway_token: ${{ secrets.RAILWAY_TOKEN }}
+          service: "guard-shin-bot"
+          directory: "./discord-bot"
+          
+      - name: Set environment variables on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          GUARD_SHIN_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          UPDATE_WEBHOOK_URL: ${{ secrets.UPDATE_WEBHOOK_URL }}
+        run: |
+          npm i -g @railway/cli
+          cd discord-bot
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway variables set DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          railway variables set GUARD_SHIN_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          railway variables set UPDATE_WEBHOOK_URL=${{ secrets.UPDATE_WEBHOOK_URL }}
           
       - name: Send deployment webhook
         run: |
