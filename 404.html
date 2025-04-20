@@ -1,29 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
 <head>
-  <meta charset="utf-8">
-  <title>Guard-shin Discord Bot</title>
-  <script>
-    // Single Page App redirect script for GitHub Pages
-    // https://github.com/rafgraph/spa-github-pages
-    // This script redirects to the root index.html with the full URL in the hash
-    // which the ReactRouter app can then parse
-
-    // Redirect with the correct path based on URL
-    const pathname = window.location.pathname;
-    const search = window.location.search;
-    const hash = window.location.hash;
-    
-    // Remove repository name from path if present (for GitHub Pages)
-    let fullPath = pathname.replace('/Guard-shin/', '/').split('/').filter(item => !!item).join('/');
-    
-    // Create redirect URL with the hash router format
-    const redirectUrl = window.location.origin + '/Guard-shin/#/' + fullPath + search + hash;
-    
-    window.location.replace(redirectUrl);
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guard-shin Dashboard - Page Not Found</title>
+  <meta http-equiv="refresh" content="0;url=https://witherco.github.io/Guard-shin/">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    a {
+      color: #5865f2;
+    }
+  </style>
 </head>
 <body>
-  <p>Redirecting to Guard-shin Dashboard...</p>
+  <div>
+    <h1>Page Not Found</h1>
+    <p>Redirecting to Guard-shin Dashboard...</p>
+    <p>If you are not redirected automatically, <a href="https://witherco.github.io/Guard-shin/">click here</a>.</p>
+  </div>
 </body>
 </html>
