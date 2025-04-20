@@ -1,0 +1,76 @@
+# JMusicBot Configuration File
+# ================================
+
+# This file contains the core settings for JMusicBot. 
+# You need to edit this file when you first set up your bot.
+
+# The bot token from Discord
+# If using JDA, keep this private!
+token=${DISCORD_BOT_TOKEN}
+
+# The bot's owner ID
+# This is your Discord user ID (NOT your bot ID)
+owner=311986834439430144
+
+# This sets the prefix for the bot
+# The prefix is used to control the commands
+# If you use an @mention, you can escape your own mentions using \\
+prefix=;
+
+# Music settings
+# Your bot will stay in the voice channel even when alone
+stayinchannel=true
+
+# Show the current song in the bot's status
+songinstatus=true
+
+# Show embedded artwork in nowplaying messages
+npimages=true
+
+# Use YTSEARCH for YouTube by default
+ytformat=251,140
+
+# Maximum allowed song length (in seconds)
+# Note: This can be overridden using the DJ role
+maxseconds=7200
+
+# The path to the playlists folder
+# Absolute paths work as well
+playlistfolder=playlists
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
