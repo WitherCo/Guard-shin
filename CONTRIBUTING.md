@@ -16,7 +16,7 @@ This section guides you through submitting a bug report. Following these guideli
 - Include detailed steps to reproduce the issue
 - Describe the behavior you observed and what you expected to see
 - Include screenshots if possible
-- Mention the browser/environment where you encountered the issue
+- Mention the browser/environment where you encountered the issues
 
 ### Suggesting Enhancements
 
