@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, HashRouter } from 'react-router-dom';
 import { ChakraProvider, extendTheme, Box, Button, Flex, Heading, Text, Container } from '@chakra-ui/react';
 import Checkout from './pages/Checkout';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -115,15 +115,20 @@ const Home = () => (
 
 // Main App component with routing
 function App() {
+  // Use HashRouter for GitHub Pages compatibility
+  const isGitHubPages = import.meta.env.GITHUB_PAGES === 'true';
+  const RouterComponent = isGitHubPages ? HashRouter : Router;
+  
   return (
     <ChakraProvider theme={theme}>
-      <Router>
+      <RouterComponent>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/premium" element={<Checkout />} />
           <Route path="/premium/success" element={<PaymentSuccess />} />
+          <Route path="*" element={<Home />} /> {/* Catch-all route */}
         </Routes>
-      </Router>
+      </RouterComponent>
     </ChakraProvider>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, HashRouter } from 'react-router-dom';
 import { Box, Flex, Text, Button, useColorModeValue, Heading, Stat, StatLabel, StatNumber, SimpleGrid, Icon, HStack } from '@chakra-ui/react';
 import { FiUsers, FiShield, FiCommand, FiAlertTriangle } from 'react-icons/fi';
 import Layout from './components/Layout';
@@ -131,17 +131,23 @@ const Premium = () => (
 
 // Main App component
 function App() {
+  // Use HashRouter for GitHub Pages compatibility
+  const isGitHubPages = import.meta.env.GITHUB_PAGES === 'true';
+  console.log('GitHub Pages deployment:', isGitHubPages);
+  const RouterComponent = isGitHubPages ? HashRouter : Router;
+  
   return (
-    <Router>
+    <RouterComponent>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="servers" element={<Servers />} />
           <Route path="commands" element={<Commands />} />
           <Route path="premium" element={<Premium />} />
+          <Route path="*" element={<Dashboard />} /> {/* Catch-all route */}
         </Route>
       </Routes>
-    </Router>
+    </RouterComponent>
   );
 }
 

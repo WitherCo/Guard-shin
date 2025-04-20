@@ -4,6 +4,15 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import App from './App';
 import './styles/index.css';
 
+// For debugging
+console.log('Environment variables:', {
+  GITHUB_PAGES: import.meta.env.GITHUB_PAGES,
+  BASE_URL: import.meta.env.BASE_URL,
+  MODE: import.meta.env.MODE,
+  DEV: import.meta.env.DEV,
+  PROD: import.meta.env.PROD
+});
+
 // Extend Chakra UI theme with our custom colors and settings
 const theme = extendTheme({
   colors: {
@@ -31,6 +40,14 @@ const theme = extendTheme({
   },
 });
 
+// Add event listener to log when the app is loaded
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOMContentLoaded event fired - App should render now');
+});
+
+// Log rendering process to help debug GitHub Pages
+console.log('Rendering React app...');
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
@@ -38,3 +55,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ChakraProvider>
   </React.StrictMode>
 );
+
+console.log('React app rendered');

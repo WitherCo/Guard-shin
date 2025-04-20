@@ -2,10 +2,17 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+// GitHub Pages configuration
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const base = isGitHubPages ? '/Guard-shin/' : '/';
+
 export default defineConfig({
   plugins: [react()],
+  base: base, // Base path for GitHub Pages deployment
   build: {
     outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: true,
   },
   resolve: {
     alias: {
