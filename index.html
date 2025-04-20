@@ -4,44 +4,185 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guard-shin - Discord Moderation Bot</title>
-  <meta http-equiv="refresh" content="0; url=gh-pages-index.html">
   <style>
+    /* Base styles */
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: #121212;
       color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
       margin: 0;
       padding: 0;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    header {
       text-align: center;
+      margin-bottom: 3rem;
     }
-    .loader {
-      border: 5px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top: 5px solid #5865f2;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
+    
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      color: #5865f2;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    
+    header p {
+      font-size: 1.25rem;
+      color: #b0b0b0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .feature-card {
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .feature-title {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .feature-description {
+      color: #b0b0b0;
+    }
+    
+    .cta {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: #5865f2;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.25rem;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    
+    .btn:hover {
+      background-color: #4752c4;
+      transform: translateY(-3px);
+    }
+    
+    .links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .link {
+      color: #5865f2;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .link:hover {
+      color: #7289da;
+      text-decoration: underline;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: #b0b0b0;
+      border-top: 1px solid #2a2a2a;
+      margin-top: 3rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div>
-    <div class="loader"></div>
-    <p>Redirecting to Guard-shin Dashboard...</p>
+  <div class="container">
+    <header>
+      <h1>Guard-shin</h1>
+      <p>Advanced Discord moderation and security bot with intelligent protection, server management tools, and customization options</p>
+    </header>
+    
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h2 class="feature-title">Security & Moderation</h2>
+        <p class="feature-description">Protect your server with advanced auto-moderation, raid protection, anti-spam, and verification systems.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h2 class="feature-title">Server Management</h2>
+        <p class="feature-description">Streamline your server with powerful management tools, custom commands, role management, and more.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h2 class="feature-title">Music & Entertainment</h2>
+        <p class="feature-description">Enjoy high-quality music playback with playlist support, volume control, and queue management.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h2 class="feature-title">Analytics & Logging</h2>
+        <p class="feature-description">Track server activity, member engagement, and get detailed insights with comprehensive logs.</p>
+      </div>
+    </div>
+    
+    <div class="cta">
+      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+      
+      <div class="links">
+        <a href="#" class="link" onclick="alert('Coming soon!'); return false;">Commands</a>
+        <a href="#" class="link" onclick="alert('Coming soon!'); return false;">Premium</a>
+        <a href="#" class="link" onclick="alert('Coming soon!'); return false;">Support</a>
+      </div>
+    </div>
+    
+    <footer>
+      <p>Guard-shin © 2025 | <a href="https://github.com/WitherCo/Guard-shin" target="_blank" rel="noopener noreferrer" style="color: #5865f2;">GitHub</a></p>
+      <p>Join <a href="https://discord.gg/guardshin" target="_blank" rel="noopener noreferrer" style="color: #5865f2;">our Discord server</a> for support and updates</p>
+    </footer>
   </div>
-  
-  <script>
-    // Fallback redirect in case meta refresh doesn't work
-    window.location.href = 'gh-pages-index.html';
-  </script>
 </body>
 </html>
