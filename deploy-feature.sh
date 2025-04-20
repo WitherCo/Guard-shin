@@ -1,8 +1,9 @@
 #!/bin/bash
-# Deploy script for pushing to GitHub
+# Deploy feature branch script for pushing to GitHub
 
 # Set your GitHub repository URL here
 GITHUB_REPO="https://github.com/witherco/guard-shin.git"
+BRANCH_NAME="feature/github-config"
 
 # Check if GITHUB_TOKEN is available
 if [ -z "$GITHUB_TOKEN" ]; then
@@ -24,17 +25,15 @@ else
   git remote set-url origin $GITHUB_REPO
 fi
 
-# Create main branch if it doesn't exist and switch to it
-if ! git show-ref --quiet refs/heads/main; then
-  git checkout -b main
-else
-  git checkout main
-fi
+# Create feature branch and switch to it
+git checkout -b $BRANCH_NAME
 
-# Pull latest changes with rebase strategy to avoid merge commits
-git pull --rebase origin main || true
+# Add all files and commit changes
+git add .
+git commit -m "Add GitHub workflow configuration, deployment docs, and update logger"
 
 # Push changes to GitHub
-git push -u origin main
+git push -u origin $BRANCH_NAME
 
-echo "Deployment completed successfully!"
+echo "Feature branch '$BRANCH_NAME' has been pushed to GitHub"
+echo "You can now create a Pull Request to merge these changes into main"

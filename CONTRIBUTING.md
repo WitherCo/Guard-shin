@@ -36,7 +36,7 @@ Want to contribute to the code? Here's how to set up Guard-shin for local develo
 1. Fork the repository on GitHub
 2. Clone your fork locally:
    ```
-   git clone https://github.com/your-username/guard-shin.git
+   git clone https://github.com/witherco/guard-shin.git
    cd guard-shin
    ```
 3. Install dependencies:
@@ -95,7 +95,7 @@ Want to contribute to the code? Here's how to set up Guard-shin for local develo
 ## Additional Resources
 
 * [Discord Server](https://discord.gg/g3rFbaW6gw)
-* [Issue Tracker](https://github.com/yourusername/guard-shin/issues)
+* [Issue Tracker](https://github.com/witherco/guard-shin/issues)
 * [Set up guide for GuardShin](./docs/SETUP.md)
 
 Thank you for contributing to Guard-shin!
