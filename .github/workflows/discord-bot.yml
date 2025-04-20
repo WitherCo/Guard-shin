@@ -19,42 +19,55 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+          cache: 'pip'
       
       - name: Install Dependencies
-        working-directory: ./discord-bot
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f discord-bot/requirements.txt ]; then pip install -r discord-bot/requirements.txt; fi
       
-      - name: Install Railway CLI
-        run: npm i -g @railway/cli
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
       
-      - name: Login to Railway
-        run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+      - name: Setup Railway CLI
+        run: npm install -g @railway/cli
+      
+      - name: Prepare Environment
+        run: |
+          cd discord-bot
+          echo "DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}" > .env
+          echo "GUARD_SHIN_BOT_TOKEN=${GUARD_SHIN_BOT_TOKEN}" >> .env
+          echo "UPDATE_WEBHOOK_URL=${UPDATE_WEBHOOK_URL}" >> .env
       
       - name: Deploy to Railway
-        working-directory: ./discord-bot
-        run: |
-          echo "Deploying bot with environment variables..."
-          railway up --service guard-shin-bot --detach
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          GUARD_SHIN_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GUARD_SHIN_BOT_TOKEN: ${{ secrets.GUARD_SHIN_BOT_TOKEN }}
           UPDATE_WEBHOOK_URL: ${{ secrets.UPDATE_WEBHOOK_URL }}
-          
-      - name: Set environment variables on Railway
-        working-directory: ./discord-bot
         run: |
-          railway variables set DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
-          railway variables set GUARD_SHIN_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
-          railway variables set UPDATE_WEBHOOK_URL=${{ secrets.UPDATE_WEBHOOK_URL }}
+          cd discord-bot
+          railway login --token ${{ secrets.RAILWAY_TOKEN }}
+          railway link || railway project create --name "guard-shin-bot"
+          railway up --detach
+      
+      - name: Set Environment Variables on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          
-      - name: Send deployment webhook
+        run: |
+          cd discord-bot
+          railway variables set DISCORD_BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }}
+          railway variables set GUARD_SHIN_BOT_TOKEN=${{ secrets.GUARD_SHIN_BOT_TOKEN }}
+          railway variables set UPDATE_WEBHOOK_URL=${{ secrets.UPDATE_WEBHOOK_URL }}
+      
+      - name: Send Deployment Notification
+        if: always()
         run: |
           if [ -n "${{ secrets.UPDATE_WEBHOOK_URL }}" ]; then
             curl -X POST \
               -H "Content-Type: application/json" \
-              -d '{"content": "Lifeless rose updated: Bot has been deployed to Railway via GitHub Actions"}' \
+              -d '{"content": "🤖 Guard-shin Bot: Deployment ${{ job.status }} at $(date)"}' \
               ${{ secrets.UPDATE_WEBHOOK_URL }}
           fi
