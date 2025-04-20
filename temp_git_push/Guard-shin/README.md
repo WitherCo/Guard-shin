@@ -137,8 +137,6 @@ node server.js
 
 ## License and Copyright
 
-Copyright © 2025 WitherCo. All rights reserved.
+Copyright (c) 2024-2025 WitherCo. All Rights Reserved.
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-Guard-shin is a proprietary software project. Unauthorized distribution, modification, or commercial use without explicit permission is prohibited.
+This software is the exclusive property of WitherCo and is protected by copyright laws. Use of this software is subject to the terms outlined in the [LICENSE](LICENSE) file. Unauthorized reproduction, distribution, or modification is strictly prohibited.

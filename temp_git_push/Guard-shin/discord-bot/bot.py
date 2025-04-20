@@ -1,15 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Guard-shin Discord Bot
-Advanced moderation and security bot for Discord servers
-
-Copyright (c) 2025 WitherCo
-All rights reserved.
-
-This source code is licensed under the MIT license found in the
-LICENSE file in the root directory of this source tree.
-"""
-
 import os
 import discord
 from discord.ext import commands, tasks

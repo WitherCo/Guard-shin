@@ -1,21 +1,35 @@
-MIT License
+Copyright (c) 2024-2025 WitherCo. All Rights Reserved.
 
-Copyright (c) 2025 WitherCo
+GUARD-SHIN DISCORD BOT SOFTWARE LICENSE AGREEMENT
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software, known as "Guard-shin Discord Bot" ("Software"), is the exclusive property of WitherCo.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. LIMITED LICENSE
+   The Software is made available under a limited, non-exclusive, non-transferable license solely for personal, 
+   educational, or commercial use subject to the terms of this License Agreement.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. RESTRICTIONS
+   You may NOT, without express written permission from WitherCo:
+   a) Modify, decompile, disassemble, reverse engineer or attempt to derive the source code
+   b) Create derivative works based on the Software
+   c) Sublicense, rent, lease, or distribute the Software
+   d) Remove or alter any copyright notices or proprietary markings
+
+3. PREMIUM FEATURES
+   Certain features of the Software are available only through paid subscription plans. 
+   Unauthorized access to premium features is strictly prohibited.
+
+4. TERMINATION
+   This license will terminate automatically if you fail to comply with its terms. 
+   Upon termination, you must cease all use of the Software.
+
+5. DISCLAIMER OF WARRANTIES
+   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+
+6. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL WITHERCO BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, OR CONSEQUENTIAL DAMAGES.
+
+7. GOVERNING LAW
+   This Agreement shall be governed by the laws of the United States.
+
+For inquiries regarding custom licensing arrangements, please contact support@witherco.org.
