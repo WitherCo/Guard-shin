@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Guard-shin Bot</title>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    .background {
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    header {
+      background-color: #1a1a1a;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #30cfd0;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: #30cfd0;
+    }
+    
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    .checkout-container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .checkout-form {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .order-summary {
+      width: 350px;
+      background-color: #1a1a1a;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      height: fit-content;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin: 0 0 2rem;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+      margin: 0 0 1.5rem;
+      color: #30cfd0;
+    }
+    
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    
+    .form-row {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #30cfd0;
+      box-shadow: 0 0 0 3px rgba(48, 207, 208, 0.2);
+    }
+    
+    .form-row-2col {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .form-row-2col .form-group {
+      flex: 1;
+    }
+    
+    .payment-methods {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .payment-method {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid #333;
+      border-radius: 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .payment-method:hover {
+      border-color: #30cfd0;
+    }
+    
+    .payment-method.active {
+      border-color: #30cfd0;
+      background-color: rgba(48, 207, 208, 0.1);
+    }
+    
+    .payment-method-logo {
+      display: block;
+      margin: 0 auto 0.5rem;
+      height: 40px;
+      filter: grayscale(100%);
+      opacity: 0.7;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+    }
+    
+    .payment-method:hover .payment-method-logo,
+    .payment-method.active .payment-method-logo {
+      filter: grayscale(0%);
+      opacity: 1;
+    }
+    
+    .payment-details {
+      margin-top: 1.5rem;
+    }
+    
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 2rem;
+    }
+    
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid #333;
+    }
+    
+    .order-item-name {
+      font-weight: bold;
+    }
+    
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      margin-top: 1rem;
+      border-top: 2px solid #333;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    .secure-badge svg {
+      width: 16px;
+      height: 16px;
+      fill: #30cfd0;
+    }
+    
+    .plan-details {
+      margin-bottom: 1.5rem;
+    }
+    
+    .plan-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .plan-description {
+      color: #999;
+      margin-bottom: 1rem;
+    }
+    
+    .auth-options {
+      margin-bottom: 2rem;
+    }
+    
+    .auth-options p {
+      margin-bottom: 1rem;
+    }
+    
+    .discord-auth-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background-color: #5865F2;
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: fit-content;
+    }
+    
+    .discord-auth-btn:hover {
+      background-color: #4752c4;
+    }
+    
+    .alternative-payments {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #333;
+    }
+    
+    .alternative-payment-option {
+      margin-bottom: 1.5rem;
+    }
+    
+    .alternative-payment-option h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .payment-info {
+      background-color: #2a2a2a;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      margin-bottom: 1rem;
+    }
+    
+    footer {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      text-align: center;
+      margin-top: auto;
+    }
+    
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .footer-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #30cfd0;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .checkout-container {
+        flex-direction: column-reverse;
+      }
+      
+      .order-summary {
+        width: 100%;
+      }
+      
+      .form-row-2col {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  
+  <header>
+    <nav>
+      <div class="logo">
+        Guard-shin
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="commands.html">Commands</a>
+        <a href="documentation.html">Documentation</a>
+        <a href="premium.html">Premium</a>
+        <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a>
+      </div>
+    </nav>
+  </header>
+  
+  <main>
+    <h1>Checkout</h1>
+    
+    <div class="checkout-container">
+      <div class="checkout-form">
+        <div class="plan-details">
+          <div class="plan-name" id="planName">Premium Monthly</div>
+          <div class="plan-description" id="planDescription">All premium features for one Discord server.</div>
+        </div>
+        
+        <div class="form-section">
+          <h2>Authentication Required</h2>
+          <div class="auth-options">
+            <p>Please sign in with Discord to continue. This is required to link your subscription to your Discord account.</p>
+            <a href="#" class="discord-auth-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3847-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
+              </svg>
+              Sign in with Discord
+            </a>
+          </div>
+        </div>
+        
+        <div class="form-section payment-section" style="display: none;">
+          <h2>Payment Method</h2>
+          <div class="payment-methods">
+            <div class="payment-method active" data-method="stripe">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg" alt="Stripe" class="payment-method-logo">
+              <span>Credit Card</span>
+            </div>
+            <div class="payment-method" data-method="paypal">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" class="payment-method-logo">
+              <span>PayPal</span>
+            </div>
+            <div class="payment-method" data-method="cashapp">
+              <img src="https://cash.app/favicon.ico" alt="CashApp" class="payment-method-logo">
+              <span>CashApp</span>
+            </div>
+          </div>
+          
+          <div class="payment-details" id="stripe-details">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="card-number">Card Number</label>
+                <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+              </div>
+            </div>
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="card-expiry">Expiration Date</label>
+                <input type="text" id="card-expiry" placeholder="MM/YY">
+              </div>
+              <div class="form-group">
+                <label for="card-cvc">CVC</label>
+                <input type="text" id="card-cvc" placeholder="123">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="card-name">Name on Card</label>
+                <input type="text" id="card-name" placeholder="John Doe">
+              </div>
+            </div>
+          </div>
+          
+          <div class="payment-details" id="paypal-details" style="display: none;">
+            <p>You will be redirected to PayPal to complete your payment.</p>
+          </div>
+          
+          <div class="payment-details" id="cashapp-details" style="display: none;">
+            <p>Please send the payment to the CashApp handle below and include your Discord username in the note.</p>
+            <div class="payment-info">$kingsweets2004</div>
+            <p>After sending payment, please join our <a href="https://discord.gg/g3rFbaW6gw" style="color: #30cfd0;">Support Server</a> and create a ticket to complete the process.</p>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="discord-username">Discord Username</label>
+              <input type="text" id="discord-username" placeholder="username#0000">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="email@example.com">
+            </div>
+          </div>
+          
+          <button type="submit" class="checkout-btn">Complete Payment</button>
+          
+          <div class="secure-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.2v3.5c0 .7-.6 1.3-1.2 1.3h-5.5c-.7 0-1.3-.6-1.3-1.2v-3.5c0-.7.6-1.3 1.2-1.3V9.5C9.2 8.1 10.6 7 12 7zm0 1.2c-.8 0-1.5.5-1.5 1.3V11h3V9.5c0-.8-.7-1.3-1.5-1.3z"/>
+            </svg>
+            <span>Secure Checkout - Your payment information is encrypted and secure.</span>
+          </div>
+        </div>
+        
+        <div class="alternative-payments">
+          <h2>Alternative Payment Methods</h2>
+          
+          <div class="alternative-payment-option">
+            <h3>PayPal Manual Payment</h3>
+            <p>Send payment to:</p>
+            <div class="payment-info">ChristopherThomas429</div>
+            <p>Include your Discord username in the payment note.</p>
+          </div>
+          
+          <div class="alternative-payment-option">
+            <h3>CashApp Payment</h3>
+            <p>Send payment to:</p>
+            <div class="payment-info">$kingsweets2004</div>
+            <p>Include your Discord username in the payment note.</p>
+          </div>
+          
+          <p>After sending payment, please join our <a href="https://discord.gg/g3rFbaW6gw" style="color: #30cfd0;">Support Server</a> and create a ticket to complete the subscription process.</p>
+        </div>
+      </div>
+      
+      <div class="order-summary">
+        <h2>Order Summary</h2>
+        
+        <div class="order-item">
+          <span class="order-item-name" id="summaryItemName">Premium Monthly</span>
+          <span class="order-item-price" id="summaryItemPrice">$4.99</span>
+        </div>
+        
+        <div class="order-total">
+          <span>Total:</span>
+          <span id="orderTotal">$4.99</span>
+        </div>
+        
+        <div class="order-info">
+          <p>You're purchasing:</p>
+          <ul>
+            <li>Premium access for 1 Discord server</li>
+            <li>Charged monthly (cancel anytime)</li>
+            <li>Instant activation after payment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="commands.html">Commands</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:support@witherco.org">Contact</a>
+    </div>
+    <p>&copy; 2025 WitherCo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Get URL parameters to determine which plan was selected
+    const urlParams = new URLSearchParams(window.location.search);
+    const plan = urlParams.get('plan');
+    
+    // Set plan information based on URL parameter
+    if (plan) {
+      let planName, planPrice, planDescription;
+      
+      switch (plan) {
+        case 'premium-monthly':
+          planName = 'Premium Monthly';
+          planPrice = '$4.99';
+          planDescription = 'All premium features for one Discord server.';
+          break;
+        case 'premium-plus-monthly':
+          planName = 'Premium+ Monthly';
+          planPrice = '$9.99';
+          planDescription = 'All premium features for up to three Discord servers.';
+          break;
+        case 'lifetime-premium':
+          planName = 'Lifetime Premium';
+          planPrice = '$149.99';
+          planDescription = 'All premium features for one Discord server, forever.';
+          break;
+        case 'lifetime-premium-plus':
+          planName = 'Lifetime Premium+';
+          planPrice = '$249.99';
+          planDescription = 'All premium features for up to three Discord servers, forever.';
+          break;
+        default:
+          planName = 'Premium Monthly';
+          planPrice = '$4.99';
+          planDescription = 'All premium features for one Discord server.';
+      }
+      
+      // Update page elements with plan information
+      document.getElementById('planName').textContent = planName;
+      document.getElementById('planDescription').textContent = planDescription;
+      document.getElementById('summaryItemName').textContent = planName;
+      document.getElementById('summaryItemPrice').textContent = planPrice;
+      document.getElementById('orderTotal').textContent = planPrice;
+    }
+    
+    // Payment method switching
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    const paymentDetails = {
+      stripe: document.getElementById('stripe-details'),
+      paypal: document.getElementById('paypal-details'),
+      cashapp: document.getElementById('cashapp-details')
+    };
+    
+    paymentMethods.forEach(method => {
+      method.addEventListener('click', () => {
+        // Remove active class from all methods
+        paymentMethods.forEach(m => m.classList.remove('active'));
+        
+        // Add active class to clicked method
+        method.classList.add('active');
+        
+        // Hide all payment details
+        Object.values(paymentDetails).forEach(details => {
+          details.style.display = 'none';
+        });
+        
+        // Show selected payment details
+        const selectedMethod = method.dataset.method;
+        paymentDetails[selectedMethod].style.display = 'block';
+      });
+    });
+    
+    // Discord auth button - would normally link to Discord OAuth flow
+    const discordAuthBtn = document.querySelector('.discord-auth-btn');
+    const paymentSection = document.querySelector('.payment-section');
+    
+    discordAuthBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // This would normally redirect to Discord OAuth
+      // For demo purposes, we'll just show the payment section
+      document.querySelector('.auth-options').style.display = 'none';
+      paymentSection.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
