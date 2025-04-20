@@ -1,0 +1,323 @@
+/ban
+Admin
+moderation
+Ban a user from the server with an optional reason
+
+Options
+user
+(User)
+Required
+The user to ban
+
+reason
+(String)
+The reason for the ban
+
+delete_days
+(Integer)
+Number of days of messages to delete (0-7)
+
+Usage
+/ban user:@username reason:Breaking server rules delete_days:7
+Example
+/ban user:@username reason:Breaking server rules delete_days:7
+/unban
+moderation
+Unban a user from the server
+
+Options
+user_id
+(String)
+Required
+The user ID to unban
+
+Usage
+/unban user_id:123456789012345678
+Example
+/unban user_id:123456789012345678
+/kick
+Admin
+moderation
+Kick a user from the server with an optional reason
+
+Options
+user
+(User)
+Required
+The user to kick
+
+reason
+(String)
+The reason for the kick
+
+Usage
+/kick user:@username reason:Disruptive behavior
+Example
+/kick user:@username reason:Disruptive behavior
+/warn
+moderation
+Warn a user with an optional reason
+
+Options
+user
+(User)
+Required
+The user to warn
+
+reason
+(String)
+The reason for the warning
+
+Usage
+/warn user:@username reason:Spamming in chat
+Example
+/warn user:@username reason:Spamming in chat
+/warnings
+moderation
+View warnings for a specific user
+
+Options
+user
+(User)
+Required
+The user to check warnings for
+
+Usage
+/warnings user:@username
+Example
+/warnings user:@username
+/clearwarnings
+moderation
+Clear all warnings for a user
+
+Options
+user
+(User)
+Required
+The user to clear warnings for
+
+Usage
+/clearwarnings user:@username
+Example
+/clearwarnings user:@username
+/mute
+moderation
+Mute a user for a specified duration
+
+Options
+user
+(User)
+Required
+The user to mute
+
+duration
+(String)
+Duration of the mute (e.g., 1h, 30m, 1d)
+
+reason
+(String)
+The reason for the mute
+
+Usage
+/mute user:@username duration:1h reason:Excessive noise
+Example
+/mute user:@username duration:1h reason:Excessive noise
+/unmute
+moderation
+Unmute a previously muted user
+
+Options
+user
+(User)
+Required
+The user to unmute
+
+Usage
+/unmute user:@username
+Example
+/unmute user:@username
+/purge
+moderation
+Delete a specified number of messages from a channel
+
+Options
+amount
+(Integer)
+Required
+Number of messages to delete (1-100)
+
+user
+(User)
+Only delete messages from this user
+
+Usage
+/purge amount:50
+Example
+/purge amount:50
+/slowmode
+Admin
+moderation
+Set the slowmode cooldown for a channel
+
+Options
+seconds
+(Integer)
+Required
+Slowmode delay in seconds (0 to disable)
+
+Usage
+/slowmode seconds:10
+Example
+/slowmode seconds:10
+/lockdown
+Premium
+moderation
+Temporarily lock a channel, preventing messages from being sent
+
+Options
+duration
+(String)
+Duration of the lockdown (e.g., 30m, 1h)
+
+reason
+(String)
+Reason for the lockdown
+
+Usage
+/lockdown duration:30m reason:Server raid in progress
+Example
+/lockdown duration:30m reason:Server raid in progress
+This command is exclusive to Guard-shin Premium subscribers
+/unlock
+Premium
+moderation
+Unlock a previously locked channel
+
+Usage
+/unlock
+Example
+/unlock
+This command is exclusive to Guard-shin Premium subscribers
+/massban
+Premium
+Admin
+moderation
+Ban multiple users at once
+
+Options
+users
+(String)
+Required
+Comma-separated list of user IDs to ban
+
+reason
+(String)
+Reason for the mass ban
+
+Usage
+/massban users:123456789012345678,234567890123456789 reason:Raid participants
+Example
+/massban users:123456789012345678,234567890123456789 reason:Raid participants
+This command is exclusive to Guard-shin Premium subscribers
+/hackban
+Premium
+moderation
+Ban a user that isn't in the server yet
+
+Options
+user_id
+(String)
+Required
+The user ID to ban
+
+reason
+(String)
+Reason for the ban
+
+Usage
+/hackban user_id:123456789012345678 reason:Known raider
+Example
+/hackban user_id:123456789012345678 reason:Known raider
+This command is exclusive to Guard-shin Premium subscribers
+/automod
+automod
+View and configure the automod settings
+
+Options
+setting
+(String)
+The automod setting to configure
+
+Choices:
+Invites
+Links
+Caps
+Mentions
+Spam
+value
+(String)
+The value to set (on/off)
+
+Choices:
+On
+Off
+Usage
+/automod setting:invites value:on
+Example
+/automod setting:invites value:on
+/filter
+automod
+Add or remove words from the word filter
+
+Options
+action
+(String)
+Required
+Action to perform on the filter
+
+Choices:
+Add
+Remove
+List
+word
+(String)
+The word to add or remove
+
+Usage
+/filter action:add word:badword
+Example
+/filter action:add word:badword
+/antispam
+automod
+Configure anti-spam settings
+
+Options
+status
+(String)
+Required
+Enable or disable anti-spam
+
+Choices:
+On
+Off
+threshold
+(Integer)
+Number of messages that trigger anti-spam
+
+timeframe
+(Integer)
+Timeframe in seconds to check messages
+
+Usage
+/antispam status:on threshold:5 timeframe:3
+Example
+/antispam status:on threshold:5 timeframe:3
+/antiraid
+automod
+Configure anti-raid protection
+
+Options
+status
+(String)
+Required
+Enable or...

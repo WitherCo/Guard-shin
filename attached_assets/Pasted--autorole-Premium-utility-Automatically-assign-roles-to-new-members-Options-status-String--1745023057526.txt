@@ -1,0 +1,231 @@
+/autorole
+Premium
+utility
+Automatically assign roles to new members
+
+Options
+status
+(String)
+Required
+Enable or disable autorole
+
+Choices:
+On
+Off
+role
+(Role)
+Role to automatically assign
+
+Usage
+/autorole status:on role:@Member
+Example
+/autorole status:on role:@Member
+This command is exclusive to Guard-shin Premium subscribers
+/logs
+Premium
+utility
+Configure server logging
+
+Options
+channel
+(Channel)
+Required
+Channel to send logs to (use 'disable' to turn off logging)
+
+type
+(String)
+Type of logs to send
+
+Choices:
+Moderation
+Messages
+Members
+Server
+All
+Usage
+/logs channel:#mod-logs type:moderation
+Example
+/logs channel:#mod-logs type:moderation
+This command is exclusive to Guard-shin Premium subscribers
+/botinfo
+info
+Display information about the bot
+
+Usage
+/botinfo
+Example
+/botinfo
+/uptime
+info
+Check how long the bot has been online
+
+Usage
+/uptime
+Example
+/uptime
+/invite
+info
+Get an invite link for the bot
+
+Usage
+/invite
+Example
+/invite
+/premium
+info
+Get information about Guard-shin Premium
+
+Usage
+/premium
+Example
+/premium
+/support
+info
+Get a link to the support server
+
+Usage
+/support
+Example
+/support
+/setup
+Admin
+admin
+Run the initial setup for Guard-shin
+
+Usage
+/setup
+Example
+/setup
+/config
+Admin
+admin
+View and modify bot configuration
+
+Options
+setting
+(String)
+Setting to configure
+
+value
+(String)
+Value to set
+
+Usage
+/config setting:modlogs value:#mod-logs
+Example
+/config setting:modlogs value:#mod-logs
+/permission
+Admin
+admin
+Configure command permissions for roles
+
+Options
+command
+(String)
+Required
+Command to configure permissions for
+
+role
+(Role)
+Required
+Role to configure permissions for
+
+permission
+(String)
+Required
+Allow or deny permission
+
+Choices:
+Allow
+Deny
+Usage
+/permission command:ban role:@Moderator permission:allow
+Example
+/permission command:ban role:@Moderator permission:allow
+/reset
+Admin
+admin
+Reset all bot settings to default
+
+Usage
+/reset
+Example
+/reset
+/backup
+Premium
+Admin
+admin
+Create a backup of server settings and configurations
+
+Options
+action
+(String)
+Required
+Action to perform
+
+Choices:
+Create
+Load
+List
+backup_id
+(String)
+ID of the backup (required for load)
+
+Usage
+/backup action:create
+Example
+/backup action:create
+This command is exclusive to Guard-shin Premium subscribers
+/banlist
+Premium
+Admin
+admin
+View, import, or export the server ban list
+
+Options
+action
+(String)
+Required
+Action to perform
+
+Choices:
+View
+Import
+Export
+Usage
+/banlist action:view
+Example
+/banlist action:view
+This command is exclusive to Guard-shin Premium subscribers
+/verification
+Premium
+Admin
+admin
+Set up member verification system
+
+Options
+action
+(String)
+Required
+Action to perform
+
+Choices:
+Setup
+Disable
+method
+(String)
+Verification method
+
+Choices:
+Captcha
+Reaction
+Question
+channel
+(Channel)
+Channel for verification
+
+Usage
+/verification action:setup method:captcha channel:#verify
+Example
+/verification action:setup method:captcha channel:#verify
+This command is exclusive to Guard-shin Premium subscribers
