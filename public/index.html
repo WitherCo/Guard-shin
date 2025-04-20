@@ -1,295 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guard-shin Bot Dashboard</title>
-  <style>
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #0f0f0f;
-      color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      position: relative;
-    }
-    
-    .background {
-      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.05;
-      z-index: -1;
-    }
-    
-    header {
-      background-color: #1a1a1a;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #30cfd0;
-    }
-    
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-    
-    .nav-links a {
-      color: #f0f0f0;
-      text-decoration: none;
-      padding: 0.5rem;
-      transition: color 0.3s ease;
-    }
-    
-    .nav-links a:hover {
-      color: #30cfd0;
-    }
-    
-    main {
-      flex: 1;
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    
-    h1 {
-      font-size: 3rem;
-      margin: 1rem 0;
-      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-      max-width: 800px;
-    }
-    
-    .cta {
-      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      font-size: 1.1rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-      margin: 0.5rem;
-    }
-    
-    .cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      width: 100%;
-      margin-top: 3rem;
-    }
-    
-    .feature-card {
-      background-color: #1a1a1a;
-      border-radius: 0.5rem;
-      padding: 2rem;
-      text-align: left;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-    }
-    
-    .feature-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: #30cfd0;
-    }
-    
-    .feature-card p {
-      font-size: 1rem;
-      margin-bottom: 0;
-    }
-    
-    footer {
-      background-color: #1a1a1a;
-      padding: 2rem;
-      text-align: center;
-      margin-top: auto;
-    }
-    
-    footer p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #888;
-    }
-    
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1rem 0;
-    }
-    
-    .footer-links a {
-      color: #f0f0f0;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    
-    .footer-links a:hover {
-      color: #30cfd0;
-    }
-    
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2.5rem;
-      }
-      
-      .features {
-        grid-template-columns: 1fr;
-      }
-      
-      .nav-links {
-        display: none;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard-shin Bot | Advanced Discord Moderation</title>
+    <style>
+        :root {
+            --primary: #8A2BE2;
+            --primary-dark: #6A1CB2;
+            --secondary: #FF6B6B;
+            --background: #121212;
+            --card-bg: #1E1E1E;
+            --text: #FFFFFF;
+            --text-secondary: #B0B0B0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            margin-left: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .cta-button {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .cta-button:hover {
+            background-color: #ff5252;
+        }
+        
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: -webkit-linear-gradient(var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 2px solid var(--primary);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .features {
+            padding: 5rem 0;
+            background-color: #0c0c0c;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+        }
+        
+        .premium {
+            padding: 5rem 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pricing-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .popular {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .pricing-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+        
+        .price small {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .features-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+        
+        footer {
+            background-color: #0a0a0a;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="background"></div>
-  
-  <header>
-    <nav>
-      <div class="logo">
-        Guard-shin
-      </div>
-      <div class="nav-links">
-        <a href="index.html" class="active">Home</a>
-        <a href="commands.html">Commands</a>
-        <a href="documentation.html">Documentation</a>
-        <a href="premium.html">Premium</a>
-        <a href="servers.html">My Servers</a>
-        <a href="welcome.html">Welcome System</a>
-        <a href="analytics.html">Analytics</a>
-        <a href="logs.html">Logs</a>
-        <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a>
-      </div>
-    </nav>
-  </header>
-  
-  <main>
-    <h1>Guard-shin Bot</h1>
-    <p>
-      Advanced Discord moderation and security bot that provides intelligent protection 
-      and management for Discord server environments through comprehensive, user-friendly tools.
-    </p>
-    
-    <div>
-      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008" class="cta">Add to Server</a>
-      <a href="https://discord.gg/g3rFbaW6gw" class="cta">Join Support Server</a>
-    </div>
-    
-    <div class="features">
-      <div class="feature-card">
-        <h3>Auto Moderation</h3>
-        <p>
-          Advanced auto-moderation system with customizable filters, 
-          profanity protection, spam detection, and link scanning.
-        </p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>Raid Protection</h3>
-        <p>
-          Intelligent raid detection and prevention system that automatically 
-          identifies and handles potential raid attempts.
-        </p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>Verification System</h3>
-        <p>
-          Customizable verification process for new members to protect 
-          your server from bots and unwanted users.
-        </p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>Premium Features</h3>
-        <p>
-          Unlock advanced features like custom welcome images, 
-          detailed analytics, auto-response system, and more.
-        </p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>Music Commands</h3>
-        <p>
-          High-quality music playback with support for various sources, 
-          playlists, and advanced audio controls.
-        </p>
-      </div>
-      
-      <div class="feature-card">
-        <h3>Dashboard Integration</h3>
-        <p>
-          Easily configure your server settings through our intuitive 
-          web dashboard without complicated commands.
-        </p>
-      </div>
-    </div>
-  </main>
-  
-  <footer>
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="commands.html">Commands</a>
-      <a href="documentation.html">Documentation</a>
-      <a href="premium.html">Premium</a>
-      <a href="servers.html">My Servers</a>
-      <a href="welcome.html">Welcome System</a>
-      <a href="analytics.html">Analytics</a>
-      <a href="logs.html">Logs</a>
-      <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a>
-      <a href="mailto:support@witherco.org">Contact</a>
-    </div>
-    <p>&copy; 2025 WitherCo. All rights reserved.</p>
-  </footer>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <span>Guard-shin</span>
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#premium">Premium</a></li>
+                    <li><a href="#commands">Commands</a></li>
+                    <li><a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a></li>
+                </ul>
+                <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="cta-button" target="_blank">Add to Discord</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Advanced Discord Moderation and Security Bot</h1>
+            <p>Guard-shin provides intelligent protection for your Discord server with comprehensive, user-friendly moderation and security tools.</p>
+            <div class="btn-group">
+                <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn-primary" target="_blank">Add to Server</a>
+                <a href="#premium" class="btn-secondary">Explore Premium</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Intelligent Auto-Moderation</h3>
+                    <p>Automatically detect and filter spam, inappropriate content, excessive mentions, and other unwanted behavior.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Raid Protection</h3>
+                    <p>Detect and prevent raid attempts with smart verification systems and advanced server lockdown capabilities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Comprehensive Moderation</h3>
+                    <p>Extensive commands for warning, muting, kicking, banning, and managing user infractions with detailed logs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Customizable Commands</h3>
+                    <p>Tailor Guard-shin to your server's needs with customizable prefix, command permissions, and response messages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>User Verification</h3>
+                    <p>Secure your server with customizable verification systems to filter out bots and unwanted users.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Detailed Logs</h3>
+                    <p>Keep track of all moderation actions and server activities with comprehensive logging systems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="premium" id="premium">
+        <div class="container">
+            <h2 class="section-title">Premium Plans</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<small>/month</small></div>
+                    <ul class="features-list">
+                        <li>Basic Moderation Commands</li>
+                        <li>Auto-Moderation</li>
+                        <li>Basic Raid Protection</li>
+                        <li>User Verification</li>
+                        <li>Server Statistics</li>
+                        <li>Community Support</li>
+                    </ul>
+                    <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn-secondary" target="_blank">Get Started</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="popular">Popular</div>
+                    <h3>Premium</h3>
+                    <div class="price">$4.99<small>/month</small></div>
+                    <ul class="features-list">
+                        <li>All Free Features</li>
+                        <li>Advanced Auto-Moderation</li>
+                        <li>Custom Welcome Images</li>
+                        <li>Advanced Server Analytics</li>
+                        <li>Auto-Response System</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Subscribe Now</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Premium+</h3>
+                    <div class="price">$9.99<small>/month</small></div>
+                    <ul class="features-list">
+                        <li>All Premium Features</li>
+                        <li>Music Commands</li>
+                        <li>Exclusive Bot Features</li>
+                        <li>Custom Command Creation</li>
+                        <li>Advanced Analytics Dashboard</li>
+                        <li>24/7 Premium Support</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Subscribe Now</a>
+                </div>
+            </div>
+            <div class="pricing-grid" style="margin-top: 30px;">
+                <div class="pricing-card">
+                    <h3>Lifetime Premium</h3>
+                    <div class="price">$149.99<small>/once</small></div>
+                    <ul class="features-list">
+                        <li>All Premium Features Forever</li>
+                        <li>No Monthly Payments</li>
+                        <li>Future Premium Updates</li>
+                        <li>Lifetime Priority Support</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Buy Once</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Lifetime Premium+</h3>
+                    <div class="price">$249.99<small>/once</small></div>
+                    <ul class="features-list">
+                        <li>All Premium+ Features Forever</li>
+                        <li>No Monthly Payments</li>
+                        <li>Future Premium+ Updates</li>
+                        <li>Lifetime Premium Support</li>
+                        <li>Early Access to New Features</li>
+                    </ul>
+                    <a href="#" class="btn-primary">Buy Once</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#features">Features</a>
+                <a href="#premium">Premium</a>
+                <a href="#">Commands</a>
+                <a href="#">Support</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="social-links">
+                <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Discord</a>
+                <a href="#" target="_blank">Twitter</a>
+                <a href="https://github.com/WitherCo/Guard-shin" target="_blank">GitHub</a>
+            </div>
+            <p class="copyright">© 2025 Guard-shin. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
