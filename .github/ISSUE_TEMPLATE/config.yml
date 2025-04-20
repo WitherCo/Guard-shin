@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Support Server
+    url: https://discord.gg/g3rFbaW6gw
+    about: For quick questions or help, join our Discord server
+  - name: Email Support
+    url: mailto:support@witherco.org
+    about: For private inquiries or account-related issues, contact us via email

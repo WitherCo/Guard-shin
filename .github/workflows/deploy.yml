@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  workflow_dispatch:  # Enables manual triggering from GitHub UI
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build --if-present
+        
+      # Add your deployment steps here
+      # Examples:
+      # - Deploy to server
+      # - Deploy to cloud service
+      # - Generate Docker image and push to registry
+      
+      - name: Deployment placeholder
+        run: echo "Add your deployment commands here"
+        
+      - name: Notify Discord on success
+        if: success()
+        run: |
+          # Add Discord webhook notification command here
+          echo "Deployment successful!"
