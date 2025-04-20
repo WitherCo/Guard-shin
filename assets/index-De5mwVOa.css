@@ -1,0 +1,1 @@
+:root{--bg-primary: #121212;--bg-secondary: #1e1e1e;--text-primary: #ffffff;--text-secondary: #aaaaaa;--brand-primary: #5865f2;--brand-secondary: #404eed;--accent: #5865f2}body{background-color:var(--bg-primary);color:var(--text-primary)}.card,.panel,.sidebar{background-color:var(--bg-secondary)}a,button{color:var(--accent)}*{color-scheme:dark}
