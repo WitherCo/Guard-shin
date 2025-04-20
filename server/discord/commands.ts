@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { 
   Client, 
   ApplicationCommandType, 
@@ -851,3 +852,158 @@ async function handleCommand(interaction: ChatInputCommandInteraction) {
       await interaction.reply({ content: 'Unknown command!', ephemeral: true });
   }
 }
+=======
+import { IStorage } from "../storage";
+import { log } from "../vite";
+
+// In a real implementation, this would be using Discord.js slash commands
+// But for the MVP, we're just mocking the command registration
+
+export function setupCommands(client: any, storage: IStorage) {
+  log("Setting up Discord bot commands");
+  
+  // Register mock commands
+  client.commands.set("help", {
+    name: "help",
+    description: "Shows a list of available commands",
+    execute: async () => {
+      return "Here's a list of commands: /help, /warn, /ban, /kick, /timeout";
+    }
+  });
+  
+  client.commands.set("warn", {
+    name: "warn",
+    description: "Warn a user",
+    execute: async (serverId: string, userId: string, username: string, moderatorId: string, moderatorName: string, reason: string) => {
+      // Create the infraction
+      await storage.createInfraction({
+        serverId,
+        userId,
+        username,
+        moderatorId,
+        moderatorName,
+        type: "WARNING",
+        reason,
+        active: true,
+        metadata: {}
+      });
+      
+      return `User ${username} has been warned for: ${reason}`;
+    }
+  });
+  
+  client.commands.set("timeout", {
+    name: "timeout",
+    description: "Timeout a user for a specified duration",
+    execute: async (serverId: string, userId: string, username: string, moderatorId: string, moderatorName: string, reason: string, duration: number) => {
+      // Create the infraction
+      const expiresAt = new Date(Date.now() + duration * 1000);
+      
+      await storage.createInfraction({
+        serverId,
+        userId,
+        username,
+        moderatorId,
+        moderatorName,
+        type: "TIMEOUT",
+        reason,
+        duration,
+        active: true,
+        expiresAt,
+        metadata: {}
+      });
+      
+      return `User ${username} has been timed out for ${duration / 60} minutes. Reason: ${reason}`;
+    }
+  });
+  
+  client.commands.set("kick", {
+    name: "kick",
+    description: "Kick a user from the server",
+    execute: async (serverId: string, userId: string, username: string, moderatorId: string, moderatorName: string, reason: string) => {
+      // Create the infraction
+      await storage.createInfraction({
+        serverId,
+        userId,
+        username,
+        moderatorId,
+        moderatorName,
+        type: "KICK",
+        reason,
+        active: true,
+        metadata: {}
+      });
+      
+      return `User ${username} has been kicked. Reason: ${reason}`;
+    }
+  });
+  
+  client.commands.set("ban", {
+    name: "ban",
+    description: "Ban a user from the server",
+    execute: async (serverId: string, userId: string, username: string, moderatorId: string, moderatorName: string, reason: string) => {
+      // Create the infraction
+      await storage.createInfraction({
+        serverId,
+        userId,
+        username,
+        moderatorId,
+        moderatorName,
+        type: "BAN",
+        reason,
+        active: true,
+        metadata: {}
+      });
+      
+      return `User ${username} has been banned. Reason: ${reason}`;
+    }
+  });
+  
+  client.commands.set("infractions", {
+    name: "infractions",
+    description: "Show infractions for a user",
+    execute: async (serverId: string, userId: string) => {
+      const userInfractions = await storage.getUserInfractions(serverId, userId);
+      
+      if (userInfractions.length === 0) {
+        return "This user has no infractions.";
+      }
+      
+      // Format infractions for display
+      const formatted = userInfractions.map(inf => 
+        `${inf.type}: ${inf.reason} (by ${inf.moderatorName} on ${inf.createdAt.toLocaleString()})`
+      ).join('\n');
+      
+      return `Infractions for user:\n${formatted}`;
+    }
+  });
+  
+  // Set up a mock interaction handler
+  client.on('interactionCreate', async (interaction: any) => {
+    if (!interaction.isCommand()) return;
+    
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+    
+    try {
+      // Mock executing the command
+      const response = await command.execute(
+        interaction.guildId,
+        interaction.options?.getUser('user')?.id,
+        interaction.options?.getUser('user')?.username,
+        interaction.user.id,
+        interaction.user.username,
+        interaction.options?.getString('reason') || 'No reason provided',
+        interaction.options?.getInteger('duration')
+      );
+      
+      await interaction.reply(response);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply('There was an error executing that command.');
+    }
+  });
+  
+  log("Discord commands setup complete");
+}
+>>>>>>> ae9502e (Add basic UI components and routing for Discord bot.)

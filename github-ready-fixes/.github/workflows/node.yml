@@ -1,0 +1,41 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    # Create package-lock.json if it doesn't exist
+    - name: Create lock file if needed
+      run: |
+        if [ ! -f package-lock.json ]; then
+          echo "Lock file not found, generating with npm install"
+          npm install --package-lock-only
+        fi
+    
+    - name: Install dependencies
+      run: npm ci || npm install
+      
+    - name: Build application
+      run: npm run build --if-present
+      
+    - name: Run type check
+      run: npm run check

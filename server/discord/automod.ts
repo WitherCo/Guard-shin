@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Client, Message, GuildMember } from 'discord.js';
 import { log } from '../vite';
 
@@ -188,3 +189,170 @@ function mockRaidSimulation(guildId: string, guildName: string): void {
   // Notify about raid detection
   log(`[RaidProtection] Potential raid detected in server ${guildName} (${joinCount} joins in 60s)`, 'express');
 }
+=======
+import { IStorage } from "../storage";
+import { log } from "../vite";
+import { Events } from "discord.js";
+
+export function setupAutoMod(client: any, storage: IStorage) {
+  log("Setting up auto-moderation");
+  
+  // In a real implementation, this would listen to Discord message events
+  // and apply the auto-moderation rules
+  
+  client.on(Events.MessageCreate, async (message: any) => {
+    if (message.author.bot) return;
+    
+    const serverId = message.guildId;
+    if (!serverId) return;
+    
+    // Get auto-mod settings for this server
+    const settings = await storage.getAutoModSettings(serverId);
+    if (!settings) return;
+    
+    // Check if the message violates any auto-mod rules
+    if (settings.profanityFilterEnabled) {
+      await checkProfanity(message, settings, storage);
+    }
+    
+    if (settings.linkFilterEnabled) {
+      await checkLinks(message, settings, storage);
+    }
+    
+    if (settings.spamDetectionEnabled) {
+      await checkSpam(message, settings, storage);
+    }
+  });
+  
+  log("Auto-moderation setup complete");
+}
+
+// Mock implementation of the profanity filter
+async function checkProfanity(message: any, settings: any, storage: IStorage) {
+  // In a real implementation, this would check the message content against a list of profanity words
+  const profanityWords = settings.profanityWords || [];
+  
+  const messageContent = message.content.toLowerCase();
+  const containsProfanity = profanityWords.some(word => 
+    messageContent.includes(word.toLowerCase())
+  );
+  
+  if (containsProfanity) {
+    // Create an infraction
+    await storage.createInfraction({
+      serverId: message.guildId,
+      userId: message.author.id,
+      username: message.author.username,
+      moderatorId: "000000000000000000", // Bot ID
+      moderatorName: "WickBot",
+      type: "WARNING",
+      reason: "Profanity detected in message",
+      active: true,
+      metadata: { 
+        automated: true, 
+        trigger: "profanity_filter",
+        content: message.content
+      }
+    });
+    
+    // In a real implementation, this would delete the message
+    // message.delete();
+    log(`[AutoMod] Deleted message from ${message.author.username} for profanity`);
+  }
+}
+
+// Mock implementation of the link filter
+async function checkLinks(message: any, settings: any, storage: IStorage) {
+  // In a real implementation, this would extract URLs from the message and check them
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urls = message.content.match(urlRegex);
+  
+  if (!urls) return;
+  
+  const allowedLinks = settings.allowedLinks || [];
+  const hasDisallowedLink = urls.some(url => {
+    try {
+      const domain = new URL(url).hostname;
+      return !allowedLinks.some(allowed => domain.includes(allowed));
+    } catch {
+      return false;
+    }
+  });
+  
+  if (hasDisallowedLink) {
+    // Create an infraction
+    await storage.createInfraction({
+      serverId: message.guildId,
+      userId: message.author.id,
+      username: message.author.username,
+      moderatorId: "000000000000000000", // Bot ID
+      moderatorName: "WickBot",
+      type: "WARNING",
+      reason: "Disallowed link posted",
+      active: true,
+      metadata: { 
+        automated: true, 
+        trigger: "link_filter",
+        content: message.content
+      }
+    });
+    
+    // In a real implementation, this would delete the message
+    // message.delete();
+    log(`[AutoMod] Deleted message from ${message.author.username} for disallowed link`);
+  }
+}
+
+// Mock implementation of spam detection
+// In a real implementation, we would keep track of recent messages per user
+const userMessageCounts = new Map<string, { count: number, lastMessage: Date }>();
+
+async function checkSpam(message: any, settings: any, storage: IStorage) {
+  const userId = message.author.id;
+  const serverId = message.guildId;
+  const key = `${serverId}-${userId}`;
+  
+  const now = new Date();
+  const userMessages = userMessageCounts.get(key) || { count: 0, lastMessage: now };
+  
+  // Reset counter if it's been longer than the time window
+  const timeWindowMs = (settings.spamTimeWindow || 5) * 1000;
+  if (now.getTime() - userMessages.lastMessage.getTime() > timeWindowMs) {
+    userMessages.count = 0;
+  }
+  
+  // Increment message count
+  userMessages.count++;
+  userMessages.lastMessage = now;
+  userMessageCounts.set(key, userMessages);
+  
+  // Check if user has exceeded threshold
+  if (userMessages.count > (settings.spamThreshold || 5)) {
+    // Create an infraction for timeout
+    await storage.createInfraction({
+      serverId,
+      userId,
+      username: message.author.username,
+      moderatorId: "000000000000000000", // Bot ID
+      moderatorName: "WickBot",
+      type: "TIMEOUT",
+      reason: "Spam detection triggered",
+      duration: 300, // 5 minutes
+      active: true,
+      expiresAt: new Date(now.getTime() + 300 * 1000),
+      metadata: { 
+        automated: true, 
+        trigger: "spam_detection",
+        messageCount: userMessages.count,
+        timeWindow: settings.spamTimeWindow
+      }
+    });
+    
+    // Reset counter after taking action
+    userMessageCounts.delete(key);
+    
+    // In a real implementation, this would timeout the user
+    log(`[AutoMod] Timed out ${message.author.username} for spamming (${userMessages.count} messages in ${settings.spamTimeWindow}s)`);
+  }
+}
+>>>>>>> ae9502e (Add basic UI components and routing for Discord bot.)

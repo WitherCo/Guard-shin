@@ -44,6 +44,7 @@ import SlashCommandsPage from "@/pages/slash-commands";
 import PremiumPage from "@/pages/premium";
 import DiscordLoginPage from "@/pages/discord-login";
 import DiscordSignupPage from "@/pages/discord-signup";
+import NotFound from "@/pages/not-found";
 
 function Router() {
   return (

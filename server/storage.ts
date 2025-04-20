@@ -1,132 +1,84 @@
-import {
-  users, type User, type InsertUser,
-  servers, type Server, type InsertServer,
-  autoModSettings, type AutoModSetting, type InsertAutoModSetting,
-  raidProtectionSettings, type RaidProtectionSetting, type InsertRaidProtectionSetting,
-  infractions, type Infraction, type InsertInfraction,
-  verificationSettings, type VerificationSetting, type InsertVerificationSetting,
-  welcomeMessageSettings, type WelcomeMessageSetting, type InsertWelcomeMessageSetting
-} from "@shared/schema";
-import { DatabaseStorage } from "./database-storage";
+/**
+ * Storage Interface Module
+ * 
+ * This module provides the storage interface for the application.
+ * It defines the interface for data access and provides a concrete implementation.
+ */
 
+import { 
+  User, InsertUser, Server, InsertServer, AutoModSetting, InsertAutoModSetting,
+  RaidProtectionSetting, InsertRaidProtectionSetting, Infraction, InsertInfraction,
+  VerificationSetting, InsertVerificationSetting, WelcomeMessageSetting, InsertWelcomeMessageSetting,
+  UserSubscription, InsertUserSubscription, PaymentTransaction, InsertPaymentTransaction
+} from '@shared/schema';
+import { DatabaseStorage } from './database-storage';
+
+/**
+ * Interface for storage operations
+ */
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   getUserByDiscordId(discordId: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  createDiscordUser(user: any): Promise<User>;
+  createUser(insertUser: InsertUser): Promise<User>;
+  createDiscordUser(userData: any): Promise<User>;
+  updateUser(id: number, userData: Partial<User>): Promise<User | undefined>;
   updateUserTokens(discordId: string, accessToken: string, refreshToken: string): Promise<boolean>;
+  updateUserPassword(id: number, newPassword: string): Promise<boolean>;
   
   // Server methods
   getServer(id: string): Promise<Server | undefined>;
   getServers(): Promise<Server[]>;
-  createServer(server: InsertServer): Promise<Server>;
-  updateServer(id: string, server: Partial<Server>): Promise<Server | undefined>;
+  createServer(insertServer: InsertServer): Promise<Server>;
+  updateServer(id: string, serverUpdate: Partial<Server>): Promise<Server | undefined>;
   deleteServer(id: string): Promise<boolean>;
   
-  // Auto-moderation settings
+  // Auto-moderation settings methods
   getAutoModSettings(serverId: string): Promise<AutoModSetting | undefined>;
   createAutoModSettings(settings: InsertAutoModSetting): Promise<AutoModSetting>;
-  updateAutoModSettings(serverId: string, settings: Partial<AutoModSetting>): Promise<AutoModSetting | undefined>;
+  updateAutoModSettings(serverId: string, settingsUpdate: Partial<AutoModSetting>): Promise<AutoModSetting | undefined>;
   
-  // Raid protection settings
+  // Raid protection settings methods
   getRaidProtectionSettings(serverId: string): Promise<RaidProtectionSetting | undefined>;
   createRaidProtectionSettings(settings: InsertRaidProtectionSetting): Promise<RaidProtectionSetting>;
-  updateRaidProtectionSettings(serverId: string, settings: Partial<RaidProtectionSetting>): Promise<RaidProtectionSetting | undefined>;
+  updateRaidProtectionSettings(serverId: string, settingsUpdate: Partial<RaidProtectionSetting>): Promise<RaidProtectionSetting | undefined>;
   
-  // Infractions
+  // Infractions methods
   getInfractions(serverId: string): Promise<Infraction[]>;
   getInfraction(id: number): Promise<Infraction | undefined>;
   getUserInfractions(serverId: string, userId: string): Promise<Infraction[]>;
   createInfraction(infraction: InsertInfraction): Promise<Infraction>;
-  updateInfraction(id: number, infraction: Partial<Infraction>): Promise<Infraction | undefined>;
+  updateInfraction(id: number, infractionUpdate: Partial<Infraction>): Promise<Infraction | undefined>;
   deleteInfraction(id: number): Promise<boolean>;
   
-  // Verification settings
+  // Verification settings methods
   getVerificationSettings(serverId: string): Promise<VerificationSetting | undefined>;
   createVerificationSettings(settings: InsertVerificationSetting): Promise<VerificationSetting>;
-  updateVerificationSettings(serverId: string, settings: Partial<VerificationSetting>): Promise<VerificationSetting | undefined>;
+  updateVerificationSettings(serverId: string, settingsUpdate: Partial<VerificationSetting>): Promise<VerificationSetting | undefined>;
   
-  // Welcome message settings
+  // Welcome message settings methods
   getWelcomeMessageSettings(serverId: string): Promise<WelcomeMessageSetting | undefined>;
   createWelcomeMessageSettings(settings: InsertWelcomeMessageSetting): Promise<WelcomeMessageSetting>;
-  updateWelcomeMessageSettings(serverId: string, settings: Partial<WelcomeMessageSetting>): Promise<WelcomeMessageSetting | undefined>;
-}
-
-// Using in-memory storage for now, will replace with database storage later
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private servers: Map<string, Server>;
-  private autoModSettings: Map<string, AutoModSetting>;
-  private raidProtectionSettings: Map<string, RaidProtectionSetting>;
-  private infractions: Map<number, Infraction>;
-  private verificationSettings: Map<string, VerificationSetting>;
-  private welcomeMessageSettings: Map<string, WelcomeMessageSetting>;
+  updateWelcomeMessageSettings(serverId: string, settingsUpdate: Partial<WelcomeMessageSetting>): Promise<WelcomeMessageSetting | undefined>;
   
-  private userIdCounter: number;
-  private infractionIdCounter: number;
-  private autoModIdCounter: number;
-  private raidProtectionIdCounter: number;
-  private verificationIdCounter: number;
-  private welcomeMessageIdCounter: number;
-
-  constructor() {
-    this.users = new Map();
-    this.servers = new Map();
-    this.autoModSettings = new Map();
-    this.raidProtectionSettings = new Map();
-    this.infractions = new Map();
-    this.verificationSettings = new Map();
-    this.welcomeMessageSettings = new Map();
-    
-    this.userIdCounter = 1;
-    this.infractionIdCounter = 1;
-    this.autoModIdCounter = 1;
-    this.raidProtectionIdCounter = 1;
-    this.verificationIdCounter = 1;
-    this.welcomeMessageIdCounter = 1;
-  }
-
-  // We're not using the MemStorage implementation, so the methods are left as stubs
-  async getUser(id: number): Promise<User | undefined> { return undefined; }
-  async getUserByUsername(username: string): Promise<User | undefined> { return undefined; }
-  async getUserByDiscordId(discordId: string): Promise<User | undefined> { return undefined; }
-  async createUser(insertUser: InsertUser): Promise<User> { throw new Error("Not implemented"); }
-  async createDiscordUser(user: any): Promise<User> { throw new Error("Not implemented"); }
-  async updateUserTokens(discordId: string, accessToken: string, refreshToken: string): Promise<boolean> { return false; }
-  async getServer(id: string): Promise<Server | undefined> { return undefined; }
-  async getServers(): Promise<Server[]> { return []; }
-  async createServer(server: InsertServer): Promise<Server> { throw new Error("Not implemented"); }
-  async updateServer(id: string, serverUpdate: Partial<Server>): Promise<Server | undefined> { return undefined; }
-  async deleteServer(id: string): Promise<boolean> { return false; }
-  async getAutoModSettings(serverId: string): Promise<AutoModSetting | undefined> { return undefined; }
-  async createAutoModSettings(settings: InsertAutoModSetting): Promise<AutoModSetting> { throw new Error("Not implemented"); }
-  async updateAutoModSettings(serverId: string, settingsUpdate: Partial<AutoModSetting>): Promise<AutoModSetting | undefined> { return undefined; }
-  async getRaidProtectionSettings(serverId: string): Promise<RaidProtectionSetting | undefined> { return undefined; }
-  async createRaidProtectionSettings(settings: InsertRaidProtectionSetting): Promise<RaidProtectionSetting> { throw new Error("Not implemented"); }
-  async updateRaidProtectionSettings(serverId: string, settingsUpdate: Partial<RaidProtectionSetting>): Promise<RaidProtectionSetting | undefined> { return undefined; }
-  async getInfractions(serverId: string): Promise<Infraction[]> { return []; }
-  async getInfraction(id: number): Promise<Infraction | undefined> { return undefined; }
-  async getUserInfractions(serverId: string, userId: string): Promise<Infraction[]> { return []; }
-  async createInfraction(infraction: InsertInfraction): Promise<Infraction> { throw new Error("Not implemented"); }
-  async updateInfraction(id: number, infractionUpdate: Partial<Infraction>): Promise<Infraction | undefined> { return undefined; }
-  async deleteInfraction(id: number): Promise<boolean> { return false; }
-  async getVerificationSettings(serverId: string): Promise<VerificationSetting | undefined> { return undefined; }
-  async createVerificationSettings(settings: InsertVerificationSetting): Promise<VerificationSetting> { throw new Error("Not implemented"); }
-  async updateVerificationSettings(serverId: string, settingsUpdate: Partial<VerificationSetting>): Promise<VerificationSetting | undefined> { return undefined; }
-  async getWelcomeMessageSettings(serverId: string): Promise<WelcomeMessageSetting | undefined> { return undefined; }
-  async createWelcomeMessageSettings(settings: InsertWelcomeMessageSetting): Promise<WelcomeMessageSetting> { throw new Error("Not implemented"); }
-  async updateWelcomeMessageSettings(serverId: string, settingsUpdate: Partial<WelcomeMessageSetting>): Promise<WelcomeMessageSetting | undefined> { return undefined; }
+  // Payment and subscription methods
+  getUserSubscription(userId: number): Promise<UserSubscription | undefined>;
+  getUserSubscriptionByStripeId(stripeSubscriptionId: string): Promise<UserSubscription | undefined>;
+  createUserSubscription(subscription: InsertUserSubscription): Promise<UserSubscription>;
+  updateUserSubscription(id: number, data: Partial<UserSubscription>): Promise<UserSubscription | undefined>;
+  getPaymentTransactionsByUserId(userId: number): Promise<PaymentTransaction[]>;
+  createPaymentTransaction(transaction: InsertPaymentTransaction): Promise<PaymentTransaction>;
+  updatePaymentTransactionByTransactionId(transactionId: string, data: Partial<PaymentTransaction>): Promise<PaymentTransaction | undefined>;
+  
+  // Stripe-related methods
+  updateStripeCustomerId(userId: number, stripeCustomerId: string): Promise<User | undefined>;
+  updateUserStripeInfo(userId: number, data: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User | undefined>;
+  
+  // Password update method
+  updatePassword(id: number, newPassword: string): Promise<boolean>;
 }
 
+// Create and export the storage instance
 export const storage = new DatabaseStorage();
-
-// Initialize sample data
-(async () => {
-  try {
-    await storage.initializeDemoData();
-  } catch (error) {
-    console.error("Failed to initialize sample data:", error);
-  }
-})();

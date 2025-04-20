@@ -1,0 +1,57 @@
+name: Database Migration
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'shared/schema.ts'
+      - 'drizzle.config.ts'
+      - 'migrations/**'
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Create lock file if needed
+      run: |
+        if [ ! -f package-lock.json ]; then
+          echo "Lock file not found, generating with npm install"
+          npm install --package-lock-only
+        fi
+        
+    - name: Install dependencies
+      run: npm ci || npm install
+      
+    - name: Run database migrations
+      run: npm run db:push
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        PGUSER: ${{ secrets.PGUSER }}
+        PGPASSWORD: ${{ secrets.PGPASSWORD }}
+        PGDATABASE: ${{ secrets.PGDATABASE }}
+        PGHOST: ${{ secrets.PGHOST }}
+        PGPORT: ${{ secrets.PGPORT }}
+        
+    - name: Send Discord notification
+      if: always()
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.UPDATE_WEBHOOK_URL }}
+      run: |
+        if [ "$DISCORD_WEBHOOK" != "" ]; then
+          if [ "${{ job.status }}" == "success" ]; then
+            curl -H "Content-Type: application/json" -d '{"username": "GitHub Actions", "content": "Lifeless rose updated: 📊 Database migration successful!"}' $DISCORD_WEBHOOK
+          else
+            curl -H "Content-Type: application/json" -d '{"username": "GitHub Actions", "content": "Lifeless rose updated: ❌ Database migration failed! Check GitHub Actions for details."}' $DISCORD_WEBHOOK
+          fi
+        fi

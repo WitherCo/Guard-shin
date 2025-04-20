@@ -1,0 +1,47 @@
+name: Database Migrations
+
+on:
+  workflow_dispatch:  # Enable manual triggering
+  push:
+    branches: [ main ]
+    paths:
+      - 'shared/schema.ts'
+      - 'migrations/**'
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    
+    # Add environment variables
+    env:
+      NODE_ENV: production
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run database migrations
+        if: ${{ env.DATABASE_URL != '' }}
+        run: npm run db:push
+        
+      - name: Skip migrations (missing database URL)
+        if: ${{ env.DATABASE_URL == '' }}
+        run: echo "Skipping migrations because DATABASE_URL is not set"
+        
+      - name: Notify Discord on success
+        if: success() && env.DATABASE_URL != ''
+        run: |
+          if [[ -n "${{ secrets.UPDATE_WEBHOOK_URL }}" ]]; then
+            curl -H "Content-Type: application/json" -d '{"content": "Lifeless rose updated: Database migrations completed successfully!"}' ${{ secrets.UPDATE_WEBHOOK_URL }}
+          else
+            echo "Discord webhook notification skipped (no webhook URL provided)"
+          fi

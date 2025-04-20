@@ -50,4 +50,8 @@ const TabsContent = React.forwardRef<
 ))
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
+<<<<<<< HEAD
 export { Tabs, TabsList, TabsTrigger, TabsContent }
+=======
+export { Tabs, TabsList, TabsTrigger, TabsContent }
+>>>>>>> ae9502e (Add basic UI components and routing for Discord bot.)

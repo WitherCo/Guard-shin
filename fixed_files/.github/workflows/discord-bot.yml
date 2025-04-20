@@ -1,0 +1,61 @@
+name: Discord Bot Deployment
+
+on:
+  workflow_dispatch:  # Enable manual triggering
+  push:
+    branches: [ main ]
+    paths:
+      - 'bot/**'
+      - 'discord-bot/**'
+
+jobs:
+  deploy-bot:
+    runs-on: ubuntu-latest
+    
+    # Add environment variables
+    env:
+      NODE_ENV: production
+      DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+      GUARD_SHIN_BOT_TOKEN: ${{ secrets.GUARD_SHIN_BOT_TOKEN }}
+      DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+      UPDATE_WEBHOOK_URL: ${{ secrets.UPDATE_WEBHOOK_URL }}
+      
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Verify Discord tokens
+        run: |
+          if [[ -z "$DISCORD_BOT_TOKEN" ]]; then
+            echo "::error::DISCORD_BOT_TOKEN is not set. Please add it to your repository secrets."
+            exit 1
+          fi
+          
+          if [[ -z "$DISCORD_CLIENT_ID" ]]; then
+            echo "::error::DISCORD_CLIENT_ID is not set. Please add it to your repository secrets."
+            exit 1
+          fi
+      
+      - name: Register Discord slash commands
+        run: |
+          echo "Registering Discord slash commands..."
+          # Add your command to register Discord slash commands here
+          # For example: node bot/register-commands.js
+      
+      - name: Notify Discord on success
+        if: success()
+        run: |
+          if [[ -n "$UPDATE_WEBHOOK_URL" ]]; then
+            curl -H "Content-Type: application/json" -d '{"content": "Lifeless rose updated: Discord bot commands updated successfully!"}' "$UPDATE_WEBHOOK_URL"
+          else
+            echo "Discord webhook notification skipped (no webhook URL provided)"
+          fi

@@ -9,7 +9,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
       
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -22,18 +23,108 @@ jobs:
       
       - name: Build
         run: npm run build --if-present
-        
-      # Add your deployment steps here
-      # Examples:
-      # - Deploy to server
-      # - Deploy to cloud service
-      # - Generate Docker image and push to registry
+        env:
+          # Add any environment variables needed for build
+          NODE_ENV: production
       
-      - name: Deployment placeholder
-        run: echo "Add your deployment commands here"
-        
+      # Database migration step
+      - name: Run database migrations
+        if: success()
+        run: npm run db:push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      
+      # Deploy the application
+      - name: Deploy to production server
+        if: success()
+        run: |
+          echo "Deploying application to production server"
+          # Add your deployment commands here
+          # Examples could include: 
+          # - SSH into server and update code
+          # - Deploy to a cloud service like AWS or Azure
+          # - Use a deployment service like Vercel, Netlify, etc.
+      
+      # Restart services after deployment
+      - name: Restart services
+        if: success()
+        run: |
+          echo "Restarting application services"
+          # Add commands to restart your services
+          # For example:
+          # - Restart web server
+          # - Restart Discord bot
+      
+      # Send notification to Discord webhook
       - name: Notify Discord on success
         if: success()
         run: |
-          # Add Discord webhook notification command here
-          echo "Deployment successful!"
+          curl -H "Content-Type: application/json" \
+          -d '{
+            "username": "GitHub Deployment",
+            "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+            "embeds": [{
+              "title": "Deployment Successful 🚀",
+              "description": "Guard-shin has been successfully deployed to production.",
+              "color": 3066993,
+              "fields": [
+                {
+                  "name": "Repository",
+                  "value": "${{ github.repository }}",
+                  "inline": true
+                },
+                {
+                  "name": "Commit",
+                  "value": "${{ github.sha }}",
+                  "inline": true
+                },
+                {
+                  "name": "Author",
+                  "value": "${{ github.actor }}",
+                  "inline": true
+                }
+              ],
+              "footer": {
+                "text": "Guard-shin Deployment System • ${{ github.workflow }}",
+                "icon_url": "https://cdn.discordapp.com/avatars/1361873604882731008/f15ccc1f80e6eb30e8e5ce0535aa3594.png"
+              },
+              "timestamp": "'$(date -u +'%Y-%m-%dT%H:%M:%SZ')'"
+            }]
+          }' ${{ secrets.DISCORD_WEBHOOK_URL }}
+      
+      # Notify Discord on failure
+      - name: Notify Discord on failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{
+            "username": "GitHub Deployment",
+            "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+            "embeds": [{
+              "title": "Deployment Failed ❌",
+              "description": "There was an error deploying Guard-shin to production.",
+              "color": 15158332,
+              "fields": [
+                {
+                  "name": "Repository",
+                  "value": "${{ github.repository }}",
+                  "inline": true
+                },
+                {
+                  "name": "Commit",
+                  "value": "${{ github.sha }}",
+                  "inline": true
+                },
+                {
+                  "name": "Author",
+                  "value": "${{ github.actor }}",
+                  "inline": true
+                }
+              ],
+              "footer": {
+                "text": "Guard-shin Deployment System • ${{ github.workflow }}",
+                "icon_url": "https://cdn.discordapp.com/avatars/1361873604882731008/f15ccc1f80e6eb30e8e5ce0535aa3594.png"
+              },
+              "timestamp": "'$(date -u +'%Y-%m-%dT%H:%M:%SZ')'"
+            }]
+          }' ${{ secrets.DISCORD_WEBHOOK_URL }}

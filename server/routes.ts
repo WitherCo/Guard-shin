@@ -14,7 +14,7 @@ import { z } from "zod";
 import { ZodError } from "zod-validation-error";
 import { disableLockdown, getLockdownStatus } from "./discord/raidProtection";
 import { setupAuth, isAuthenticated } from "./auth";
-import { handleContactFormSubmission } from "./contact";
+import { handleAuthenticatedContact, handlePublicContact } from "./contact";
 import { requestPasswordReset, resetPassword } from "./password-reset";
 import { sendWebhookMessage } from "./webhook";
 import { logUpdate, logFeatureUpdate, logBugFix, forceFlushUpdates } from "./update-logger";
@@ -38,9 +38,21 @@ type DiscordClient = {
   sendGuildMessage: (guildId: string, channelId: string, message: string) => Promise<boolean>;
 };
 
+// Define a stub for the Discord client if it's not provided
+const createStubDiscordClient = (): DiscordClient => {
+  return {
+    isInitialized: false,
+    getGuilds: async () => [],
+    getGuild: async () => null,
+    getMemberCount: async () => 0,
+    sendGuildMessage: async () => false
+  };
+};
+
 export async function registerRoutes(app: Express, discordClient?: DiscordClient): Promise<Server> {
   // Store Discord client for middleware usage
-  const discord = discordClient;
+  const discord = discordClient || createStubDiscordClient();
+  
   // API Routes
   app.get("/api/discord/guilds", isAuthenticated, async (req: Request, res: Response) => {
     try {
@@ -406,375 +418,76 @@ export async function registerRoutes(app: Express, discordClient?: DiscordClient
     }
   });
 
-  // Raid protection settings
-  app.get("/api/servers/:id/raid-protection", async (req: Request, res: Response) => {
-    try {
-      const settings = await storage.getRaidProtectionSettings(req.params.id);
-      if (!settings) {
-        return res.status(404).json({ message: "Raid protection settings not found" });
-      }
-      res.json(settings);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch raid protection settings" });
-    }
-  });
+  // Payment routes
+  app.post("/api/create-payment-intent", isAuthenticated, createPaymentIntent);
+  app.post("/api/create-subscription", isAuthenticated, createSubscription);
+  app.post("/api/webhook", express.raw({ type: 'application/json' }), handleStripeWebhook);
+  app.get("/api/subscriptions/current", isAuthenticated, getUserSubscription);
+  app.get("/api/payments/history", isAuthenticated, getPaymentHistory);
+  app.post("/api/subscriptions/cancel", isAuthenticated, cancelSubscription);
+  app.post("/api/payments/verify", isAuthenticated, manualPaymentVerification);
 
-  app.post("/api/servers/:id/raid-protection", async (req: Request, res: Response) => {
-    try {
-      const server = await storage.getServer(req.params.id);
-      if (!server) {
-        return res.status(404).json({ message: "Server not found" });
-      }
-
-      const validatedData = insertRaidProtectionSettingsSchema.parse({
-        ...req.body,
-        serverId: req.params.id
-      });
-      
-      const existingSettings = await storage.getRaidProtectionSettings(req.params.id);
-      
-      if (existingSettings) {
-        const updated = await storage.updateRaidProtectionSettings(req.params.id, validatedData);
-        return res.json(updated);
-      } else {
-        const created = await storage.createRaidProtectionSettings(validatedData);
-        return res.status(201).json(created);
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid data", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update raid protection settings" });
-    }
-  });
-
-  // Toggle raid lockdown
-  app.post("/api/servers/:id/raid-protection/lockdown", async (req: Request, res: Response) => {
-    try {
-      const raidSettings = await storage.getRaidProtectionSettings(req.params.id);
-      if (!raidSettings) {
-        return res.status(404).json({ message: "Raid protection settings not found" });
-      }
-
-      const lockdownActive = req.body.lockdownActive;
-      if (typeof lockdownActive !== 'boolean') {
-        return res.status(400).json({ message: "Invalid lockdown state" });
-      }
-
-      const updated = await storage.updateRaidProtectionSettings(req.params.id, {
-        lockdownActive,
-        lockdownActivatedAt: lockdownActive ? new Date() : null
-      });
-
-      return res.json(updated);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to toggle lockdown" });
-    }
-  });
-
-  // Infractions
-  app.get("/api/servers/:id/infractions", async (req: Request, res: Response) => {
-    try {
-      const infractions = await storage.getInfractions(req.params.id);
-      res.json(infractions);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch infractions" });
-    }
-  });
-
-  app.get("/api/servers/:id/infractions/:infractionId", async (req: Request, res: Response) => {
-    try {
-      const infractionId = parseInt(req.params.infractionId);
-      if (isNaN(infractionId)) {
-        return res.status(400).json({ message: "Invalid infraction ID" });
-      }
-
-      const infraction = await storage.getInfraction(infractionId);
-      if (!infraction || infraction.serverId !== req.params.id) {
-        return res.status(404).json({ message: "Infraction not found" });
-      }
-
-      res.json(infraction);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch infraction" });
-    }
-  });
-
-  app.post("/api/servers/:id/infractions", async (req: Request, res: Response) => {
-    try {
-      const server = await storage.getServer(req.params.id);
-      if (!server) {
-        return res.status(404).json({ message: "Server not found" });
-      }
-
-      const validatedData = insertInfractionSchema.parse({
-        ...req.body,
-        serverId: req.params.id
-      });
-      
-      const created = await storage.createInfraction(validatedData);
-      return res.status(201).json(created);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid data", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to create infraction" });
-    }
-  });
-
-  app.delete("/api/servers/:id/infractions/:infractionId", async (req: Request, res: Response) => {
-    try {
-      const infractionId = parseInt(req.params.infractionId);
-      if (isNaN(infractionId)) {
-        return res.status(400).json({ message: "Invalid infraction ID" });
-      }
-
-      const infraction = await storage.getInfraction(infractionId);
-      if (!infraction || infraction.serverId !== req.params.id) {
-        return res.status(404).json({ message: "Infraction not found" });
-      }
-
-      await storage.deleteInfraction(infractionId);
-      res.status(204).end();
-    } catch (error) {
-      res.status(500).json({ message: "Failed to delete infraction" });
-    }
-  });
-
-  // Verification settings
-  app.get("/api/servers/:id/verification", async (req: Request, res: Response) => {
-    try {
-      const settings = await storage.getVerificationSettings(req.params.id);
-      if (!settings) {
-        return res.status(404).json({ message: "Verification settings not found" });
-      }
-      res.json(settings);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch verification settings" });
-    }
-  });
-
-  app.post("/api/servers/:id/verification", async (req: Request, res: Response) => {
-    try {
-      const server = await storage.getServer(req.params.id);
-      if (!server) {
-        return res.status(404).json({ message: "Server not found" });
-      }
-
-      const validatedData = insertVerificationSettingsSchema.parse({
-        ...req.body,
-        serverId: req.params.id
-      });
-      
-      const existingSettings = await storage.getVerificationSettings(req.params.id);
-      
-      if (existingSettings) {
-        const updated = await storage.updateVerificationSettings(req.params.id, validatedData);
-        return res.json(updated);
-      } else {
-        const created = await storage.createVerificationSettings(validatedData);
-        return res.status(201).json(created);
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid data", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update verification settings" });
-    }
-  });
-
-  // Welcome message settings
-  app.get("/api/servers/:id/welcome-message", async (req: Request, res: Response) => {
-    try {
-      const settings = await storage.getWelcomeMessageSettings(req.params.id);
-      if (!settings) {
-        return res.status(404).json({ message: "Welcome message settings not found" });
-      }
-      res.json(settings);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch welcome message settings" });
-    }
-  });
-
-  app.post("/api/servers/:id/welcome-message", async (req: Request, res: Response) => {
-    try {
-      const server = await storage.getServer(req.params.id);
-      if (!server) {
-        return res.status(404).json({ message: "Server not found" });
-      }
-
-      const validatedData = insertWelcomeMessageSettingsSchema.parse({
-        ...req.body,
-        serverId: req.params.id
-      });
-      
-      const existingSettings = await storage.getWelcomeMessageSettings(req.params.id);
-      
-      if (existingSettings) {
-        const updated = await storage.updateWelcomeMessageSettings(req.params.id, validatedData);
-        return res.json(updated);
-      } else {
-        const created = await storage.createWelcomeMessageSettings(validatedData);
-        return res.status(201).json(created);
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid data", errors: error.errors });
-      }
-      res.status(500).json({ message: "Failed to update welcome message settings" });
-    }
-  });
-
-  // Contact form submission endpoint - available to both authenticated and unauthenticated users
-  app.post("/api/contact", handleContactFormSubmission);
+  // Contact form
+  app.post("/api/contact/authenticated", isAuthenticated, handleAuthenticatedContact);
+  app.post("/api/contact", handlePublicContact);
   
-  // Update logging routes
-  app.post("/api/updates/log", isAuthenticated, async (req: Request, res: Response) => {
+  // Password reset
+  app.post("/api/request-password-reset", requestPasswordReset);
+  app.post("/api/reset-password", resetPassword);
+  
+  // Update endpoint for admin-only usage
+  app.post("/api/admin/send-update", isAuthenticated, async (req: Request, res: Response) => {
+    const user = req.user as any;
+    
+    // Check if user is admin
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized. Only admins can send updates." });
+    }
+    
+    const { message, type = "general" } = req.body;
+    
+    if (!message) {
+      return res.status(400).json({ message: "Update message is required" });
+    }
+    
     try {
-      // Only allow specific users to post updates
-      const user = req.user as any;
-      // Admin ID check - make sure only admins can log updates
-      const ADMIN_ID = "1259367203346841725"; // fc4life_ Discord ID
-      
-      if (!user?.discordId || user.discordId !== ADMIN_ID) {
-        return res.status(403).json({ error: "Only admin users can log updates" });
+      switch (type) {
+        case "feature":
+          await logFeatureUpdate(message);
+          break;
+        case "bugfix":
+          await logBugFix(message);
+          break;
+        default:
+          await logUpdate(message, "admin");
       }
       
-      const { message, component = 'system' } = req.body;
-      
-      if (!message) {
-        return res.status(400).json({ error: "Update message is required" });
-      }
-      
-      await logUpdate(message, component);
-      
-      return res.json({ success: true, message: "Update logged successfully" });
+      res.json({ message: "Update sent successfully" });
     } catch (error) {
-      console.error("Error logging update:", error);
-      return res.status(500).json({ error: "Failed to log update" });
+      console.error("Error sending update:", error);
+      res.status(500).json({ message: "Failed to send update" });
     }
   });
   
-  app.post("/api/updates/feature", isAuthenticated, async (req: Request, res: Response) => {
-    try {
-      // Only allow specific users to post updates
-      const user = req.user as any;
-      // Admin ID check - make sure only admins can log updates
-      const ADMIN_ID = "1259367203346841725"; // fc4life_ Discord ID
-      
-      if (!user?.discordId || user.discordId !== ADMIN_ID) {
-        return res.status(403).json({ error: "Only admin users can log feature updates" });
-      }
-      
-      const { feature, description } = req.body;
-      
-      if (!feature || !description) {
-        return res.status(400).json({ error: "Feature name and description are required" });
-      }
-      
-      await logFeatureUpdate(feature, description);
-      
-      return res.json({ success: true, message: "Feature update logged successfully" });
-    } catch (error) {
-      console.error("Error logging feature update:", error);
-      return res.status(500).json({ error: "Failed to log feature update" });
+  app.post("/api/admin/force-flush-updates", isAuthenticated, async (req: Request, res: Response) => {
+    const user = req.user as any;
+    
+    // Check if user is admin
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized. Only admins can flush updates." });
     }
-  });
-  
-  app.post("/api/updates/bugfix", isAuthenticated, async (req: Request, res: Response) => {
+    
     try {
-      // Only allow specific users to post updates
-      const user = req.user as any;
-      // Admin ID check - make sure only admins can log updates
-      const ADMIN_ID = "1259367203346841725"; // fc4life_ Discord ID
-      
-      if (!user?.discordId || user.discordId !== ADMIN_ID) {
-        return res.status(403).json({ error: "Only admin users can log bug fixes" });
-      }
-      
-      const { description } = req.body;
-      
-      if (!description) {
-        return res.status(400).json({ error: "Bug fix description is required" });
-      }
-      
-      await logBugFix(description);
-      
-      return res.json({ success: true, message: "Bug fix logged successfully" });
-    } catch (error) {
-      console.error("Error logging bug fix:", error);
-      return res.status(500).json({ error: "Failed to log bug fix" });
-    }
-  });
-
-  // Added command bug fix endpoint for internal use (no auth required)
-  app.post("/api/internal/command-fix", async (req: Request, res: Response) => {
-    try {
-      const { description = "Fixed duplicate slash command registration issue in Discord commands" } = req.body;
-      
-      // Log the bug fix
-      await logBugFix(description);
-      
-      // Force flush updates to ensure they're sent immediately
       await forceFlushUpdates();
-      
-      return res.json({ success: true, message: "Command bug fix logged successfully" });
+      res.json({ message: "Updates flushed successfully" });
     } catch (error) {
-      console.error("Error logging command bug fix:", error);
-      return res.status(500).json({ error: "Failed to log command bug fix" });
+      console.error("Error flushing updates:", error);
+      res.status(500).json({ message: "Failed to flush updates" });
     }
   });
   
-  // Password reset endpoints - available to unauthenticated users
-  app.post("/api/auth/forgot-password", requestPasswordReset);
-  app.post("/api/auth/reset-password", resetPassword);
-  
-  // Webhook message endpoint - available to both authenticated and unauthenticated users
-  app.post("/api/webhook/send", sendWebhookMessage);
-  
-  // Payment routes for premium features
-  app.post("/api/payments/create-payment-intent", isAuthenticated, createPaymentIntent);
-  app.post("/api/payments/create-subscription", isAuthenticated, createSubscription);
-  app.post("/api/stripe/webhook", express.raw({ type: 'application/json' }), handleStripeWebhook);
-  app.get("/api/user/subscription", isAuthenticated, getUserSubscription);
-  app.get("/api/user/payment-history", isAuthenticated, getPaymentHistory);
-  app.post("/api/user/subscription/:subscriptionId/cancel", isAuthenticated, cancelSubscription);
-  app.post("/api/payments/manual-verification", isAuthenticated, manualPaymentVerification);
-  
-  // Push database schema changes for payments
-  pushPaymentSchemaChanges().catch(err => console.error("Error pushing payment schema changes:", err));
-  
-  // Log the Stripe integration announcement
-  logFeatureUpdate("Stripe payment integration coming soon for premium features", "Premium subscriptions")
-    .catch(err => console.error("Error logging Stripe update:", err));
-  
-  // Test endpoint for update logger - for development only
-  app.post("/api/test/update-logger", async (req: Request, res: Response) => {
-    try {
-      const { message = "Test update", component = "test" } = req.body;
-      
-      // Log a test update
-      await logUpdate(message, component);
-      
-      // Log a test feature update
-      await logFeatureUpdate("Test Feature", "Testing the batched update system");
-      
-      // Log a test bug fix
-      await logBugFix("Fixed an issue with the update logger system");
-      
-      // Force flush updates immediately
-      await forceFlushUpdates();
-      
-      return res.json({ 
-        success: true, 
-        message: "Test updates logged and flushed successfully" 
-      });
-    } catch (error) {
-      console.error("Error in test update endpoint:", error);
-      return res.status(500).json({ error: "Failed to log test updates" });
-    }
-  });
-
+  // Create server for HTTP and WebSocket
   const httpServer = createServer(app);
+
   return httpServer;
 }
