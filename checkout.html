@@ -479,22 +479,26 @@
         'basic': {
           title: 'Basic Plan',
           price: '$4.99/month',
-          description: 'Essential protection for small communities'
+          description: 'Essential protection for small communities',
+          stripeLink: 'https://buy.stripe.com/9AQ01MeWf41y3cY8wx'
         },
         'standard': {
           title: 'Standard Plan',
           price: '$7.99/month',
-          description: 'Advanced moderation tools for medium-sized servers'
+          description: 'Advanced moderation tools for medium-sized servers',
+          stripeLink: 'https://buy.stripe.com/dR6bKudSb41y6pa9AC'
         },
         'premium': {
           title: 'Premium Plan',
           price: '$9.99/month',
-          description: 'Advanced features for growing communities'
+          description: 'Advanced features for growing communities',
+          stripeLink: 'https://buy.stripe.com/fZe7ueeWfeGcbJu5kn'
         },
         'enterprise': {
           title: 'Enterprise Plan',
           price: '$24.99/month',
-          description: 'Complete solution for large servers and communities'
+          description: 'Complete solution for large servers and communities',
+          stripeLink: 'https://buy.stripe.com/fZe01MbK3eGc4h23cg'
         }
       };
       
@@ -503,21 +507,18 @@
         planTitle.textContent = plans[plan].title;
         planPrice.textContent = plans[plan].price;
         planDescription.textContent = plans[plan].description;
+        
+        // Update Stripe payment link
+        const stripeButton = document.querySelector('[data-payment="stripe"]');
+        if (stripeButton && plans[plan].stripeLink) {
+          stripeButton.setAttribute('href', plans[plan].stripeLink);
+        }
       } else {
         // Default to premium if plan not found
         planTitle.textContent = plans['premium'].title;
         planPrice.textContent = plans['premium'].price;
         planDescription.textContent = plans['premium'].description;
       }
-      
-      // Update all payment buttons to include the correct plan parameter
-      document.querySelectorAll('.btn-purchase').forEach(button => {
-        const payment = button.getAttribute('data-payment');
-        const currentHref = button.getAttribute('href');
-        if (currentHref && currentHref.includes('?')) {
-          button.setAttribute('href', currentHref.split('?')[0] + '?plan=' + plan + '&payment=' + payment);
-        }
-      });
       
       // Update the "I've Completed My Payment" buttons to include the correct plan
       document.querySelectorAll('.btn.outline').forEach(button => {
@@ -530,9 +531,6 @@
           button.setAttribute('href', 'payment-success.html?plan=' + plan + '&payment=' + payment);
         }
       });
-      
-      // We don't need the Stripe integration for our showcase
-      // These buttons already handle redirection to the payment success page
     });
   </script>
 </body>
