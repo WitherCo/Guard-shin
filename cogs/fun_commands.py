@@ -734,17 +734,10 @@ class FunCommands(commands.Cog):
         # Add spongebob meme reference
         embed.set_thumbnail(url="https://i.imgur.com/dTwPZys.jpg")
         
-        await ctx.send(embed=embed)
-        
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(FunCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(FunCommands(bot))
+        await ctx.send(embed=embed)))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = FunCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[FunCommands.__name__] = FunCommands(bot)
