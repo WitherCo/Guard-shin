@@ -468,14 +468,40 @@
       const planPrice = document.getElementById('plan-price');
       const planDescription = document.getElementById('plan-description');
       
-      if (plan === 'premium') {
-        planTitle.textContent = 'Premium Plan';
-        planPrice.textContent = '$9.99/month';
-        planDescription.textContent = 'Advanced features for growing communities';
+      // Define all plan options
+      const plans = {
+        'basic': {
+          title: 'Basic Plan',
+          price: '$4.99/month',
+          description: 'Essential protection for small communities'
+        },
+        'standard': {
+          title: 'Standard Plan',
+          price: '$7.99/month',
+          description: 'Advanced moderation tools for medium-sized servers'
+        },
+        'premium': {
+          title: 'Premium Plan',
+          price: '$9.99/month',
+          description: 'Advanced features for growing communities'
+        },
+        'enterprise': {
+          title: 'Enterprise Plan',
+          price: '$24.99/month',
+          description: 'Complete solution for large servers and communities'
+        }
+      };
+      
+      // Update plan details based on selected plan
+      if (plans[plan]) {
+        planTitle.textContent = plans[plan].title;
+        planPrice.textContent = plans[plan].price;
+        planDescription.textContent = plans[plan].description;
       } else {
-        planTitle.textContent = 'Enterprise Plan';
-        planPrice.textContent = '$24.99/month';
-        planDescription.textContent = 'Complete solution for large servers and communities';
+        // Default to premium if plan not found
+        planTitle.textContent = plans['premium'].title;
+        planPrice.textContent = plans['premium'].price;
+        planDescription.textContent = plans['premium'].description;
       }
       
       // Update all payment buttons to include the correct plan parameter
@@ -484,6 +510,18 @@
         const currentHref = button.getAttribute('href');
         if (currentHref && currentHref.includes('?')) {
           button.setAttribute('href', currentHref.split('?')[0] + '?plan=' + plan + '&payment=' + payment);
+        }
+      });
+      
+      // Update the "I've Completed My Payment" buttons to include the correct plan
+      document.querySelectorAll('.btn.outline').forEach(button => {
+        const currentHref = button.getAttribute('href');
+        if (currentHref && currentHref.includes('plan=')) {
+          // Extract the payment method from the current href
+          const hrefParams = new URLSearchParams(currentHref.split('?')[1]);
+          const payment = hrefParams.get('payment');
+          // Set the new href with the correct plan
+          button.setAttribute('href', 'payment-success.html?plan=' + plan + '&payment=' + payment);
         }
       });
       
