@@ -714,17 +714,10 @@ class UtilityCommands(commands.Cog):
         # Create color preview
         embed.set_image(url=f"https://dummyimage.com/200x100/{hex_code}/{text_color}&text=+")
         
-        await ctx.send(embed=embed)
-        
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(UtilityCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(UtilityCommands(bot))
+        await ctx.send(embed=embed)))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = UtilityCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[UtilityCommands.__name__] = UtilityCommands(bot)
