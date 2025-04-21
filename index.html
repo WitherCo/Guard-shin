@@ -3,30 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Guard-shin Dashboard</title>
-  <link rel="icon" type="image/png" href="generated-icon.png">
+  <title>Guard-shin - Discord Moderation Bot</title>
+  <link rel="icon" type="image/png" href="./generated-icon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
     :root {
       --color-bg-primary: #0f0f0f;
       --color-bg-secondary: #1a1a1a;
-      --color-bg-tertiary: #252525;
       --color-text-primary: #fff;
-      --color-text-secondary: #ccc;
-      --color-text-tertiary: #999;
       --color-accent-primary: #8249F0;
-      --color-accent-secondary: #7339e0;
-      --color-accent-hover: #9166f4;
-      --color-error: #f04747;
-      --color-success: #43b581;
-      --color-warning: #faa61a;
-      --color-premium: #ffb800;
-      --color-servers: #3b82f6;
-      --color-commands: #10b981;
-      --color-users: #8b5cf6;
-      --color-raids: #ef4444;
-      --border-radius: 8px;
       --transition-speed: 0.3s;
     }
     
@@ -40,550 +26,89 @@
     body {
       background-color: var(--color-bg-primary);
       color: var(--color-text-primary);
-      line-height: 1.6;
       display: flex;
-      min-height: 100vh;
-    }
-    
-    a {
-      color: var(--color-text-primary);
-      text-decoration: none;
-    }
-    
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background-color: #101010;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      padding: 1.5rem 0;
-      display: flex;
-      flex-direction: column;
-      position: fixed;
-      left: 0;
-      top: 0;
-    }
-    
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      padding: 0 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background-color: var(--color-accent-primary);
-      border-radius: 8px;
-      margin-right: 0.75rem;
-    }
-    
-    .logo-text {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--color-accent-primary);
-    }
-    
-    .nav-item {
-      display: flex;
-      align-items: center;
-      padding: 0.75rem 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-secondary);
-      border-left: 3px solid transparent;
-      transition: all var(--transition-speed);
-    }
-    
-    .nav-item:hover {
-      background-color: rgba(130, 73, 240, 0.1);
-      color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
-    }
-    
-    .nav-item.active {
-      background-color: rgba(130, 73, 240, 0.2);
-      color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
-    }
-    
-    .nav-icon {
-      width: 20px;
-      margin-right: 0.75rem;
       text-align: center;
     }
     
-    .nav-text {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .premium-badge {
-      background-color: var(--color-premium);
-      color: #000;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      margin-left: auto;
-      text-transform: uppercase;
-    }
-    
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 0 1.5rem;
-    }
-    
-    .discord-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-accent-primary);
-      color: white;
-      font-weight: 600;
-      padding: 0.75rem;
-      border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed);
-    }
-    
-    .discord-btn:hover {
-      background-color: var(--color-accent-hover);
-    }
-    
-    .discord-icon {
-      margin-right: 0.5rem;
-    }
-    
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      margin-left: 220px;
-      padding: 1.5rem;
-      width: calc(100% - 220px);
-    }
-    
-    .header {
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.5rem 0 2rem;
-    }
-    
-    .notification-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-accent-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
-    /* Welcome Banner */
-    .welcome-banner {
-      background-color: var(--color-accent-primary);
-      border-radius: var(--border-radius);
+    .container {
       padding: 2rem;
-      margin-bottom: 2rem;
     }
     
-    .welcome-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
+    .loading-spinner {
+      border: 4px solid rgba(130, 73, 240, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid var(--color-accent-primary);
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
     }
     
-    .welcome-subtitle {
-      color: rgba(255, 255, 255, 0.85);
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
       margin-bottom: 1.5rem;
+      max-width: 500px;
     }
     
-    .add-server-btn {
-      display: inline-flex;
-      align-items: center;
-      background-color: rgba(255, 255, 255, 0.2);
+    .redirect-link {
+      display: inline-block;
+      background-color: var(--color-accent-primary);
       color: white;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
       font-weight: 600;
-      padding: 0.6rem 1.25rem;
-      border-radius: var(--border-radius);
       transition: background-color var(--transition-speed);
     }
     
-    .add-server-btn:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+    .redirect-link:hover {
+      background-color: #7339e0;
     }
-    
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
+
+    .nav-links {
+      margin-top: 2rem;
     }
-    
-    .stat-card {
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
+
+    .nav-links a {
+      display: inline-block;
+      margin: 0 10px;
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-speed);
     }
-    
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-      font-size: 1.25rem;
-    }
-    
-    .servers-icon {
-      background-color: rgba(59, 130, 246, 0.2);
-      color: var(--color-servers);
-    }
-    
-    .commands-icon {
-      background-color: rgba(16, 185, 129, 0.2);
-      color: var(--color-commands);
-    }
-    
-    .users-icon {
-      background-color: rgba(139, 92, 246, 0.2);
-      color: var(--color-users);
-    }
-    
-    .raids-icon {
-      background-color: rgba(239, 68, 68, 0.2);
-      color: var(--color-raids);
-    }
-    
-    .stat-info {
-      flex: 1;
-    }
-    
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--color-text-tertiary);
-      margin-bottom: 0.25rem;
-    }
-    
-    .stat-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-    }
-    
-    /* Features Section */
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.25rem;
-    }
-    
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-    }
-    
-    .feature-card {
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      height: 100%;
-    }
-    
-    .feature-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    
-    .feature-description {
-      font-size: 0.9rem;
-      color: var(--color-text-tertiary);
-      margin-bottom: 0.75rem;
-    }
-    
-    .feature-footer {
-      display: flex;
-      align-items: center;
-      font-size: 0.85rem;
-    }
-    
-    .feature-status {
-      color: var(--color-text-tertiary);
-    }
-    
-    .premium-label {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-    }
-    
-    .premium-text {
-      font-size: 0.85rem;
-      color: var(--color-premium);
-      margin-right: 0.25rem;
-    }
-    
-    /* Responsive Adjustments */
-    @media (max-width: 1200px) {
-      .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 64px;
-        padding: 1rem 0;
-      }
-      
-      .logo-text,
-      .nav-text,
-      .premium-badge {
-        display: none;
-      }
-      
-      .sidebar-logo {
-        justify-content: center;
-        padding: 0;
-      }
-      
-      .logo-icon {
-        margin-right: 0;
-      }
-      
-      .nav-item {
-        justify-content: center;
-        padding: 0.75rem;
-      }
-      
-      .nav-icon {
-        margin-right: 0;
-      }
-      
-      .discord-btn {
-        padding: 0.75rem;
-        justify-content: center;
-      }
-      
-      .discord-icon {
-        margin-right: 0;
-      }
-      
-      .main-content {
-        margin-left: 64px;
-        width: calc(100% - 64px);
-      }
-      
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
+
+    .nav-links a:hover {
+      color: var(--color-accent-primary);
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon"></div>
-      <div class="logo-text">Guard-shin</div>
+  <div class="container">
+    <div class="loading-spinner"></div>
+    <h1>Guard-shin Discord Bot</h1>
+    <p>Advanced moderation and security for your Discord server. Add to your server now to improve moderation and security.</p>
+    <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" target="_blank" class="redirect-link">Add to Server</a>
+    
+    <div class="nav-links">
+      <a href="./modern_dashboard.html">Dashboard</a>
+      <a href="./modern_commands.html">Commands</a>
+      <a href="./modern_premium.html">Premium</a>
+      <a href="./modern_support.html">Support</a>
+      <a href="./modern_settings.html">Settings</a>
     </div>
-    
-    <nav class="sidebar-nav">
-      <a href="modern_dashboard.html" class="nav-item active">
-        <div class="nav-icon"><i class="fas fa-home"></i></div>
-        <div class="nav-text">Dashboard</div>
-      </a>
-      
-      <a href="modern_commands.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
-        <div class="nav-text">Commands</div>
-      </a>
-      
-      <a href="modern_premium.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-crown"></i></div>
-        <div class="nav-text">Premium</div>
-      </a>
-      
-      <a href="support.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
-        <div class="nav-text">Support</div>
-      </a>
-    </nav>
-    
-    <div class="sidebar-footer">
-      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
-        <span class="discord-icon"><i class="fas fa-plus"></i></span>
-        <span>Add to Discord</span>
-      </a>
-    </div>
-  </aside>
-  
-  <!-- Main Content -->
-  <main class="main-content">
-    <header class="header">
-      <div class="notification-icon">
-        <i class="fas fa-bell"></i>
-      </div>
-      <div class="user-avatar">
-        U
-      </div>
-    </header>
-    
-    <!-- Welcome Banner -->
-    <section class="welcome-banner">
-      <h1 class="welcome-title">Welcome to Guard-shin Dashboard</h1>
-      <p class="welcome-subtitle">Advanced Discord moderation and security bot with intelligent protection</p>
-      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-server-btn" target="_blank" rel="noopener noreferrer">
-        Add to Server
-      </a>
-    </section>
-    
-    <!-- Stats Grid -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon servers-icon">
-          <i class="fas fa-server"></i>
-        </div>
-        <div class="stat-info">
-          <div class="stat-label">Servers Protected</div>
-          <div class="stat-value">3</div>
-        </div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon commands-icon">
-          <i class="fas fa-terminal"></i>
-        </div>
-        <div class="stat-info">
-          <div class="stat-label">Commands Executed</div>
-          <div class="stat-value">12655</div>
-        </div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon users-icon">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-info">
-          <div class="stat-label">Users Protected</div>
-          <div class="stat-value">572</div>
-        </div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon raids-icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <div class="stat-info">
-          <div class="stat-label">Raids Prevented</div>
-          <div class="stat-value">935</div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Features Section -->
-    <section class="features-section">
-      <h2 class="section-title">Features</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3 class="feature-title">Auto-Moderation</h3>
-          <p class="feature-description">Automatically moderate your server with customizable rules</p>
-          <div class="feature-footer">
-            <div class="feature-status">Available for all servers</div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Raid Protection</h3>
-          <p class="feature-description">Advanced protection against raid attacks</p>
-          <div class="feature-footer">
-            <div class="feature-status">Premium Feature</div>
-            <div class="premium-label">
-              <span class="premium-text">PRO</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Verification System</h3>
-          <p class="feature-description">Keep your server secure with user verification</p>
-          <div class="feature-footer">
-            <div class="feature-status">Available for all servers</div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Welcome Messages</h3>
-          <p class="feature-description">Customize welcome messages for new members</p>
-          <div class="feature-footer">
-            <div class="feature-status">Premium Feature</div>
-            <div class="premium-label">
-              <span class="premium-text">PRO</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Music Player</h3>
-          <p class="feature-description">Play music in your voice channels</p>
-          <div class="feature-footer">
-            <div class="feature-status">Available for all servers</div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Advanced Analytics</h3>
-          <p class="feature-description">Detailed insights about your server activity</p>
-          <div class="feature-footer">
-            <div class="feature-status">Premium Feature</div>
-            <div class="premium-label">
-              <span class="premium-text">PRO</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Custom Commands</h3>
-          <p class="feature-description">Create your own commands for your server</p>
-          <div class="feature-footer">
-            <div class="feature-status">Available for all servers</div>
-          </div>
-        </div>
-        
-        <div class="feature-card">
-          <h3 class="feature-title">Ticket System</h3>
-          <p class="feature-description">Support ticket system for your server</p>
-          <div class="feature-footer">
-            <div class="feature-status">Premium Feature</div>
-            <div class="premium-label">
-              <span class="premium-text">PRO</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+  </div>
 </body>
 </html>

@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Guard-shin</title>
+  <link rel="icon" type="image/png" href="generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --color-bg-primary: #0f0f0f;
+      --color-bg-secondary: #1a1a1a;
+      --color-bg-tertiary: #252525;
+      --color-text-primary: #fff;
+      --color-text-secondary: #ccc;
+      --color-text-tertiary: #999;
+      --color-accent-primary: #8249F0;
+      --color-accent-secondary: #7339e0;
+      --color-accent-hover: #9166f4;
+      --color-error: #f04747;
+      --color-success: #43b581;
+      --color-warning: #faa61a;
+      --color-premium: #ffb800;
+      --color-border: #333;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    body {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #101010;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--color-accent-primary);
+      border-radius: 8px;
+      margin-right: 0.75rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+      border-left: 3px solid transparent;
+      transition: all var(--transition-speed);
+    }
+    
+    .nav-item:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-item.active {
+      background-color: rgba(130, 73, 240, 0.2);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-icon {
+      width: 20px;
+      margin-right: 0.75rem;
+      text-align: center;
+    }
+    
+    .nav-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .premium-badge {
+      background-color: var(--color-premium);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0 1.5rem;
+    }
+    
+    .discord-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+    }
+    
+    .discord-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .discord-icon {
+      margin-right: 0.5rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 220px;
+      padding: 1.5rem;
+      width: calc(100% - 220px);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.5rem 0 2rem;
+    }
+    
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Settings Header */
+    .settings-header {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .settings-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .settings-title-icon {
+      margin-right: 0.75rem;
+      font-size: 1.5rem;
+      color: var(--color-accent-primary);
+    }
+    
+    .settings-description {
+      color: var(--color-text-secondary);
+      max-width: 80%;
+    }
+    
+    /* Server Selector */
+    .server-selector {
+      display: flex;
+      align-items: center;
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.5rem 1rem;
+      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+    }
+    
+    .server-selector:hover {
+      background-color: var(--color-bg-primary);
+    }
+    
+    .server-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+    
+    .server-name {
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .server-dropdown-icon {
+      color: var(--color-text-tertiary);
+    }
+    
+    /* Tabs */
+    .settings-tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .settings-tab {
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+      color: var(--color-text-secondary);
+      transition: color var(--transition-speed);
+    }
+    
+    .settings-tab:hover {
+      color: var(--color-text-primary);
+    }
+    
+    .settings-tab.active {
+      color: var(--color-accent-primary);
+    }
+    
+    .settings-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--color-accent-primary);
+    }
+    
+    /* Settings Sections */
+    .settings-section {
+      display: none;
+    }
+    
+    .settings-section.active {
+      display: block;
+    }
+    
+    .settings-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .settings-card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .settings-card-title-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: rgba(130, 73, 240, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+      color: var(--color-accent-primary);
+      font-size: 0.75rem;
+    }
+    
+    .settings-form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .settings-form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    .settings-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .settings-description {
+      font-size: 0.9rem;
+      color: var(--color-text-tertiary);
+      margin-bottom: 0.75rem;
+    }
+    
+    .settings-input {
+      width: 100%;
+      background-color: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .settings-input:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .settings-select {
+      position: relative;
+    }
+    
+    .settings-select-input {
+      width: 100%;
+      background-color: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      appearance: none;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .settings-select-input:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .settings-select-arrow {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-tertiary);
+      pointer-events: none;
+    }
+    
+    /* Toggle Switch */
+    .toggle-switch {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .toggle-label {
+      margin-left: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .toggle-switch input {
+      display: none;
+    }
+    
+    .toggle-slider {
+      position: relative;
+      width: 48px;
+      height: 24px;
+      background-color: var(--color-bg-tertiary);
+      border-radius: 12px;
+      transition: background-color var(--transition-speed);
+    }
+    
+    .toggle-slider:before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      bottom: 4px;
+      width: 16px;
+      height: 16px;
+      background-color: var(--color-text-tertiary);
+      border-radius: 50%;
+      transition: transform var(--transition-speed), background-color var(--transition-speed);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: var(--color-accent-primary);
+    }
+    
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(24px);
+      background-color: white;
+    }
+    
+    /* Buttons */
+    .settings-button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    
+    .settings-button {
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all var(--transition-speed);
+    }
+    
+    .primary-button {
+      background-color: var(--color-accent-primary);
+      color: white;
+      border: none;
+    }
+    
+    .primary-button:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .secondary-button {
+      background-color: transparent;
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+    }
+    
+    .secondary-button:hover {
+      background-color: var(--color-bg-tertiary);
+    }
+    
+    /* Premium Feature Badge */
+    .premium-feature {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-premium);
+      margin-left: 0.75rem;
+    }
+    
+    .premium-feature-icon {
+      margin-right: 0.25rem;
+    }
+    
+    /* Channel Selector */
+    .channel-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    
+    .channel-option {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      display: flex;
+      align-items: center;
+    }
+    
+    .channel-option:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+    }
+    
+    .channel-option.selected {
+      background-color: rgba(130, 73, 240, 0.2);
+      color: var(--color-accent-primary);
+    }
+    
+    .channel-icon {
+      margin-right: 0.5rem;
+      font-size: 0.85rem;
+    }
+    
+    /* Color Picker */
+    .color-options {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    
+    .color-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      transition: transform var(--transition-speed);
+    }
+    
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+    
+    .color-option.selected::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border: 2px solid var(--color-text-primary);
+      border-radius: 50%;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 64px;
+        padding: 1rem 0;
+      }
+      
+      .logo-text,
+      .nav-text,
+      .premium-badge {
+        display: none;
+      }
+      
+      .sidebar-logo {
+        justify-content: center;
+        padding: 0;
+      }
+      
+      .logo-icon {
+        margin-right: 0;
+      }
+      
+      .nav-item {
+        justify-content: center;
+        padding: 0.75rem;
+      }
+      
+      .nav-icon {
+        margin-right: 0;
+      }
+      
+      .discord-btn {
+        padding: 0.75rem;
+        justify-content: center;
+      }
+      
+      .discord-icon {
+        margin-right: 0;
+      }
+      
+      .main-content {
+        margin-left: 64px;
+        width: calc(100% - 64px);
+      }
+      
+      .settings-description {
+        max-width: 100%;
+      }
+      
+      .settings-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .settings-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      
+      .settings-button-group {
+        flex-direction: column;
+      }
+      
+      .settings-button {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">Guard-shin</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a href="modern_dashboard.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-home"></i></div>
+        <div class="nav-text">Dashboard</div>
+      </a>
+      
+      <a href="modern_commands.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
+        <div class="nav-text">Commands</div>
+      </a>
+      
+      <a href="modern_premium.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-crown"></i></div>
+        <div class="nav-text">Premium</div>
+      </a>
+      
+      <a href="modern_support.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="nav-text">Support</div>
+      </a>
+      
+      <a href="modern_settings.html" class="nav-item active">
+        <div class="nav-icon"><i class="fas fa-cog"></i></div>
+        <div class="nav-text">Settings</div>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
+        <span class="discord-icon"><i class="fas fa-plus"></i></span>
+        <span>Add to Discord</span>
+      </a>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="user-avatar">
+        U
+      </div>
+    </header>
+    
+    <!-- Settings Header -->
+    <section class="settings-header">
+      <h1 class="settings-title">
+        <span class="settings-title-icon"><i class="fas fa-cog"></i></span>
+        Bot Settings
+      </h1>
+      <p class="settings-description">Configure Guard-shin for your server. Customize commands, moderation settings, welcome messages, and more.</p>
+    </section>
+    
+    <!-- Server Selector -->
+    <div class="server-selector">
+      <div class="server-icon">G</div>
+      <div class="server-name">Gaming Community</div>
+      <div class="server-dropdown-icon">
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+    
+    <!-- Settings Tabs -->
+    <div class="settings-tabs">
+      <div class="settings-tab active" data-tab="general">General</div>
+      <div class="settings-tab" data-tab="moderation">Moderation</div>
+      <div class="settings-tab" data-tab="welcome">Welcome Messages</div>
+      <div class="settings-tab" data-tab="logs">Logging</div>
+      <div class="settings-tab" data-tab="automod">Auto-Moderation</div>
+      <div class="settings-tab" data-tab="music">Music Player</div>
+    </div>
+    
+    <!-- General Settings -->
+    <div class="settings-section active" id="general-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-sliders-h"></i></div>
+          Basic Configuration
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Bot Prefix</label>
+          <p class="settings-description">The prefix used to trigger commands in your server.</p>
+          <input type="text" class="settings-input" value="g!" placeholder="Enter a custom prefix">
+          <span class="premium-feature">
+            <i class="fas fa-crown premium-feature-icon"></i>
+            Premium Feature
+          </span>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Command Channel</label>
+          <p class="settings-description">Channel where commands can be used. Leave empty to allow commands in all channels.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="">All Channels</option>
+              <option value="bot-commands">#bot-commands</option>
+              <option value="moderator-only">#moderator-only</option>
+              <option value="general">#general</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Bot Permissions</label>
+          <p class="settings-description">Roles that can use the bot's administrative commands.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="admin">Admin Only</option>
+              <option value="moderator">Moderators and Above</option>
+              <option value="custom">Custom Roles</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-bell"></i></div>
+          Notifications
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Server Join/Leave Notifications</span>
+          </label>
+          <p class="settings-description">Send notifications when users join or leave the server.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Moderation Action Notifications</span>
+          </label>
+          <p class="settings-description">Send notifications when moderation actions are taken.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Bot Update Notifications</span>
+          </label>
+          <p class="settings-description">Send notifications when the bot is updated with new features.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Notification Channel</label>
+          <p class="settings-description">Channel where bot notifications will be sent.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="bot-logs">#bot-logs</option>
+              <option value="moderator-only">#moderator-only</option>
+              <option value="general">#general</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Moderation Settings -->
+    <div class="settings-section" id="moderation-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-gavel"></i></div>
+          Moderation Configuration
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Moderator Roles</label>
+          <p class="settings-description">Roles that can use moderation commands.</p>
+          <div class="settings-select">
+            <select class="settings-select-input" multiple>
+              <option value="admin">Admin</option>
+              <option value="moderator" selected>Moderator</option>
+              <option value="server-guardian">Server Guardian</option>
+              <option value="support">Support Team</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Moderation Log Channel</label>
+          <p class="settings-description">Channel where moderation actions will be logged.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="mod-logs">#mod-logs</option>
+              <option value="bot-logs">#bot-logs</option>
+              <option value="audit-logs">#audit-logs</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Require Reason for Moderation Actions</span>
+          </label>
+          <p class="settings-description">Require moderators to provide a reason when using moderation commands.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">DM Users on Moderation Action</span>
+          </label>
+          <p class="settings-description">Send a direct message to users when they are kicked, banned, or warned.</p>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-user-shield"></i></div>
+          Raid Protection
+          <span class="premium-feature">
+            <i class="fas fa-crown premium-feature-icon"></i>
+            Premium Feature
+          </span>
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Raid Protection</span>
+          </label>
+          <p class="settings-description">Automatically detect and prevent raid attacks on your server.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Raid Protection Level</label>
+          <p class="settings-description">Configure how strictly the bot should respond to potential raids.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="low">Low - Notify Only</option>
+              <option value="medium">Medium - Lockdown Channels</option>
+              <option value="high">High - Lockdown and Auto-Ban</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Raid Alert Channel</label>
+          <p class="settings-description">Channel where raid alerts will be sent.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="raid-alerts">#raid-alerts</option>
+              <option value="mod-logs">#mod-logs</option>
+              <option value="admin-chat">#admin-chat</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Welcome Messages Settings -->
+    <div class="settings-section" id="welcome-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-door-open"></i></div>
+          Welcome Messages
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Welcome Messages</span>
+          </label>
+          <p class="settings-description">Send a message when new users join your server.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Welcome Channel</label>
+          <p class="settings-description">Channel where welcome messages will be sent.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="welcome">#welcome</option>
+              <option value="general">#general</option>
+              <option value="introductions">#introductions</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Welcome Message</label>
+          <p class="settings-description">Message that will be sent when a user joins. Use {user} to mention the user, {server} for server name.</p>
+          <textarea class="settings-input" rows="4">Welcome {user} to {server}! Please read the rules and have a great time!</textarea>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-image"></i></div>
+          Custom Welcome Images
+          <span class="premium-feature">
+            <i class="fas fa-crown premium-feature-icon"></i>
+            Premium Feature
+          </span>
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Custom Welcome Images</span>
+          </label>
+          <p class="settings-description">Generate a personalized welcome image for new members.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Background Image</label>
+          <p class="settings-description">Select a background for welcome images.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="default">Default</option>
+              <option value="abstract">Abstract</option>
+              <option value="gaming">Gaming</option>
+              <option value="nature">Nature</option>
+              <option value="custom">Custom Upload</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Welcome Text Color</label>
+          <p class="settings-description">Choose the color for the welcome text.</p>
+          <div class="color-options">
+            <div class="color-option selected" style="background-color: #ffffff;"></div>
+            <div class="color-option" style="background-color: #8249F0;"></div>
+            <div class="color-option" style="background-color: #43b581;"></div>
+            <div class="color-option" style="background-color: #f04747;"></div>
+            <div class="color-option" style="background-color: #faa61a;"></div>
+            <div class="color-option" style="background-color: #3b82f6;"></div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Welcome Text</label>
+          <p class="settings-description">Text that will appear on the welcome image. Use {user} for username, {server} for server name.</p>
+          <input type="text" class="settings-input" value="Welcome to {server}, {user}!" placeholder="Enter welcome text">
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Logging Settings -->
+    <div class="settings-section" id="logs-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-clipboard-list"></i></div>
+          Log Configuration
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Logging</span>
+          </label>
+          <p class="settings-description">Log events and actions in your server.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Log Channel</label>
+          <p class="settings-description">Channel where logs will be sent.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="server-logs">#server-logs</option>
+              <option value="bot-logs">#bot-logs</option>
+              <option value="admin-logs">#admin-logs</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-filter"></i></div>
+          Event Logging
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Events to Log</label>
+          <p class="settings-description">Select which events should be logged.</p>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Message Edits</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Message Deletions</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Member Joins/Leaves</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Nickname Changes</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Role Changes</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Voice Channel Activity</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Channel Updates</span>
+            </label>
+          </div>
+          
+          <div class="settings-form-group">
+            <label class="toggle-switch">
+              <input type="checkbox">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Server Updates</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Auto-Moderation Settings -->
+    <div class="settings-section" id="automod-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-robot"></i></div>
+          Auto-Moderation Configuration
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Auto-Moderation</span>
+          </label>
+          <p class="settings-description">Automatically moderate messages in your server.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Ignored Channels</label>
+          <p class="settings-description">Channels where auto-moderation will not be applied.</p>
+          <div class="channel-select">
+            <div class="channel-option">
+              <span class="channel-icon"><i class="fas fa-hashtag"></i></span>
+              general
+            </div>
+            <div class="channel-option selected">
+              <span class="channel-icon"><i class="fas fa-hashtag"></i></span>
+              moderator-chat
+            </div>
+            <div class="channel-option selected">
+              <span class="channel-icon"><i class="fas fa-hashtag"></i></span>
+              admin-chat
+            </div>
+            <div class="channel-option">
+              <span class="channel-icon"><i class="fas fa-hashtag"></i></span>
+              memes
+            </div>
+            <div class="channel-option">
+              <span class="channel-icon"><i class="fas fa-hashtag"></i></span>
+              nsfw-memes
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Ignored Roles</label>
+          <p class="settings-description">Roles that will not be affected by auto-moderation.</p>
+          <div class="settings-select">
+            <select class="settings-select-input" multiple>
+              <option value="admin" selected>Admin</option>
+              <option value="moderator" selected>Moderator</option>
+              <option value="server-guardian">Server Guardian</option>
+              <option value="trusted">Trusted Member</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-shield-alt"></i></div>
+          Content Filters
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Profanity Filter</span>
+          </label>
+          <p class="settings-description">Filter messages containing profanity.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Link Filter</span>
+          </label>
+          <p class="settings-description">Filter messages containing links.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Spam Filter</span>
+          </label>
+          <p class="settings-description">Filter spam messages.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Mention Spam Filter</span>
+          </label>
+          <p class="settings-description">Filter messages with excessive mentions.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Maximum Mentions</label>
+          <p class="settings-description">Maximum number of mentions allowed in a single message.</p>
+          <input type="number" class="settings-input" value="5" min="1" max="20">
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Punishment</label>
+          <p class="settings-description">Action to take when auto-moderation is triggered.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="delete">Delete Message</option>
+              <option value="warn">Warn User</option>
+              <option value="mute">Mute User</option>
+              <option value="kick">Kick User</option>
+              <option value="ban">Ban User</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+    
+    <!-- Music Player Settings -->
+    <div class="settings-section" id="music-settings">
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-music"></i></div>
+          Music Player Configuration
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Music Player</span>
+          </label>
+          <p class="settings-description">Allow the bot to play music in voice channels.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">DJ Role</label>
+          <p class="settings-description">Role that can control the music player.</p>
+          <div class="settings-select">
+            <select class="settings-select-input">
+              <option value="everyone">Everyone</option>
+              <option value="dj" selected>DJ</option>
+              <option value="moderator">Moderator</option>
+              <option value="admin">Admin</option>
+            </select>
+            <div class="settings-select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Default Volume</label>
+          <p class="settings-description">Default volume level for music playback (0-100).</p>
+          <input type="number" class="settings-input" value="50" min="0" max="100">
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Announce Songs</span>
+          </label>
+          <p class="settings-description">Announce songs when they start playing.</p>
+        </div>
+      </div>
+      
+      <div class="settings-card">
+        <h2 class="settings-card-title">
+          <div class="settings-card-title-icon"><i class="fas fa-list"></i></div>
+          Playlists
+          <span class="premium-feature">
+            <i class="fas fa-crown premium-feature-icon"></i>
+            Premium Feature
+          </span>
+        </h2>
+        
+        <div class="settings-form-group">
+          <label class="toggle-switch">
+            <input type="checkbox">
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Enable Custom Playlists</span>
+          </label>
+          <p class="settings-description">Allow users to create and save custom playlists.</p>
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Maximum Playlists</label>
+          <p class="settings-description">Maximum number of playlists allowed per server.</p>
+          <input type="number" class="settings-input" value="10" min="1" max="50">
+        </div>
+        
+        <div class="settings-form-group">
+          <label class="settings-label">Maximum Songs per Playlist</label>
+          <p class="settings-description">Maximum number of songs allowed in a playlist.</p>
+          <input type="number" class="settings-input" value="50" min="1" max="200">
+        </div>
+      </div>
+      
+      <div class="settings-button-group">
+        <button class="settings-button secondary-button">Reset to Default</button>
+        <button class="settings-button primary-button">Save Changes</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Tab switching
+      const tabs = document.querySelectorAll('.settings-tab');
+      const sections = document.querySelectorAll('.settings-section');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Get the tab data
+          const tabId = this.getAttribute('data-tab');
+          
+          // Hide all sections
+          sections.forEach(section => section.classList.remove('active'));
+          
+          // Show the selected section
+          document.getElementById(`${tabId}-settings`).classList.add('active');
+        });
+      });
+      
+      // Channel selection
+      const channelOptions = document.querySelectorAll('.channel-option');
+      
+      channelOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          this.classList.toggle('selected');
+        });
+      });
+      
+      // Color selection
+      const colorOptions = document.querySelectorAll('.color-option');
+      
+      colorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove selected class from all color options
+          colorOptions.forEach(o => o.classList.remove('selected'));
+          
+          // Add selected class to clicked option
+          this.classList.add('selected');
+        });
+      });
+      
+      // Save button alert
+      const saveButtons = document.querySelectorAll('.primary-button');
+      
+      saveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('Settings saved successfully!');
+        });
+      });
+      
+      // Reset button alert
+      const resetButtons = document.querySelectorAll('.secondary-button');
+      
+      resetButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          if (confirm('Are you sure you want to reset these settings to default?')) {
+            alert('Settings reset to default!');
+          }
+        });
+      });
+      
+      // Server selector dropdown (for demo purposes)
+      const serverSelector = document.querySelector('.server-selector');
+      
+      serverSelector.addEventListener('click', function() {
+        alert('Server selection dropdown would appear here. This is a demo version.');
+      });
+    });
+  </script>
+</body>
+</html>
