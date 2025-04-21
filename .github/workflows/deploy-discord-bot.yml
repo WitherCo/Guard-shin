@@ -1,0 +1,147 @@
+name: Deploy Discord Bot
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'cogs/**'
+      - 'discord-bot/**'
+      - 'run_bot.py'
+      - '.github/workflows/deploy-discord-bot.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */4 * * *'  # Run every 4 hours to restart the bot regularly
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install discord.py==2.5.2 wavelink==3.2.0 python-dotenv==1.0.0 requests==2.31.0 aiohttp==3.9.1 psutil==5.9.6 python-dateutil==2.8.2 Pillow>=9.0.0 PyNaCl>=1.5.0
+          
+      - name: Prepare bot files
+        run: |
+          # Create directory structure for the bot
+          mkdir -p bot-deployment
+          
+          # Copy the bot code
+          if [ -f "run_bot.py" ]; then
+            cp run_bot.py bot-deployment/run.py
+          else
+            cp discord-bot/run.py bot-deployment/run.py
+          fi
+          
+          # Copy cogs
+          mkdir -p bot-deployment/cogs
+          if [ -d "cogs" ]; then
+            cp -r cogs/* bot-deployment/cogs/
+          elif [ -d "discord-bot/cogs" ]; then
+            cp -r discord-bot/cogs/* bot-deployment/cogs/
+          fi
+          
+          # Create premium_guilds.json if it doesn't exist
+          echo '{"guild_ids": []}' > bot-deployment/premium_guilds.json
+          
+          # Copy deployment files
+          cp discord-bot/Procfile bot-deployment/
+          cp discord-bot/runtime.txt bot-deployment/
+          cp discord-bot/README.md bot-deployment/
+          cp discord-bot/app.json bot-deployment/
+          cp discord-bot/requirements.txt bot-deployment/
+          
+      - name: Test Bot Connection
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GUARD_SHIN_BOT_TOKEN: ${{ secrets.GUARD_SHIN_BOT_TOKEN }}
+        run: |
+          echo "Testing if the bot can connect to Discord"
+          
+          # Simple test script to verify connection
+          cat > bot-deployment/test_connection.py << 'EOL'
+          import asyncio
+          import discord
+          import os
+          import sys
+          
+          class TestBot(discord.Client):
+              async def on_ready(self):
+                  print(f'Successfully connected as {self.user}')
+                  await self.close()
+          
+          async def main():
+              intents = discord.Intents.default()
+              client = TestBot(intents=intents)
+              token = os.getenv('DISCORD_BOT_TOKEN') or os.getenv('GUARD_SHIN_BOT_TOKEN')
+              if not token:
+                  print("ERROR: No Discord token found in environment variables")
+                  sys.exit(1)
+              try:
+                  await client.start(token)
+              except discord.errors.LoginFailure:
+                  print("ERROR: Invalid Discord token")
+                  sys.exit(1)
+          
+          asyncio.run(main())
+          EOL
+          
+          cd bot-deployment
+          python test_connection.py
+          
+      - name: Deploy to GitHub
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create a startup script
+          cat > bot-deployment/start.sh << 'EOL'
+          #!/bin/bash
+          python run.py
+          EOL
+          
+          chmod +x bot-deployment/start.sh
+          
+          # Commit the bot code to a dedicated bot branch
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # Create a clean branch for deployment
+          git checkout --orphan discord-bot-deployment
+          git rm -rf .
+          
+          # Copy all files from bot-deployment directory
+          cp -r bot-deployment/* .
+          
+          # Add all files
+          git add .
+          
+          # Commit and push
+          git commit -m "Deploy Discord bot $(date -u +'%Y-%m-%d %H:%M:%S')"
+          git push -f origin discord-bot-deployment
+          
+          echo "✅ Bot code deployed to discord-bot-deployment branch"
+          echo "You can now set up a service like Heroku, Render, or DigitalOcean App Platform"
+          echo "to run the bot using this branch as the source."
+          
+      - name: Run Bot (temporary for testing)
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          GUARD_SHIN_BOT_TOKEN: ${{ secrets.GUARD_SHIN_BOT_TOKEN }}
+        run: |
+          echo "Starting the bot for a brief test run..."
+          cd bot-deployment
+          
+          # Run the bot with timeout to ensure workflow completes
+          timeout 2m python run.py || true
+          
+          echo "Bot test run complete. For permanent deployment,"
+          echo "please connect a service like Heroku or Render to the discord-bot-deployment branch."

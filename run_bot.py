@@ -1,216 +1,224 @@
-import os
 import discord
 from discord.ext import commands
-from discord import app_commands
-import asyncio
-import datetime
+import os
 import logging
+import datetime
+import json
+import asyncio
+import random
 import sys
-import time
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler()
-    ]
-)
+# Set up logging
 logger = logging.getLogger('guard-shin')
+logger.setLevel(logging.INFO)
+handler = logging.FileHandler(filename='guard-shin.log', encoding='utf-8', mode='a')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
-# Get token directly from environment
-TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+# Also log to console
+console = logging.StreamHandler()
+console.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(console)
+
+# Status messages for the bot to cycle through
+STATUS_MESSAGES = [
+    "Protecting servers!",
+    "Type g!help for commands",
+    "Visit witherco.github.io/Guard-shin",
+    "Premium features available!",
+    "Music, moderation, security, and more!"
+]
 
 class HelpCog(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
         self._original_help_command = bot.help_command
-        bot.help_command = commands.DefaultHelpCommand(
-            no_category="Commands", 
-            sort_commands=True,
-            command_attrs={"hidden": False}
-        )
+        bot.help_command = commands.DefaultHelpCommand()
         bot.help_command.cog = self
-    
+
     def cog_unload(self):
         self.bot.help_command = self._original_help_command
 
 class GuardShin(commands.Bot):
     def __init__(self):
-        # Use message content intent (required for prefix commands)
-        # and guilds/members intents (required for moderation)
-        intents = discord.Intents.default()
-        intents.guilds = True
-        intents.members = True
-        intents.message_content = True
-        
-        # Server prefix storage
-        self.guild_prefixes = {}
-        
+        intents = discord.Intents.all()
         super().__init__(
             command_prefix=self.get_prefix,
             intents=intents,
-            help_command=None,
-            description="Guard-shin: Advanced Discord moderation and security bot"
+            description="Advanced Discord moderation and security bot",
+            activity=discord.Game(name="Starting up...")
         )
         
-        # Sync slash commands on startup
-        self.synced = False
-    
+        # Guild prefixes
+        self.prefixes = {}
+        self.load_prefixes()
+        
+        # Path to commands
+        self.core_commands_path = "bot/python/commands"
+        self.premium_commands_path = "cogs"
+        
+        # Premium servers
+        self.premium_guilds = self.load_premium_guilds()
+        
     async def get_prefix(self, bot, message):
         """Get the appropriate prefix for a guild"""
-        # Default prefix if not in a guild
-        default_prefix = '>'
-        
-        # Use mentions as prefix always
-        prefixes = [f'<@{bot.user.id}> ', f'<@!{bot.user.id}> ']
-        
-        # If DM, only use default and mentions
+        # DM channel has no guild
         if message.guild is None:
-            prefixes.append(default_prefix)
-            return prefixes
-        
-        # Get server-specific prefix if available
+            return commands.when_mentioned_or("g!")(bot, message)
+            
+        # Get custom prefix for this guild, default to "g!"
         guild_id = str(message.guild.id)
-        custom_prefix = self.guild_prefixes.get(guild_id, default_prefix)
-        prefixes.append(custom_prefix)
+        prefix = self.get_guild_prefix(guild_id)
         
-        return prefixes
-    
+        return commands.when_mentioned_or(prefix)(bot, message)
+        
     def set_guild_prefix(self, guild_id, prefix):
         """Set a guild's custom prefix"""
-        guild_id = str(guild_id)
-        self.guild_prefixes[guild_id] = prefix
+        self.prefixes[str(guild_id)] = prefix
         self.save_prefixes()
-        return True
-    
+        
     def get_guild_prefix(self, guild_id):
         """Get a guild's custom prefix"""
-        guild_id = str(guild_id)
-        return self.guild_prefixes.get(guild_id, '>')
-    
+        return self.prefixes.get(str(guild_id), "g!")
+        
+    def load_prefixes(self):
+        """Load guild prefixes from file"""
+        try:
+            if os.path.exists('prefixes.json'):
+                with open('prefixes.json', 'r') as f:
+                    self.prefixes = json.load(f)
+                logger.info(f"Loaded prefixes for {len(self.prefixes)} guilds")
+        except Exception as e:
+            logger.error(f"Error loading prefixes: {e}")
+            self.prefixes = {}
+            
     def save_prefixes(self):
         """Save guild prefixes"""
-        logger.info(f"Saved custom prefixes for {len(self.guild_prefixes)} guilds")
-        # In a real implementation, this would save to a database
+        try:
+            with open('prefixes.json', 'w') as f:
+                json.dump(self.prefixes, f)
+            logger.info(f"Saved prefixes for {len(self.prefixes)} guilds")
+        except Exception as e:
+            logger.error(f"Error saving prefixes: {e}")
+        
+    def load_premium_guilds(self):
+        """Load the list of premium guild IDs"""
+        try:
+            if os.path.exists('premium_guilds.json'):
+                with open('premium_guilds.json', 'r') as f:
+                    data = json.load(f)
+                    premium_guilds = set([int(guild_id) for guild_id in data.get("guild_ids", [])])
+                    logger.info(f"Loaded {len(premium_guilds)} premium guilds")
+                    return premium_guilds
+        except Exception as e:
+            logger.error(f"Error loading premium guilds: {e}")
+        
+        # Set demo server and chill zone as premium by default
+        return {1234567890123456789, 9876543210987654321}  # Replace with actual server IDs
         
     async def setup_hook(self):
         """Initialize modules and tasks when the bot starts"""
-        logger.info("Bot is starting up...")
+        # Load core commands
+        if os.path.exists(self.core_commands_path):
+            for filename in os.listdir(self.core_commands_path):
+                if filename.endswith('.py') and not filename.startswith('_'):
+                    module_name = filename[:-3]  # Remove .py extension
+                    try:
+                        await self.load_extension(f"bot.python.commands.{module_name}")
+                        logger.info(f"Loaded core extension: {module_name}")
+                    except Exception as e:
+                        logger.error(f"Failed to load extension {module_name}: {e}")
+        else:
+            logger.warning(f"Core commands directory not found: {self.core_commands_path}")
         
-        # Load custom prefixes (this would load from a database in a real implementation)
-        # For demonstration purposes, we'll set up a few example prefixes
-        self.guild_prefixes = {
-            '123456789012345678': '.',   # Example guild 1
-            '987654321098765432': '?',   # Example guild 2
-            '876543210987654321': '+'    # Example guild 3
-        }
-        logger.info(f"Loaded {len(self.guild_prefixes)} custom guild prefixes")
-        
-        # Add help command
-        await self.add_cog(HelpCog(self))
-        
-        # Load command modules
-        try:
-            # Utility commands (ping, info, etc.)
-            from bot.python.commands import utility
-            await self.add_cog(utility.Utility(self))
-            logger.info("Loaded utility commands")
-            
-            # Admin commands (prefix, setup, etc.)
-            from bot.python.commands import admin
-            await self.add_cog(admin.Admin(self))
-            logger.info("Loaded admin commands")
-            
-            # Moderation commands (warn, ban, etc.)
-            from bot.python.commands import moderation
-            await self.add_cog(moderation.Moderation(self))
-            logger.info("Loaded moderation commands")
-            
-            # Load verification module
-            from bot.python.moderation import verification
-            await self.add_cog(verification.Verification(self))
-            logger.info("Loaded verification module")
-            
-        except Exception as e:
-            logger.error(f"Error loading modules: {e}")
-        
-        # Start status rotation task
-        self.status_task = self.loop.create_task(self.rotate_status())
+        # Load premium commands
+        if os.path.exists(self.premium_commands_path):
+            for filename in os.listdir(self.premium_commands_path):
+                if filename.endswith('.py') and not filename.startswith('_'):
+                    module_name = filename[:-3]  # Remove .py extension
+                    try:
+                        await self.load_extension(f"cogs.{module_name}")
+                        logger.info(f"Loaded premium extension: {module_name}")
+                    except Exception as e:
+                        logger.error(f"Failed to load premium extension {module_name}: {e}")
+        else:
+            logger.warning(f"Premium commands directory not found: {self.premium_commands_path}")
+                
+        # Start background tasks
+        self.bg_task = self.loop.create_task(self.rotate_status())
+        logger.info("Started background tasks")
         
     async def rotate_status(self):
-        """Rotate bot status regularly between Lifeless Rose statuses"""
+        """Rotate bot status regularly"""
         await self.wait_until_ready()
-        
-        # Status rotation with Guard-shin themed statuses
-        statuses = [
-            (discord.ActivityType.watching, "your server"),
-            (discord.ActivityType.playing, "with moderation"),
-            (discord.ActivityType.listening, "command requests"),
-            (discord.ActivityType.watching, "for rule breakers")
-        ]
-        
         while not self.is_closed():
-            for activity_type, name in statuses:
-                activity = discord.Activity(type=activity_type, name=name)
-                await self.change_presence(activity=activity)
-                logger.info(f"Changed status to: {activity_type.name} {name}")
-                
-                # Wait before changing (2 minutes)
-                await asyncio.sleep(120)
-        
+            status = random.choice(STATUS_MESSAGES)
+            await self.change_presence(activity=discord.Game(name=status))
+            await asyncio.sleep(60)  # Change status every minute
+    
     async def on_ready(self):
         """Event triggered when the bot is fully ready"""
-        logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
-        logger.info(f'Connected to {len(self.guilds)} guilds')
-        logger.info('------')
+        logger.info(f'Logged in as {self.user.name} (ID: {self.user.id})')
+        logger.info(f'Connected to {len(self.guilds)} guilds, serving {sum(g.member_count for g in self.guilds)} users')
         
-        # Sync slash commands if not already done
-        if not self.synced:
-            try:
-                # First sync to specific guilds for faster testing
-                for guild in self.guilds:
-                    try:
-                        # Clear existing commands in the guild first
-                        self.tree.clear_commands(guild=guild)
-                        # Then sync new commands to the guild
-                        await self.tree.sync(guild=guild)
-                        logger.info(f"Slash commands synced to guild: {guild.name}")
-                    except discord.HTTPException as e:
-                        logger.error(f"Failed to sync commands to {guild.name}: {e}")
+        # Save server information to a file
+        try:
+            servers_data = []
+            for guild in self.guilds:
+                # Get moderation actions count (placeholder for now)
+                mod_actions = 0
+                try:
+                    # Count number of audit log entries as a proxy for moderation actions
+                    async for entry in guild.audit_logs(limit=None):
+                        if entry.action.name in ['ban', 'kick', 'mute', 'unban', 'timeout']:
+                            mod_actions += 1
+                except Exception as e:
+                    logger.error(f"Error getting audit logs for {guild.name}: {e}")
                 
-                # Then do a global sync (takes up to an hour to propagate)
-                # Clear existing global commands first
-                self.tree.clear_commands(guild=None)
-                # Then sync new commands globally
-                await self.tree.sync()
-                logger.info("Slash commands synced globally")
+                # Determine plan type (customize as needed)
+                plan_type = "Free"
+                if hasattr(self, 'premium_guilds') and guild.id in getattr(self, 'premium_guilds', set()):
+                    plan_type = "Premium"
                 
-                self.synced = True
-            except Exception as e:
-                logger.error(f"Failed to sync slash commands: {e}")
+                servers_data.append({
+                    "id": str(guild.id),
+                    "name": guild.name,
+                    "icon": str(guild.icon.url) if guild.icon else None,
+                    "members": guild.member_count,
+                    "moderation_actions": mod_actions,
+                    "plan": plan_type
+                })
+            
+            # Save to file for dashboard to read
+            with open('server_data.json', 'w') as f:
+                json.dump({"servers": servers_data}, f)
+            logger.info(f"Saved data for {len(servers_data)} servers")
+        except Exception as e:
+            logger.error(f"Error saving server data: {e}")
         
-        logger.info('Bot is now online with status rotation!')
-
-# Main function to run the bot
+        # Load help command
+        await self.add_cog(HelpCog(self))
+        
 def main():
     """Initialize and run the bot"""
-    if not TOKEN:
-        logger.error("No Discord token provided. Please check your DISCORD_BOT_TOKEN environment variable.")
-        return False
-    
     bot = GuardShin()
     
+    # Get token from environment variable
+    token = os.getenv('DISCORD_BOT_TOKEN') or os.getenv('GUARD_SHIN_BOT_TOKEN')
+    if not token:
+        logger.error("No token found in DISCORD_BOT_TOKEN or GUARD_SHIN_BOT_TOKEN environment variables")
+        print("ERROR: No Discord bot token found. Please set either the DISCORD_BOT_TOKEN or GUARD_SHIN_BOT_TOKEN environment variable.")
+        sys.exit(1)
+        
     try:
-        logger.info("Starting bot...")
-        bot.run(TOKEN)
-        return True
-    except discord.LoginFailure:
-        logger.error("Invalid Discord token. Please check your DISCORD_BOT_TOKEN environment variable.")
-        return False
+        bot.run(token, log_handler=None)  # log_handler=None to avoid duplicate logging
+    except discord.errors.LoginFailure:
+        logger.error("Invalid token provided")
+        print("ERROR: Invalid Discord bot token.")
+        sys.exit(1)
     except Exception as e:
-        logger.error(f"Error starting bot: {e}")
-        return False
-
+        logger.error(f"Error running bot: {e}")
+        print(f"ERROR: Failed to start bot: {e}")
+        sys.exit(1)
+        
 if __name__ == "__main__":
     main()
