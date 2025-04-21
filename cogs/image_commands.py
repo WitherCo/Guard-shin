@@ -472,17 +472,10 @@ class ImageCommands(commands.Cog):
         image_url = f"https://some-random-api.ml/canvas/blur?avatar={member.avatar.url}&blur={intensity}"
         embed.set_image(url=image_url)
         
-        await ctx.send(embed=embed)
-        
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(ImageCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(ImageCommands(bot))
+        await ctx.send(embed=embed)))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = ImageCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[ImageCommands.__name__] = ImageCommands(bot)
