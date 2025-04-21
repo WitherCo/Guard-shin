@@ -3,831 +3,652 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Premium Plans - Guard-shin</title>
-  <link rel="icon" type="image/png" href="generated-icon.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
+  <title>Premium - Guard-shin Discord Bot</title>
+  <meta name="description" content="Upgrade to Guard-shin Premium for exclusive Discord moderation and feature access.">
+  <meta name="author" content="WitherCo">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
   <style>
+    /* Custom properties for theming */
     :root {
-      --color-bg-primary: #0f0f0f;
-      --color-bg-secondary: #1a1a1a;
-      --color-bg-tertiary: #252525;
-      --color-text-primary: #fff;
-      --color-text-secondary: #ccc;
-      --color-text-tertiary: #999;
-      --color-accent-primary: #8249F0;
-      --color-accent-secondary: #7339e0;
-      --color-accent-hover: #9166f4;
-      --color-error: #f04747;
-      --color-success: #43b581;
-      --color-warning: #faa61a;
-      --color-premium: #ffb800;
-      --color-servers: #3b82f6;
-      --color-commands: #10b981;
-      --color-users: #8b5cf6;
-      --color-raids: #ef4444;
+      --color-bg-primary: #121212;
+      --color-bg-secondary: #1e1e1e; 
+      --color-bg-tertiary: #2a2a2a;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #b0b0b0;
+      --color-accent-primary: #5865f2; /* Discord Blurple */
+      --color-accent-secondary: #3a46c3;
+      --color-success: #57F287;
+      --color-warning: #FEE75C;
+      --color-danger: #ED4245;
       --border-radius: 8px;
       --transition-speed: 0.3s;
     }
     
+    /* Base styles */
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     }
     
     body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--color-bg-primary);
       color: var(--color-text-primary);
       line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    
+    a:hover {
+      color: var(--color-accent-secondary);
+    }
+    
+    /* Layout */
+    .layout {
       display: flex;
       min-height: 100vh;
     }
     
-    a {
-      color: var(--color-text-primary);
-      text-decoration: none;
-    }
-    
     /* Sidebar */
     .sidebar {
-      width: 220px;
-      background-color: #101010;
+      width: 250px;
+      background-color: var(--color-bg-secondary);
+      position: fixed;
       height: 100vh;
       padding: 1.5rem 0;
       display: flex;
       flex-direction: column;
-      position: fixed;
-      left: 0;
-      top: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
     }
     
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      padding: 0 1.5rem;
-      margin-bottom: 2rem;
+    .sidebar-header {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background-color: var(--color-accent-primary);
-      border-radius: 8px;
-      margin-right: 0.75rem;
-    }
-    
-    .logo-text {
-      font-size: 1.25rem;
-      font-weight: 600;
+    .sidebar-header h1 {
+      font-size: 1.75rem;
       color: var(--color-accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-header p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .nav-list {
+      list-style: none;
     }
     
     .nav-item {
-      display: flex;
-      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+    
+    .nav-link {
+      display: block;
       padding: 0.75rem 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-secondary);
-      border-left: 3px solid transparent;
-      transition: all var(--transition-speed);
-    }
-    
-    .nav-item:hover {
-      background-color: rgba(124, 58, 237, 0.1);
       color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
+      transition: background-color var(--transition-speed);
+      position: relative;
     }
     
-    .nav-item.active {
-      background-color: rgba(124, 58, 237, 0.2);
+    .nav-link:hover {
+      background-color: var(--color-bg-tertiary);
       color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
     }
     
-    .nav-icon {
-      width: 20px;
-      margin-right: 0.75rem;
-      text-align: center;
-    }
-    
-    .nav-text {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .premium-badge {
-      background-color: var(--color-premium);
-      color: #000;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      margin-left: auto;
-      text-transform: uppercase;
+    .nav-link.active {
+      background-color: var(--color-accent-primary);
+      color: white;
     }
     
     .sidebar-footer {
-      margin-top: auto;
-      padding: 0 1.5rem;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .discord-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .add-bot-btn {
+      display: block;
       background-color: var(--color-accent-primary);
       color: white;
       font-weight: 600;
-      padding: 0.75rem;
+      text-align: center;
+      padding: 0.75rem 1rem;
       border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed);
+      transition: background-color var(--transition-speed), transform 0.2s;
     }
     
-    .discord-btn:hover {
-      background-color: var(--color-accent-hover);
-    }
-    
-    .discord-icon {
-      margin-right: 0.5rem;
+    .add-bot-btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
     }
     
     /* Main Content */
     .main-content {
       flex: 1;
-      margin-left: 220px;
-      padding: 1.5rem;
-      width: calc(100% - 220px);
+      margin-left: 250px;
+      padding: 2rem;
+      width: calc(100% - 250px);
     }
     
-    .header {
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.5rem 0 2rem;
-    }
-    
-    .notification-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-accent-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
-    /* Page Header */
     .page-header {
       margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1rem;
     }
     
-    .page-title {
+    .page-header h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+    
+    /* Card Components */
+    .card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    /* Pricing plans */
+    .pricing-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .pricing-plan {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pricing-plan:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .pricing-plan.premium {
+      border: 2px solid var(--color-warning);
+      position: relative;
+    }
+    
+    .pricing-plan.premium::before {
+      content: "POPULAR";
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background-color: var(--color-warning);
+      color: black;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 20px;
+      letter-spacing: 1px;
+    }
+    
+    .plan-header {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .plan-name {
       font-size: 1.75rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
     
-    .page-description {
-      color: var(--color-text-secondary);
-    }
-    
-    /* Pricing Cards */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    
-    .pricing-card {
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s;
-    }
-    
-    .pricing-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .pricing-card.featured {
-      border: 2px solid var(--color-premium);
-      position: relative;
-    }
-    
-    .pricing-card.featured::before {
-      content: "Popular Choice";
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background-color: var(--color-premium);
-      color: black;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    
-    .pricing-header {
-      background-color: var(--color-bg-tertiary);
-      padding: 1.5rem;
-      text-align: center;
-    }
-    
-    .pricing-name {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    
-    .pricing-price {
+    .plan-price {
       font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--color-accent-primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .pricing-period {
-      color: var(--color-text-tertiary);
-      font-size: 0.9rem;
-    }
-    
-    .pricing-content {
-      padding: 1.5rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .feature-list {
-      margin-bottom: 1.5rem;
-      flex: 1;
-    }
-    
-    .feature-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.75rem;
-      color: var(--color-text-secondary);
-    }
-    
-    .feature-icon {
-      color: var(--color-success);
-      margin-right: 0.5rem;
-      font-size: 1rem;
-    }
-    
-    .feature-icon.disabled {
-      color: var(--color-text-tertiary);
-    }
-    
-    .upgrade-btn {
-      display: block;
-      text-align: center;
-      background-color: var(--color-accent-primary);
-      color: white;
-      font-weight: 600;
-      padding: 0.75rem;
-      border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed), transform 0.2s;
-    }
-    
-    .upgrade-btn:hover {
-      background-color: var(--color-accent-hover);
-      transform: translateY(-2px);
-    }
-    
-    .payment-options {
-      display: flex;
-      justify-content: center;
-      margin-top: 1rem;
-      gap: 0.5rem;
-    }
-    
-    .payment-option {
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-bg-tertiary);
-      border-radius: var(--border-radius);
-      color: var(--color-text-secondary);
-      font-size: 1.25rem;
-      transition: all var(--transition-speed);
-    }
-    
-    .payment-option:hover {
-      background-color: var(--color-accent-primary);
-      color: white;
-    }
-    
-    /* Feature Comparison Table */
-    .comparison-section {
-      margin-bottom: 3rem;
-    }
-    
-    .section-title {
-      font-size: 1.5rem;
       font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--color-accent-primary);
+    }
+    
+    .plan-price .currency {
+      font-size: 1.5rem;
+      vertical-align: super;
+    }
+    
+    .plan-price .period {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--color-text-secondary);
+    }
+    
+    .plan-description {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
       margin-bottom: 1.5rem;
     }
     
-    .comparison-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      overflow: hidden;
+    .plan-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      flex: 1;
     }
     
-    .comparison-table th {
-      text-align: left;
-      padding: 1rem;
-      background-color: var(--color-bg-tertiary);
-      font-weight: 600;
-      color: var(--color-text-primary);
-    }
-    
-    .comparison-table th:first-child {
-      text-align: left;
-      width: 40%;
-    }
-    
-    .comparison-table th:not(:first-child) {
-      text-align: center;
-    }
-    
-    .comparison-table td {
-      padding: 1rem;
-      border-bottom: 1px solid var(--color-bg-tertiary);
-      color: var(--color-text-secondary);
-    }
-    
-    .comparison-table tr:last-child td {
-      border-bottom: none;
-    }
-    
-    .comparison-table td:not(:first-child) {
-      text-align: center;
-    }
-    
-    .feature-check {
-      color: var(--color-success);
-      font-size: 1.1rem;
-    }
-    
-    .feature-times {
-      color: var(--color-error);
-      font-size: 1.1rem;
-    }
-    
-    /* FAQ Section */
-    .faq-section {
-      margin-bottom: 3rem;
-    }
-    
-    .faq-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: 1.5rem;
-    }
-    
-    .faq-item {
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-    }
-    
-    .faq-question {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: var(--color-text-primary);
-    }
-    
-    .faq-answer {
-      color: var(--color-text-secondary);
+    .plan-features li {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
       font-size: 0.95rem;
     }
     
-    /* Responsive Adjustments */
+    .plan-features li::before {
+      content: "✓";
+      color: var(--color-success);
+      font-weight: 700;
+      margin-right: 0.5rem;
+    }
+    
+    .plan-cta {
+      text-align: center;
+      margin-top: auto;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+    
+    .btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn.outline {
+      background-color: transparent;
+      border: 2px solid var(--color-accent-primary);
+      color: var(--color-accent-primary);
+    }
+    
+    .btn.outline:hover {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+    
+    /* FAQ Section */
+    .faq-container {
+      margin-top: 3rem;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.5rem 0;
+    }
+    
+    .faq-question {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .faq-question::after {
+      content: "+";
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    
+    .faq-item.active .faq-question::after {
+      transform: rotate(45deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px; /* Adjust as needed */
+    }
+    
+    /* Payment Buttons */
+    .payment-options {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .payment-btn {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition-speed), transform 0.2s;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .payment-btn:hover {
+      background-color: var(--color-bg-primary);
+      transform: translateY(-2px);
+    }
+    
+    .payment-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    
+    /* Payment methods */
+    .payment-methods {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .payment-method {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.3s;
+    }
+    
+    .payment-icon {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+    
+    /* Responsive design */
     @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      
       .sidebar {
-        width: 64px;
+        width: 100%;
+        height: auto;
+        position: relative;
         padding: 1rem 0;
       }
       
-      .logo-text,
-      .nav-text,
-      .premium-badge {
-        display: none;
-      }
-      
-      .sidebar-logo {
-        justify-content: center;
-        padding: 0;
-      }
-      
-      .logo-icon {
-        margin-right: 0;
-      }
-      
-      .nav-item {
-        justify-content: center;
-        padding: 0.75rem;
-      }
-      
-      .nav-icon {
-        margin-right: 0;
-      }
-      
-      .discord-btn {
-        padding: 0.75rem;
-        justify-content: center;
-      }
-      
-      .discord-icon {
-        margin-right: 0;
-      }
-      
       .main-content {
-        margin-left: 64px;
-        width: calc(100% - 64px);
+        margin-left: 0;
+        width: 100%;
+        padding: 1.5rem;
       }
       
-      .pricing-grid {
-        grid-template-columns: 1fr;
+      .sidebar-nav {
+        max-height: 300px;
       }
       
-      .comparison-table {
-        overflow-x: auto;
-        display: block;
-      }
-      
-      .faq-list {
+      .pricing-container {
         grid-template-columns: 1fr;
       }
     }
   </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // FAQ accordion functionality
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+          // Close all other items
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle this item
+          item.classList.toggle('active');
+        });
+      });
+      
+      // No JavaScript needed - using direct links instead
+    });
+  </script>
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon"></div>
-      <div class="logo-text">Guard-shin</div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <a href="index.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-home"></i></div>
-        <div class="nav-text">Dashboard</div>
-      </a>
-      
-      <a href="commands.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
-        <div class="nav-text">Commands</div>
-      </a>
-      
-      <a href="premium.html" class="nav-item active">
-        <div class="nav-icon"><i class="fas fa-crown"></i></div>
-        <div class="nav-text">Premium</div>
-      </a>
-      
-      <a href="support.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
-        <div class="nav-text">Support</div>
-      </a>
-    </nav>
-    
-    <div class="sidebar-footer">
-      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
-        <span class="discord-icon"><i class="fas fa-plus"></i></span>
-        <span>Add to Discord</span>
-      </a>
-    </div>
-  </aside>
-  
-  <!-- Main Content -->
-  <main class="main-content">
-    <header class="header">
-      <div class="notification-icon">
-        <i class="fas fa-bell"></i>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Guard-shin</h1>
+        <p>Discord Moderation Bot</p>
       </div>
-      <div class="user-avatar">
-        U
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="commands.html" class="nav-link">Commands</a>
+          </li>
+          <li class="nav-item">
+            <a href="premium.html" class="nav-link active">Premium</a>
+          </li>
+          <li class="nav-item">
+            <a href="support.html" class="nav-link">Support</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">
+          Add to Discord
+        </a>
       </div>
-    </header>
+    </aside>
     
-    <section class="page-header">
-      <h1 class="page-title">Premium Plans</h1>
-      <p class="page-description">Unlock the full potential of Guard-shin with our premium features</p>
-    </section>
-    
-    <div class="pricing-grid">
-      <!-- Free Plan -->
-      <div class="pricing-card">
-        <div class="pricing-header">
-          <div class="pricing-name">Free</div>
-          <div class="pricing-price">$0</div>
-          <div class="pricing-period">Forever</div>
-        </div>
-        <div class="pricing-content">
-          <ul class="feature-list">
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Moderation Commands</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Server Information</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Auto-Moderation</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Fun Commands</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Logs</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Music Player</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Custom Welcome Messages</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Advanced Analytics</li>
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="page-header">
+        <h2>Premium Features</h2>
+        <p>Supercharge your Discord server with advanced moderation and utility features</p>
+      </header>
+      
+      <!-- Pricing Plans -->
+      <div class="pricing-container">
+        <!-- Free Plan -->
+        <div class="pricing-plan">
+          <div class="plan-header">
+            <h3 class="plan-name">Free</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>0<span class="period">/mo</span>
+            </div>
+            <p class="plan-description">Essential moderation tools for every server</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li>Basic moderation commands</li>
+            <li>Server security features</li>
+            <li>Anti-spam protection</li>
+            <li>Auto moderation</li>
+            <li>5 custom welcome messages</li>
           </ul>
-          <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="upgrade-btn" style="background-color: var(--color-bg-tertiary);" target="_blank" rel="noopener noreferrer">
-            Add to Discord
-          </a>
+          
+          <div class="plan-cta">
+            <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn outline" target="_blank" rel="noopener noreferrer">Get Started</a>
+          </div>
         </div>
-      </div>
-      
-      <!-- Basic Plan -->
-      <div class="pricing-card">
-        <div class="pricing-header">
-          <div class="pricing-name">Basic</div>
-          <div class="pricing-price">$4.99</div>
-          <div class="pricing-period">per month</div>
-        </div>
-        <div class="pricing-content">
-          <ul class="feature-list">
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> <strong>Everything in Free, plus:</strong></li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Moderation Tools</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Simple Music Player</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Welcome Messages</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Member Analytics</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Auto-Response System</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Advanced Server Logging</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Priority Support</li>
+        
+        <!-- Premium Plan -->
+        <div class="pricing-plan premium">
+          <div class="plan-header">
+            <h3 class="plan-name">Premium</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>9.99<span class="period">/mo</span>
+            </div>
+            <p class="plan-description">Advanced features for growing communities</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li>All Free features</li>
+            <li>Auto-role assignment</li>
+            <li>Advanced logging</li>
+            <li>Reaction roles</li>
+            <li>Custom commands</li>
+            <li>Advanced anti-raid protection</li>
+            <li>Ticket system</li>
+            <li>Unlimited custom welcome messages</li>
+            <li>Priority support</li>
           </ul>
-          <a href="checkout.html?plan=basic&payment=stripe" class="upgrade-btn btn-purchase" data-plan="basic" data-payment="stripe">
-            Upgrade Now
-          </a>
-          <div class="payment-options">
-            <a href="checkout.html?plan=basic&payment=paypal" class="payment-option" data-plan="basic" data-payment="paypal">
-              <i class="fab fa-paypal"></i>
-            </a>
-            <a href="checkout.html?plan=basic&payment=cashapp" class="payment-option" data-plan="basic" data-payment="cashapp">
-              <i class="fas fa-dollar-sign"></i>
-            </a>
-            <a href="checkout.html?plan=basic&payment=stripe" class="payment-option" data-plan="basic" data-payment="stripe">
-              <i class="fab fa-stripe-s"></i>
-            </a>
+          
+          <div class="plan-cta">
+            <a href="checkout.html?plan=premium&payment=stripe" class="btn btn-purchase" data-plan="premium" data-payment="stripe">Upgrade with Stripe</a>
+            <div class="payment-options">
+              <a href="checkout.html?plan=premium&payment=paypal" class="payment-btn btn-purchase" data-plan="premium" data-payment="paypal">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal">
+              </a>
+              <a href="checkout.html?plan=premium&payment=cashapp" class="payment-btn btn-purchase" data-plan="premium" data-payment="cashapp">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2300D54B'><path d='M23.59 3.475a5.9 5.9 0 0 0-3.88-3.88c-.76-.22-1.64-.41-2.87-.46C15.31.04 14.9 0 12 0S8.69.04 7.18.14c-1.23.05-2.11.24-2.87.46a5.9 5.9 0 0 0-3.88 3.88c-.22.76-.41 1.64-.46 2.87C-.09 8.69 0 9.1 0 12s.04 3.31.14 4.82c.05 1.23.24 2.11.46 2.87a5.9 5.9 0 0 0 3.88 3.88c.76.22 1.64.41 2.87.46 1.54.1 1.94.14 4.82.14s3.31-.04 4.82-.14c1.23-.05 2.11-.24 2.87-.46a5.9 5.9 0 0 0 3.88-3.88c.22-.76.41-1.64.46-2.87.1-1.54.14-1.94.14-4.82s-.04-3.31-.14-4.82c-.05-1.26-.24-2.11-.46-2.87zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z'/></svg>" alt="CashApp">
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Enterprise Plan -->
+        <div class="pricing-plan">
+          <div class="plan-header">
+            <h3 class="plan-name">Enterprise</h3>
+            <div class="plan-price">
+              <span class="currency">$</span>24.99<span class="period">/mo</span>
+            </div>
+            <p class="plan-description">Complete solution for large servers and communities</p>
+          </div>
+          
+          <ul class="plan-features">
+            <li>All Premium features</li>
+            <li>Customizable bot appearance</li>
+            <li>Custom development hours</li>
+            <li>AI-powered moderation</li>
+            <li>Advanced analytics</li>
+            <li>VIP support with 24/7 priority</li>
+            <li>Multi-server management</li>
+          </ul>
+          
+          <div class="plan-cta">
+            <a href="checkout.html?plan=enterprise&payment=stripe" class="btn btn-purchase" data-plan="enterprise" data-payment="stripe">Upgrade with Stripe</a>
+            <div class="payment-options">
+              <a href="checkout.html?plan=enterprise&payment=paypal" class="payment-btn btn-purchase" data-plan="enterprise" data-payment="paypal">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal">
+              </a>
+              <a href="checkout.html?plan=enterprise&payment=cashapp" class="payment-btn btn-purchase" data-plan="enterprise" data-payment="cashapp">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2300D54B'><path d='M23.59 3.475a5.9 5.9 0 0 0-3.88-3.88c-.76-.22-1.64-.41-2.87-.46C15.31.04 14.9 0 12 0S8.69.04 7.18.14c-1.23.05-2.11.24-2.87.46a5.9 5.9 0 0 0-3.88 3.88c-.22.76-.41 1.64-.46 2.87C-.09 8.69 0 9.1 0 12s.04 3.31.14 4.82c.05 1.23.24 2.11.46 2.87a5.9 5.9 0 0 0 3.88 3.88c.76.22 1.64.41 2.87.46 1.54.1 1.94.14 4.82.14s3.31-.04 4.82-.14c1.23-.05 2.11-.24 2.87-.46a5.9 5.9 0 0 0 3.88-3.88c.22-.76.41-1.64.46-2.87.1-1.54.14-1.94.14-4.82s-.04-3.31-.14-4.82c-.05-1.26-.24-2.11-.46-2.87zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z'/></svg>" alt="CashApp">
+              </a>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Standard Plan -->
-      <div class="pricing-card">
-        <div class="pricing-header">
-          <div class="pricing-name">Standard</div>
-          <div class="pricing-price">$7.99</div>
-          <div class="pricing-period">per month</div>
-        </div>
-        <div class="pricing-content">
-          <ul class="feature-list">
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> <strong>Everything in Basic, plus:</strong></li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Intermediate Moderation Tools</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Music Player with 3 Playlists</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Standard Welcome Messages</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Member Analytics</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Basic Auto-Response System</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Standard Server Logging</li>
-            <li class="feature-item"><i class="fas fa-times feature-icon disabled"></i> Priority Support</li>
-          </ul>
-          <a href="checkout.html?plan=standard&payment=stripe" class="upgrade-btn btn-purchase" data-plan="standard" data-payment="stripe">
-            Upgrade Now
-          </a>
-          <div class="payment-options">
-            <a href="checkout.html?plan=standard&payment=paypal" class="payment-option" data-plan="standard" data-payment="paypal">
-              <i class="fab fa-paypal"></i>
-            </a>
-            <a href="checkout.html?plan=standard&payment=cashapp" class="payment-option" data-plan="standard" data-payment="cashapp">
-              <i class="fas fa-dollar-sign"></i>
-            </a>
-            <a href="checkout.html?plan=standard&payment=stripe" class="payment-option" data-plan="standard" data-payment="stripe">
-              <i class="fab fa-stripe-s"></i>
-            </a>
+      <!-- Payment Methods -->
+      <div class="card">
+        <h3>Accepted Payment Methods</h3>
+        <div class="payment-methods">
+          <div class="payment-method">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='none' stroke='%235865f2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='1' y='4' width='22' height='16' rx='2' ry='2'></rect><line x1='1' y1='10' x2='23' y2='10'></line></svg>" alt="Credit Card" class="payment-icon">
+            <span>Credit Card</span>
+          </div>
+          <div class="payment-method">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal" class="payment-icon">
+            <span>PayPal</span>
+          </div>
+          <div class="payment-method">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2300D632'><path d='M23.59 3.475a5.294 5.294 0 0 0-3.039-1.962 5.307 5.307 0 0 0-1.554-.229c-1.423 0-2.587.476-3.48 1.422-.195.209-.378.43-.546.665-.365-.87-.9-1.554-1.604-2.033-.704-.475-1.517-.713-2.433-.713-.462 0-.914.063-1.352.194a5.29 5.29 0 0 0-3.621 3.351c-.118.355-.206.735-.26 1.132-.18 1.353.046 2.52.67 3.496.304.47.673.876 1.108 1.209-.462.511-.823 1.096-1.083 1.746-.355.89-.474 1.89-.355 2.999.119 1.112.476 2.048 1.065 2.798.705.875 1.649 1.422 2.817 1.613.445.075.9.115 1.353.115 1.125 0 2.14-.33 3.027-.989.304.165.624.304.965.422C15.1 19.42 16.177 19.745 17.34 19.745c.543 0 1.094-.059 1.645-.17a5.304 5.304 0 0 0 3.306-2.06 5.303 5.303 0 0 0 1.109-3.728 5.287 5.287 0 0 0-1.88-3.557 7.702 7.702 0 0 0 1.508-1.302c.89-1.021 1.339-2.283 1.339-3.775 0-.57-.091-1.126-.266-1.678h-.002z'/></svg>" alt="CashApp" class="payment-icon">
+            <span>CashApp</span>
           </div>
         </div>
       </div>
       
-      <!-- Premium Plan -->
-      <div class="pricing-card featured">
-        <div class="pricing-header">
-          <div class="pricing-name">Premium</div>
-          <div class="pricing-price">$9.99</div>
-          <div class="pricing-period">per month</div>
-        </div>
-        <div class="pricing-content">
-          <ul class="feature-list">
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> <strong>Everything in Standard, plus:</strong></li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Advanced Moderation Tools</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Music Player with 5 Playlists</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Custom Welcome Images</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Detailed Member Analytics</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Advanced Auto-Response System</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Advanced Server Logging</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Priority Support</li>
-          </ul>
-          <a href="checkout.html?plan=premium&payment=stripe" class="upgrade-btn btn-purchase" data-plan="premium" data-payment="stripe">
-            Upgrade Now
-          </a>
-          <div class="payment-options">
-            <a href="checkout.html?plan=premium&payment=paypal" class="payment-option" data-plan="premium" data-payment="paypal">
-              <i class="fab fa-paypal"></i>
-            </a>
-            <a href="checkout.html?plan=premium&payment=cashapp" class="payment-option" data-plan="premium" data-payment="cashapp">
-              <i class="fas fa-dollar-sign"></i>
-            </a>
-            <a href="checkout.html?plan=premium&payment=stripe" class="payment-option" data-plan="premium" data-payment="stripe">
-              <i class="fab fa-stripe-s"></i>
-            </a>
+      <!-- FAQ Section -->
+      <div class="card">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question">How do I activate premium features?</div>
+            <div class="faq-answer">
+              <p>After purchasing a premium subscription, premium features will be automatically activated for your server(s). You'll receive a confirmation in your server's system channel, and premium commands will be immediately available for use.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">Can I transfer my premium subscription to another server?</div>
+            <div class="faq-answer">
+              <p>Yes! Premium subscriptions can be transferred between servers that you own. Use the !premium transfer command in the new server after removing the bot from the old server. Note that you can only perform a transfer once every 30 days.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">Do you offer refunds?</div>
+            <div class="faq-answer">
+              <p>We offer a 7-day money-back guarantee for premium subscriptions if you're not satisfied with our services. For refund requests, please contact our support team through our Discord support server or via the support page.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">What payment methods do you accept?</div>
+            <div class="faq-answer">
+              <p>We accept major credit cards through Stripe, PayPal, and CashApp. All payments are secure and encrypted. For special payment arrangements or bulk purchases, please contact our sales team.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">Do I need to pay for each server?</div>
+            <div class="faq-answer">
+              <p>Premium subscriptions are per server. However, our Enterprise plan allows management of multiple servers. We also offer bulk discounts for communities that manage multiple servers - please contact our sales team for details.</p>
+            </div>
           </div>
         </div>
       </div>
-      
-      <!-- Pro Plan -->
-      <div class="pricing-card">
-        <div class="pricing-header">
-          <div class="pricing-name">Enterprise</div>
-          <div class="pricing-price">$24.99</div>
-          <div class="pricing-period">per month</div>
-        </div>
-        <div class="pricing-content">
-          <ul class="feature-list">
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> <strong>Everything in Premium, plus:</strong></li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Advanced Auto-Moderation</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Customizable Dashboard</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Custom Bot Branding</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Dedicated Support Manager</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Unlimited Music Playlists</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Custom Bot Commands</li>
-            <li class="feature-item"><i class="fas fa-check feature-icon"></i> Advanced Server Analytics</li>
-          </ul>
-          <a href="checkout.html?plan=enterprise&payment=stripe" class="upgrade-btn btn-purchase" data-plan="enterprise" data-payment="stripe">
-            Upgrade Now
-          </a>
-          <div class="payment-options">
-            <a href="checkout.html?plan=enterprise&payment=paypal" class="payment-option" data-plan="enterprise" data-payment="paypal">
-              <i class="fab fa-paypal"></i>
-            </a>
-            <a href="checkout.html?plan=enterprise&payment=cashapp" class="payment-option" data-plan="enterprise" data-payment="cashapp">
-              <i class="fas fa-dollar-sign"></i>
-            </a>
-            <a href="checkout.html?plan=enterprise&payment=stripe" class="payment-option" data-plan="enterprise" data-payment="stripe">
-              <i class="fab fa-stripe-s"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <section class="comparison-section">
-      <h2 class="section-title">Feature Comparison</h2>
-      <div class="table-wrapper">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Free</th>
-              <th>Premium</th>
-              <th>Enterprise</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Basic Moderation Commands</td>
-              <td><i class="fas fa-check feature-check"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-            </tr>
-            <tr>
-              <td>Advanced Moderation Tools</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-            </tr>
-            <tr>
-              <td>Auto-Moderation</td>
-              <td>Basic</td>
-              <td>Advanced</td>
-              <td>Custom Rules</td>
-            </tr>
-            <tr>
-              <td>Music Player</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-            </tr>
-            <tr>
-              <td>Music Playlists</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td>5 Playlists</td>
-              <td>Unlimited</td>
-            </tr>
-            <tr>
-              <td>Welcome Messages</td>
-              <td>Text Only</td>
-              <td>Custom Images</td>
-              <td>Custom Images + Videos</td>
-            </tr>
-            <tr>
-              <td>Server Logging</td>
-              <td>Basic</td>
-              <td>Advanced</td>
-              <td>Comprehensive</td>
-            </tr>
-            <tr>
-              <td>Analytics</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td>Basic Analytics</td>
-              <td>Advanced Analytics</td>
-            </tr>
-            <tr>
-              <td>Auto-Response System</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-            </tr>
-            <tr>
-              <td>Custom Commands</td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td><i class="fas fa-times feature-times"></i></td>
-              <td><i class="fas fa-check feature-check"></i></td>
-            </tr>
-            <tr>
-              <td>Support Level</td>
-              <td>Community</td>
-              <td>Priority</td>
-              <td>Dedicated Manager</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-    
-    <section class="faq-section">
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <h3 class="faq-question">How do I upgrade to Premium?</h3>
-          <p class="faq-answer">Click on any of the "Upgrade Now" buttons above to purchase a premium subscription. After completing the payment, your server will automatically be upgraded within minutes.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3 class="faq-question">Can I cancel my subscription anytime?</h3>
-          <p class="faq-answer">Yes, you can cancel your subscription at any time. Your premium features will remain active until the end of your billing period.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3 class="faq-question">How many servers can I use Premium on?</h3>
-          <p class="faq-answer">Each subscription applies to a single Discord server. If you want to use premium features on multiple servers, you'll need a separate subscription for each one.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3 class="faq-question">Do you offer refunds?</h3>
-          <p class="faq-answer">We offer a 7-day money-back guarantee if you're not satisfied with our premium services. Contact our support team for assistance.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3 class="faq-question">How do I get help with my subscription?</h3>
-          <p class="faq-answer">Visit our <a href="support.html" style="color: var(--color-accent-primary);">Support</a> page or join our <a href="https://discord.gg/1233495879223345172" style="color: var(--color-accent-primary);" target="_blank" rel="noopener noreferrer">Support Server</a> for assistance with your subscription.</p>
-        </div>
-        
-        <div class="faq-item">
-          <h3 class="faq-question">What payment methods do you accept?</h3>
-          <p class="faq-answer">We accept payments via Stripe, PayPal, and CashApp. Select your preferred payment method during checkout.</p>
-        </div>
-      </div>
-    </section>
-  </main>
+    </main>
+  </div>
 </body>
 </html>

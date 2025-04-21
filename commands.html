@@ -3,862 +3,568 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commands - Guard-shin</title>
-  <link rel="icon" type="image/png" href="generated-icon.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
+  <title>Commands - Guard-shin Discord Bot</title>
+  <meta name="description" content="View all available commands for Guard-shin Discord moderation and security bot.">
+  <meta name="author" content="WitherCo">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
   <style>
+    /* Custom properties for theming */
     :root {
-      --color-bg-primary: #0f0f0f;
-      --color-bg-secondary: #1a1a1a;
-      --color-bg-tertiary: #252525;
-      --color-text-primary: #fff;
-      --color-text-secondary: #ccc;
-      --color-text-tertiary: #999;
-      --color-accent-primary: #8249F0;
-      --color-accent-secondary: #7339e0;
-      --color-accent-hover: #9166f4;
-      --color-error: #f04747;
-      --color-success: #43b581;
-      --color-warning: #faa61a;
-      --color-premium: #ffb800;
-      --color-servers: #3b82f6;
-      --color-commands: #10b981;
-      --color-users: #8b5cf6;
-      --color-raids: #ef4444;
+      --color-bg-primary: #121212;
+      --color-bg-secondary: #1e1e1e; 
+      --color-bg-tertiary: #2a2a2a;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #b0b0b0;
+      --color-accent-primary: #5865f2; /* Discord Blurple */
+      --color-accent-secondary: #3a46c3;
+      --color-success: #57F287;
+      --color-warning: #FEE75C;
+      --color-danger: #ED4245;
       --border-radius: 8px;
       --transition-speed: 0.3s;
     }
     
+    /* Base styles */
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     }
     
     body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--color-bg-primary);
       color: var(--color-text-primary);
       line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    
+    a:hover {
+      color: var(--color-accent-secondary);
+    }
+    
+    /* Layout */
+    .layout {
       display: flex;
       min-height: 100vh;
     }
     
-    a {
-      color: var(--color-text-primary);
-      text-decoration: none;
-    }
-    
     /* Sidebar */
     .sidebar {
-      width: 220px;
-      background-color: #101010;
+      width: 250px;
+      background-color: var(--color-bg-secondary);
+      position: fixed;
       height: 100vh;
       padding: 1.5rem 0;
       display: flex;
       flex-direction: column;
-      position: fixed;
-      left: 0;
-      top: 0;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
     }
     
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      padding: 0 1.5rem;
-      margin-bottom: 2rem;
+    .sidebar-header {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .logo-icon {
-      width: 32px;
-      height: 32px;
-      background-color: var(--color-accent-primary);
-      border-radius: 8px;
-      margin-right: 0.75rem;
-    }
-    
-    .logo-text {
-      font-size: 1.25rem;
-      font-weight: 600;
+    .sidebar-header h1 {
+      font-size: 1.75rem;
       color: var(--color-accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-header p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .nav-list {
+      list-style: none;
     }
     
     .nav-item {
-      display: flex;
-      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+    
+    .nav-link {
+      display: block;
       padding: 0.75rem 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--color-text-secondary);
-      border-left: 3px solid transparent;
-      transition: all var(--transition-speed);
-    }
-    
-    .nav-item:hover {
-      background-color: rgba(124, 58, 237, 0.1);
       color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
+      transition: background-color var(--transition-speed);
+      position: relative;
     }
     
-    .nav-item.active {
-      background-color: rgba(124, 58, 237, 0.2);
+    .nav-link:hover {
+      background-color: var(--color-bg-tertiary);
       color: var(--color-text-primary);
-      border-left-color: var(--color-accent-primary);
     }
     
-    .nav-icon {
-      width: 20px;
-      margin-right: 0.75rem;
-      text-align: center;
-    }
-    
-    .nav-text {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-    
-    .premium-badge {
-      background-color: var(--color-premium);
-      color: #000;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      margin-left: auto;
-      text-transform: uppercase;
+    .nav-link.active {
+      background-color: var(--color-accent-primary);
+      color: white;
     }
     
     .sidebar-footer {
-      margin-top: auto;
-      padding: 0 1.5rem;
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .discord-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .add-bot-btn {
+      display: block;
       background-color: var(--color-accent-primary);
       color: white;
       font-weight: 600;
-      padding: 0.75rem;
+      text-align: center;
+      padding: 0.75rem 1rem;
       border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed);
+      transition: background-color var(--transition-speed), transform 0.2s;
     }
     
-    .discord-btn:hover {
-      background-color: var(--color-accent-hover);
-    }
-    
-    .discord-icon {
-      margin-right: 0.5rem;
+    .add-bot-btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
     }
     
     /* Main Content */
     .main-content {
       flex: 1;
-      margin-left: 220px;
-      padding: 1.5rem;
-      width: calc(100% - 220px);
+      margin-left: 250px;
+      padding: 2rem;
+      width: calc(100% - 250px);
     }
     
-    .header {
-      display: flex;
-      justify-content: flex-end;
-      padding: 0.5rem 0 2rem;
-    }
-    
-    .notification-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 1rem;
-      cursor: pointer;
-    }
-    
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background-color: var(--color-accent-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    
-    /* Page Header */
     .page-header {
       margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1rem;
     }
     
-    .page-title {
-      font-size: 1.75rem;
+    .page-header h2 {
+      font-size: 2.25rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
     }
     
-    .page-description {
-      color: var(--color-text-secondary);
-    }
-    
-    /* Search and Filter */
-    .commands-toolbar {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      gap: 1rem;
-    }
-    
-    .search-box {
-      flex: 1;
-      position: relative;
-    }
-    
-    .search-input {
-      width: 100%;
+    /* Card Components */
+    .card {
       background-color: var(--color-bg-secondary);
-      border: none;
       border-radius: var(--border-radius);
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      color: var(--color-text-primary);
-      font-size: 0.95rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--color-text-tertiary);
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
     }
     
-    .filter-dropdown {
-      background-color: var(--color-bg-secondary);
-      border: none;
-      border-radius: var(--border-radius);
-      padding: 0.75rem 1rem;
-      color: var(--color-text-primary);
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-    
-    /* Category Tabs */
+    /* Command Categories */
     .category-tabs {
       display: flex;
-      overflow-x: auto;
-      margin-bottom: 2rem;
       border-bottom: 1px solid var(--color-bg-tertiary);
-      padding-bottom: 0.75rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      padding-bottom: 1px;
     }
     
     .category-tab {
-      white-space: nowrap;
-      padding: 0.5rem 1.25rem;
-      margin-right: 0.5rem;
-      border-radius: var(--border-radius);
+      padding: 0.75rem 1.5rem;
       cursor: pointer;
+      margin-right: 0.5rem;
+      border-radius: 8px 8px 0 0;
+      font-weight: 500;
       transition: all var(--transition-speed);
-      color: var(--color-text-secondary);
-      background-color: transparent;
     }
     
     .category-tab:hover {
-      color: var(--color-text-primary);
-      background-color: var(--color-bg-tertiary);
+      background-color: rgba(255, 255, 255, 0.05);
     }
     
     .category-tab.active {
-      color: white;
       background-color: var(--color-accent-primary);
+      color: white;
     }
     
-    /* Commands Table */
-    .commands-table {
+    /* Command table */
+    .command-table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-bottom: 2rem;
+      border-collapse: collapse;
     }
     
-    .commands-table th {
+    .command-table th {
+      background-color: var(--color-bg-tertiary);
       text-align: left;
-      padding: 1rem;
-      color: var(--color-text-tertiary);
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--color-bg-tertiary);
+      padding: 0.75rem 1rem;
+      font-weight: 500;
     }
     
-    .commands-table td {
-      padding: 1rem;
+    .command-table td {
+      padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--color-bg-tertiary);
-      vertical-align: middle;
+      vertical-align: top;
     }
     
-    .commands-table tr:hover {
-      background-color: var(--color-bg-secondary);
+    .command-table tr:hover td {
+      background-color: rgba(255, 255, 255, 0.05);
     }
     
     .command-name {
-      font-weight: 600;
+      font-family: 'Consolas', 'Courier New', monospace;
       color: var(--color-accent-primary);
+      font-weight: 500;
     }
     
-    .command-description {
+    .command-usage {
+      font-family: 'Consolas', 'Courier New', monospace;
       color: var(--color-text-secondary);
-      font-size: 0.95rem;
+      font-size: 0.875rem;
     }
     
-    .command-syntax {
-      font-family: monospace;
+    .premium-badge {
+      display: inline-block;
+      background-color: var(--color-warning);
+      color: black;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    
+    /* Search bar */
+    .search-container {
+      margin-bottom: 2rem;
+    }
+    
+    .search-input {
       background-color: var(--color-bg-tertiary);
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-    
-    .command-pro-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-premium);
-      color: #000;
-      font-size: 0.65rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-    
-    .command-category {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--color-bg-tertiary);
-      color: var(--color-text-secondary);
-      font-size: 0.8rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
-    
-    /* Pagination */
-    .pagination {
-      display: flex;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    
-    .pagination-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 36px;
-      height: 36px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--border-radius);
-      background-color: var(--color-bg-secondary);
+      padding: 0.75rem 1rem;
       color: var(--color-text-primary);
-      margin: 0 0.25rem;
-      cursor: pointer;
-      transition: all var(--transition-speed);
+      width: 100%;
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
     }
     
-    .pagination-btn:hover {
-      background-color: var(--color-bg-tertiary);
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
     }
     
-    .pagination-btn.active {
-      background-color: var(--color-accent-primary);
+    .search-input::placeholder {
+      color: var(--color-text-secondary);
     }
     
-    /* Responsive Adjustments */
+    /* Command description */
+    .command-description {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Premium info */
+    .premium-info {
+      background-color: rgba(254, 231, 92, 0.1);
+      border-left: 4px solid var(--color-warning);
+      padding: 1rem;
+      margin: 2rem 0;
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    
+    /* Responsive design */
     @media (max-width: 768px) {
-      .sidebar {
-        width: 64px;
-        padding: 1rem 0;
-      }
-      
-      .logo-text,
-      .nav-text,
-      .premium-badge {
-        display: none;
-      }
-      
-      .sidebar-logo {
-        justify-content: center;
-        padding: 0;
-      }
-      
-      .logo-icon {
-        margin-right: 0;
-      }
-      
-      .nav-item {
-        justify-content: center;
-        padding: 0.75rem;
-      }
-      
-      .nav-icon {
-        margin-right: 0;
-      }
-      
-      .discord-btn {
-        padding: 0.75rem;
-        justify-content: center;
-      }
-      
-      .discord-icon {
-        margin-right: 0;
-      }
-      
-      .main-content {
-        margin-left: 64px;
-        width: calc(100% - 64px);
-      }
-      
-      .commands-toolbar {
+      .layout {
         flex-direction: column;
       }
       
-      .search-box {
+      .sidebar {
         width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
       }
       
-      .filter-dropdown {
+      .main-content {
+        margin-left: 0;
         width: 100%;
-        margin-top: 0.5rem;
+        padding: 1.5rem;
       }
       
-      .commands-table th:nth-child(3),
-      .commands-table td:nth-child(3) {
+      .sidebar-nav {
+        max-height: 300px;
+      }
+      
+      .command-table th:nth-child(3),
+      .command-table td:nth-child(3) {
         display: none;
       }
     }
   </style>
-</head>
-<body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-icon"></div>
-      <div class="logo-text">Guard-shin</div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <a href="index.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-home"></i></div>
-        <div class="nav-text">Dashboard</div>
-      </a>
-      
-      <a href="commands.html" class="nav-item active">
-        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
-        <div class="nav-text">Commands</div>
-      </a>
-      
-      <a href="premium.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-crown"></i></div>
-        <div class="nav-text">Premium</div>
-      </a>
-      
-      <a href="support.html" class="nav-item">
-        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
-        <div class="nav-text">Support</div>
-      </a>
-    </nav>
-    
-    <div class="sidebar-footer">
-      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
-        <span class="discord-icon"><i class="fas fa-plus"></i></span>
-        <span>Add to Discord</span>
-      </a>
-    </div>
-  </aside>
   
-  <!-- Main Content -->
-  <main class="main-content">
-    <header class="header">
-      <div class="notification-icon">
-        <i class="fas fa-bell"></i>
-      </div>
-      <div class="user-avatar">
-        U
-      </div>
-    </header>
-    
-    <section class="page-header">
-      <h1 class="page-title">Commands</h1>
-      <p class="page-description">Browse and search all available commands for Guard-shin</p>
-    </section>
-    
-    <div class="commands-toolbar">
-      <div class="search-box">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Search commands...">
-      </div>
-      
-      <select class="filter-dropdown">
-        <option value="all">All Commands</option>
-        <option value="free">Free Commands</option>
-        <option value="premium">Premium Commands</option>
-      </select>
-    </div>
-    
-    <div class="category-tabs">
-      <div class="category-tab active" data-category="all">All Commands</div>
-      <div class="category-tab" data-category="moderation">Moderation</div>
-      <div class="category-tab" data-category="admin">Admin</div>
-      <div class="category-tab" data-category="utility">Utility</div>
-      <div class="category-tab" data-category="fun">Fun</div>
-      <div class="category-tab" data-category="music">Music</div>
-      <div class="category-tab" data-category="economy">Economy</div>
-      <div class="category-tab" data-category="leveling">Leveling</div>
-    </div>
-    
-    <table class="commands-table">
-      <thead>
-        <tr>
-          <th>Command</th>
-          <th>Description</th>
-          <th>Usage</th>
-          <th>Category</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Moderation Commands -->
-        <tr>
-          <td class="command-name">/ban</td>
-          <td class="command-description">Ban a user from the server with an optional reason</td>
-          <td class="command-syntax">/ban user:@username reason:Breaking rules delete_days:7</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/unban</td>
-          <td class="command-description">Unban a user from the server</td>
-          <td class="command-syntax">/unban user_id:123456789012345678</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/kick</td>
-          <td class="command-description">Kick a user from the server with an optional reason</td>
-          <td class="command-syntax">/kick user:@username reason:Disruptive behavior</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/warn</td>
-          <td class="command-description">Issue a warning to a user</td>
-          <td class="command-syntax">/warn user:@username reason:Spamming in chat</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/warnings</td>
-          <td class="command-description">View warnings for a specific user</td>
-          <td class="command-syntax">/warnings user:@username</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/clearwarnings</td>
-          <td class="command-description">Clear all warnings for a user</td>
-          <td class="command-syntax">/clearwarnings user:@username</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/mute</td>
-          <td class="command-description">Temporarily mute a user in the server</td>
-          <td class="command-syntax">/mute user:@username duration:1h reason:Excessive noise</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/unmute</td>
-          <td class="command-description">Unmute a previously muted user</td>
-          <td class="command-syntax">/unmute user:@username</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/purge</td>
-          <td class="command-description">Delete a specified number of messages from a channel</td>
-          <td class="command-syntax">/purge amount:50</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/slowmode</td>
-          <td class="command-description">Set the slowmode cooldown for a channel</td>
-          <td class="command-syntax">/slowmode seconds:10</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        
-        <!-- Premium Moderation Commands -->
-        <tr>
-          <td class="command-name">/lockdown <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Temporarily lock a channel, preventing messages</td>
-          <td class="command-syntax">/lockdown duration:30m reason:Server raid in progress</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/unlock <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Unlock a previously locked channel</td>
-          <td class="command-syntax">/unlock</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/massban <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Ban multiple users at once</td>
-          <td class="command-syntax">/massban users:id1,id2 reason:Raid participants</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/hackban <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Ban a user that isn't in the server yet</td>
-          <td class="command-syntax">/hackban user_id:123456789012345678 reason:Known raider</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        
-        <!-- Auto-Moderation Commands -->
-        <tr>
-          <td class="command-name">/automod</td>
-          <td class="command-description">View and configure the automod settings</td>
-          <td class="command-syntax">/automod setting:invites value:on</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/filter</td>
-          <td class="command-description">Add or remove words from the word filter</td>
-          <td class="command-syntax">/filter action:add word:badword</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/antispam</td>
-          <td class="command-description">Configure anti-spam settings</td>
-          <td class="command-syntax">/antispam status:on threshold:5 timeframe:3</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        
-        <!-- Utility Commands -->
-        <tr>
-          <td class="command-name">/autorole <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Automatically assign roles to new members</td>
-          <td class="command-syntax">/autorole status:on role:@Member</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/logs <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Configure server logging</td>
-          <td class="command-syntax">/logs channel:#mod-logs type:moderation</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/botinfo</td>
-          <td class="command-description">Display information about the bot</td>
-          <td class="command-syntax">/botinfo</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/uptime</td>
-          <td class="command-description">Check how long the bot has been online</td>
-          <td class="command-syntax">/uptime</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/invite</td>
-          <td class="command-description">Get an invite link for the bot</td>
-          <td class="command-syntax">/invite</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/premium</td>
-          <td class="command-description">Get information about Guard-shin Premium</td>
-          <td class="command-syntax">/premium</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/support</td>
-          <td class="command-description">Get a link to the support server</td>
-          <td class="command-syntax">/support</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        
-        <!-- Admin Commands -->
-        <tr>
-          <td class="command-name">/setup</td>
-          <td class="command-description">Run the initial setup for Guard-shin</td>
-          <td class="command-syntax">/setup</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/config</td>
-          <td class="command-description">View and modify bot configuration</td>
-          <td class="command-syntax">/config setting:modlogs value:#mod-logs</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/permission</td>
-          <td class="command-description">Configure command permissions for roles</td>
-          <td class="command-syntax">/permission command:ban role:@Moderator permission:allow</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/reset</td>
-          <td class="command-description">Reset all bot settings to default</td>
-          <td class="command-syntax">/reset</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        
-        <!-- Premium Admin Commands -->
-        <tr>
-          <td class="command-name">/backup <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Create a backup of server settings and configurations</td>
-          <td class="command-syntax">/backup action:create</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/banlist <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">View, import, or export the server ban list</td>
-          <td class="command-syntax">/banlist action:view</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/verification <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Set up member verification system</td>
-          <td class="command-syntax">/verification action:setup method:captcha channel:#verify</td>
-          <td><span class="command-category">Admin</span></td>
-        </tr>
-        
-        <!-- Music Commands (Premium only) -->
-        <tr>
-          <td class="command-name">/play <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Play a song or add it to the queue</td>
-          <td class="command-syntax">/play song:URL or song name</td>
-          <td><span class="command-category">Music</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/skip <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Skip the currently playing song</td>
-          <td class="command-syntax">/skip</td>
-          <td><span class="command-category">Music</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">/queue <span class="command-pro-badge">Pro</span></td>
-          <td class="command-description">Display the current music queue</td>
-          <td class="command-syntax">/queue</td>
-          <td><span class="command-category">Music</span></td>
-        </tr>
-      </tbody>
-    </table>
-    
-    <div class="pagination">
-      <div class="pagination-btn"><i class="fas fa-chevron-left"></i></div>
-      <div class="pagination-btn active">1</div>
-      <div class="pagination-btn">2</div>
-      <div class="pagination-btn">3</div>
-      <div class="pagination-btn">...</div>
-      <div class="pagination-btn">10</div>
-      <div class="pagination-btn"><i class="fas fa-chevron-right"></i></div>
-    </div>
-  </main>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Command filtering functionality
+      // Category tab switching
+      const tabs = document.querySelectorAll('.category-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
+          tabs.forEach(t => t.classList.remove('active'));
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          // Filter commands based on category
+          // This is where you would implement filtering logic
+          // For now, just showing an alert
+          alert('Category switching functionality coming soon!');
+        });
+      });
+      
+      // Search input functionality
       const searchInput = document.querySelector('.search-input');
-      const filterDropdown = document.querySelector('.filter-dropdown');
-      const categoryTabs = document.querySelectorAll('.category-tab');
-      const commandRows = document.querySelectorAll('.commands-table tbody tr');
-      
-      // Initialize data for each row
-      commandRows.forEach(row => {
-        const categoryElement = row.querySelector('.command-category');
-        if (categoryElement) {
-          const category = categoryElement.textContent.toLowerCase();
-          row.setAttribute('data-category', category);
-          
-          // Check if it's a premium command
-          const isPremium = row.querySelector('.command-pro-badge') !== null;
-          row.setAttribute('data-premium', isPremium ? 'true' : 'false');
-        }
-      });
-      
-      // Function to filter commands based on current criteria
-      function filterCommands() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedFilter = filterDropdown.value;
-        const activeTab = document.querySelector('.category-tab.active');
-        const selectedCategory = activeTab ? activeTab.getAttribute('data-category') : 'all';
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
         
-        commandRows.forEach(row => {
-          // Get command data
-          const commandName = row.querySelector('.command-name') ? 
-                              row.querySelector('.command-name').textContent.toLowerCase() : '';
-          const commandDescription = row.querySelector('.command-description') ? 
-                                    row.querySelector('.command-description').textContent.toLowerCase() : '';
-          const rowCategory = row.getAttribute('data-category');
-          const isPremium = row.getAttribute('data-premium') === 'true';
-          
-          // Match criteria
-          const matchesSearch = searchTerm === '' || 
-                               commandName.includes(searchTerm) || 
-                               commandDescription.includes(searchTerm);
-          const matchesCategory = selectedCategory === 'all' || rowCategory === selectedCategory;
-          const matchesPremiumFilter = selectedFilter === 'all' || 
-                                     (selectedFilter === 'premium' && isPremium) || 
-                                     (selectedFilter === 'free' && !isPremium);
-          
-          // Show/hide row based on criteria
-          if (matchesSearch && matchesCategory && matchesPremiumFilter) {
-            row.style.display = '';
+        // Filter commands based on search term
+        // This is where you would implement search logic
+        // For this version, we'll keep it simple
+        const commands = document.querySelectorAll('.command-table tbody tr');
+        commands.forEach(cmd => {
+          const cmdText = cmd.textContent.toLowerCase();
+          if (cmdText.includes(searchTerm)) {
+            cmd.style.display = '';
           } else {
-            row.style.display = 'none';
+            cmd.style.display = 'none';
           }
         });
-        
-        console.log('Filtering by category:', selectedCategory);
-      }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Guard-shin</h1>
+        <p>Discord Moderation Bot</p>
+      </div>
       
-      // Hook up event listeners
-      if (searchInput) {
-        searchInput.addEventListener('input', filterCommands);
-      }
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="commands.html" class="nav-link active">Commands</a>
+          </li>
+          <li class="nav-item">
+            <a href="premium.html" class="nav-link">Premium</a>
+          </li>
+          <li class="nav-item">
+            <a href="support.html" class="nav-link">Support</a>
+          </li>
+        </ul>
+      </nav>
       
-      if (filterDropdown) {
-        filterDropdown.addEventListener('change', filterCommands);
-      }
+      <div class="sidebar-footer">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">
+          Add to Discord
+        </a>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="page-header">
+        <h2>Commands</h2>
+        <p>Browse and learn how to use all available Guard-shin commands</p>
+      </header>
       
-      // Set up category tab functionality
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search commands..." aria-label="Search commands">
+      </div>
+      
+      <!-- Category Tabs -->
+      <div class="category-tabs">
+        <div class="category-tab active">All Commands</div>
+        <div class="category-tab">Moderation</div>
+        <div class="category-tab">Security</div>
+        <div class="category-tab">Utility</div>
+        <div class="category-tab">Configuration</div>
+        <div class="category-tab">Premium</div>
+      </div>
+      
+      <!-- Commands List -->
+      <div class="card">
+        <div style="overflow-x: auto;">
+          <table class="command-table">
+            <thead>
+              <tr>
+                <th style="width: 20%">Command</th>
+                <th style="width: 50%">Description</th>
+                <th style="width: 30%">Usage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Moderation Commands -->
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!ban</span>
+                </td>
+                <td>
+                  <div class="command-description">Ban a user from the server with an optional reason.</div>
+                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
+                </td>
+                <td><code>!ban @user [reason]</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!unban</span>
+                </td>
+                <td>
+                  <div class="command-description">Unban a user from the server.</div>
+                  <div class="command-usage">Options: user (User ID)</div>
+                </td>
+                <td><code>!unban 123456789012345678</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!kick</span>
+                </td>
+                <td>
+                  <div class="command-description">Kick a user from the server with an optional reason.</div>
+                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
+                </td>
+                <td><code>!kick @user [reason]</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!mute</span>
+                </td>
+                <td>
+                  <div class="command-description">Mute a user, preventing them from sending messages.</div>
+                  <div class="command-usage">Options: user (User), duration (String, optional), reason (String, optional)</div>
+                </td>
+                <td><code>!mute @user 1h spamming</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!unmute</span>
+                </td>
+                <td>
+                  <div class="command-description">Unmute a previously muted user.</div>
+                  <div class="command-usage">Options: user (User)</div>
+                </td>
+                <td><code>!unmute @user</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Moderation">
+                <td>
+                  <span class="command-name">!warn</span>
+                </td>
+                <td>
+                  <div class="command-description">Issue a warning to a user and log it.</div>
+                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
+                </td>
+                <td><code>!warn @user inappropriate language</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Premium Configuration">
+                <td>
+                  <span class="command-name">!autorole</span>
+                  <span class="premium-badge">Premium</span>
+                </td>
+                <td>
+                  <div class="command-description">Automatically assign roles to new members.</div>
+                  <div class="command-usage">Options: status (String), role (Role)</div>
+                </td>
+                <td><code>!autorole enable @Member</code></td>
+              </tr>
+              
+              <tr class="command-row" data-category="Security">
+                <td>
+                  <span class="command-name">!lockdown</span>
+                </td>
+                <td>
+                  <div class="command-description">Lock down a channel or the entire server, preventing members from sending messages.</div>
+                  <div class="command-usage">Options: channel (Channel, optional), reason (String, optional)</div>
+                </td>
+                <td><code>!lockdown #general raid in progress</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Premium Info -->
+      <div class="premium-info">
+        <h3>Premium Commands</h3>
+        <p>Some commands are marked with a <span class="premium-badge">Premium</span> badge, indicating they are only available to servers with a premium subscription. <a href="premium.html">Upgrade to premium</a> to unlock all features!</p>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Category switching functionality
+      const categoryTabs = document.querySelectorAll('.category-tab');
+      const commandRows = document.querySelectorAll('.command-row');
+      
+      // Add click listeners to category tabs
       categoryTabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          // Update active tab
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
           categoryTabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
           this.classList.add('active');
           
-          // Apply filters
-          filterCommands();
+          const selectedCategory = this.textContent.trim();
+          
+          // Show/hide commands based on category
+          commandRows.forEach(row => {
+            if (selectedCategory === 'All Commands') {
+              row.style.display = ''; // Show all
+            } else if (selectedCategory === 'Premium') {
+              // Show commands with Premium badge
+              if (row.querySelector('.premium-badge')) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            } else {
+              // Show commands that match the category
+              const rowCategory = row.getAttribute('data-category');
+              if (rowCategory && rowCategory.includes(selectedCategory)) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            }
+          });
         });
       });
       
-      // Pagination functionality
-      const paginationBtns = document.querySelectorAll('.pagination-btn');
-      
-      paginationBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          if (this.textContent === '...' || this.querySelector('i')) {
-            return; // Skip ellipsis and arrow buttons for now
-          }
-          
-          // Update active page button
-          paginationBtns.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          
-          // In a real implementation, this would load the appropriate page of commands
-          // For now, it's just visual feedback
-        });
-      });
-      
-      // Run initial filtering
-      filterCommands();
+      // Initialize with All Commands selected
+      categoryTabs[0].click();
     });
   </script>
 </body>

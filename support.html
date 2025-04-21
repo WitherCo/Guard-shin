@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support - Guard-shin Discord Bot</title>
+  <meta name="description" content="Get help and support for Guard-shin, the advanced Discord moderation and security bot.">
+  <meta name="author" content="WitherCo">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <style>
+    /* Custom properties for theming */
+    :root {
+      --color-bg-primary: #121212;
+      --color-bg-secondary: #1e1e1e; 
+      --color-bg-tertiary: #2a2a2a;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #b0b0b0;
+      --color-accent-primary: #5865f2; /* Discord Blurple */
+      --color-accent-secondary: #3a46c3;
+      --color-success: #57F287;
+      --color-warning: #FEE75C;
+      --color-danger: #ED4245;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    /* Base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    
+    a:hover {
+      color: var(--color-accent-secondary);
+    }
+    
+    /* Layout */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background-color: var(--color-bg-secondary);
+      position: fixed;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    
+    .sidebar-header {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-header h1 {
+      font-size: 1.75rem;
+      color: var(--color-accent-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-header p {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem 0;
+      overflow-y: auto;
+    }
+    
+    .nav-list {
+      list-style: none;
+    }
+    
+    .nav-item {
+      margin-bottom: 0.25rem;
+    }
+    
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: var(--color-text-primary);
+      transition: background-color var(--transition-speed);
+      position: relative;
+    }
+    
+    .nav-link:hover {
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .nav-link.active {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+    
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .add-bot-btn {
+      display: block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+    }
+    
+    .add-bot-btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 2rem;
+      width: calc(100% - 250px);
+    }
+    
+    .page-header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1rem;
+    }
+    
+    .page-header h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+    }
+    
+    /* Card Components */
+    .card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    /* Support cards */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .support-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .support-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .support-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1.5rem;
+      color: var(--color-accent-primary);
+    }
+    
+    .support-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .support-description {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+    
+    .support-link {
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+      display: inline-block;
+    }
+    
+    .support-link:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Contact form */
+    .contact-form {
+      display: grid;
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-input,
+    .form-textarea,
+    .form-select {
+      background-color: var(--color-bg-tertiary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      padding: 0.75rem 1rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .btn {
+      display: inline-block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    
+    .btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* FAQ Section */
+    .faq-container {
+      margin-top: 1rem;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1.5rem 0;
+    }
+    
+    .faq-question {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .faq-question::after {
+      content: "+";
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    
+    .faq-item.active .faq-question::after {
+      transform: rotate(45deg);
+    }
+    
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px; /* Adjust as needed */
+    }
+    
+    /* Alert styles */
+    .alert {
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .alert-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    
+    .alert-info {
+      background-color: rgba(88, 101, 242, 0.1);
+      border-left: 4px solid var(--color-accent-primary);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
+      }
+      
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1.5rem;
+      }
+      
+      .sidebar-nav {
+        max-height: 300px;
+      }
+      
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // FAQ accordion functionality
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+          // Close all other items
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle this item
+          item.classList.toggle('active');
+        });
+      });
+      
+      // Contact form submission
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Simulate form submission
+          const nameInput = document.getElementById('name');
+          const emailInput = document.getElementById('email');
+          const subjectInput = document.getElementById('subject');
+          const messageInput = document.getElementById('message');
+          
+          // Basic validation
+          if (nameInput.value.trim() === '' || emailInput.value.trim() === '' || messageInput.value.trim() === '') {
+            alert('Please fill out all required fields.');
+            return;
+          }
+          
+          // Simulate successful submission
+          alert('Thank you for your message! Our support team will get back to you soon.');
+          contactForm.reset();
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Guard-shin</h1>
+        <p>Discord Moderation Bot</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="commands.html" class="nav-link">Commands</a>
+          </li>
+          <li class="nav-item">
+            <a href="premium.html" class="nav-link">Premium</a>
+          </li>
+          <li class="nav-item">
+            <a href="support.html" class="nav-link active">Support</a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">
+          Add to Discord
+        </a>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="page-header">
+        <h2>Support Center</h2>
+        <p>Get help with Guard-shin setup, commands, and features</p>
+      </header>
+      
+      <!-- Support Options -->
+      <div class="support-grid">
+        <!-- Documentation -->
+        <div class="support-card">
+          <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <h3 class="support-title">Documentation</h3>
+          <p class="support-description">
+            Browse our documentation to learn about commands, settings, and best practices for moderating your server with Guard-shin.
+          </p>
+          <a href="commands.html" class="support-link">View Docs</a>
+        </div>
+        
+        <!-- Discord Support Server -->
+        <div class="support-card">
+          <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+          </svg>
+          <h3 class="support-title">Discord Server</h3>
+          <p class="support-description">
+            Join our community Discord server to get real-time support, report bugs, suggest features, and connect with other Guard-shin users.
+          </p>
+          <a href="https://discord.gg/guard-shin" class="support-link" target="_blank" rel="noopener noreferrer">Join Server</a>
+        </div>
+        
+        <!-- Premium Support -->
+        <div class="support-card">
+          <svg class="support-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+          <h3 class="support-title">Premium Support</h3>
+          <p class="support-description">
+            Premium subscribers get priority support, dedicated assistance, and faster response times for all Guard-shin related issues.
+          </p>
+          <a href="premium.html" class="support-link">Upgrade Now</a>
+        </div>
+      </div>
+      
+      <!-- Contact Form -->
+      <div class="card">
+        <h3>Contact Us</h3>
+        <div class="alert alert-info">
+          <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <p>Before submitting a ticket, please check our FAQ below to see if your question has already been answered. For faster support, consider joining our Discord support server.</p>
+          </div>
+        </div>
+        
+        <form id="contact-form" class="contact-form">
+          <div class="form-group">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" id="name" class="form-input" required placeholder="Your name">
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-input" required placeholder="Your email address">
+          </div>
+          
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject</label>
+            <select id="subject" class="form-select" required>
+              <option value="" disabled selected>Select a category</option>
+              <option value="general">General Question</option>
+              <option value="technical">Technical Support</option>
+              <option value="billing">Billing Question</option>
+              <option value="bug">Bug Report</option>
+              <option value="feature">Feature Request</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-textarea" required placeholder="Describe your issue or question in detail"></textarea>
+          </div>
+          
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+      
+      <!-- FAQ Section -->
+      <div class="card">
+        <h3>Frequently Asked Questions</h3>
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question">How do I add Guard-shin to my server?</div>
+            <div class="faq-answer">
+              <p>Adding Guard-shin to your server is simple. Click the "Add to Discord" button on our website, authorize the bot with your Discord account, and select the server where you want to add it. Make sure you have the "Manage Server" permission on that server.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">What permissions does Guard-shin need?</div>
+            <div class="faq-answer">
+              <p>Guard-shin requires the "Administrator" permission for full functionality. However, if you prefer to limit its permissions, the bot needs at minimum: Manage Roles, Manage Channels, Kick Members, Ban Members, Manage Messages, View Audit Log, and Send Messages. Some features may not work without the proper permissions.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">How do I set up custom welcome messages?</div>
+            <div class="faq-answer">
+              <p>Use the <code>!welcome</code> command to set up custom welcome messages. For example: <code>!welcome set #welcome-channel Welcome {user} to our server!</code> will send a welcome message when new members join. You can use variables like {user}, {server}, {count}, etc. to personalize your messages.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">My premium subscription isn't working. What should I do?</div>
+            <div class="faq-answer">
+              <p>If your premium subscription isn't working properly, try the following steps:<br>
+              1. Make sure your payment was successful and not declined.<br>
+              2. Use the <code>!premium status</code> command to check your subscription status.<br>
+              3. Try refreshing your connection with <code>!premium refresh</code>.<br>
+              4. If the issue persists, please contact our support team with your transaction ID ready.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">Can I customize the bot's prefix?</div>
+            <div class="faq-answer">
+              <p>Yes, you can customize the prefix using the <code>!prefix</code> command. For example, <code>!prefix $</code> will change the prefix from ! to $. After changing the prefix, you'll need to use the new prefix for all commands (e.g., <code>$help</code> instead of <code>!help</code>).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
