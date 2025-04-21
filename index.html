@@ -1,22 +1,265 @@
 <!DOCTYPE html>
-<!--
-Copyright (c) 2024-2025 WitherCo. All Rights Reserved.
-Guard-shin Discord Bot - Advanced moderation and security for Discord servers
-This software is the exclusive property of WitherCo. Unauthorized use, reproduction, or distribution is prohibited.
--->
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guard-shin Discord Bot</title>
-    <meta name="description" content="Advanced Discord moderation and security bot" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta name="copyright" content="Copyright (c) 2024-2025 WitherCo. All Rights Reserved." />
-    <meta name="author" content="WitherCo" />
-    <script type="module" crossorigin src="/Guard-shin/assets/index-U-FgXLQp.js"></script>
-    <link rel="stylesheet" crossorigin href="/Guard-shin/assets/index-C5ZT5nUR.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guard-shin Dashboard</title>
+  <meta name="description" content="Guard-shin Discord Bot Dashboard">
+  <style>
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-tertiary: #292929;
+      --text-primary: #ffffff;
+      --text-secondary: #aaaaaa;
+      --brand-primary: #5865f2;
+      --brand-secondary: #404eed;
+      --accent: #5865f2;
+      --danger: #ed4245;
+      --success: #57f287;
+      --warning: #fee75c;
+      --border-color: #333333;
+    }
+    
+    body, html {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .layout-container {
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      position: fixed;
+    }
+    
+    .sidebar-header {
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .sidebar-header h2 {
+      margin: 0;
+      color: var(--brand-primary);
+    }
+    
+    .sidebar-nav {
+      flex: 1;
+      padding: 20px 0;
+    }
+    
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar-nav li {
+      margin-bottom: 5px;
+    }
+    
+    .sidebar-link {
+      display: block;
+      padding: 10px 20px;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .sidebar-link:hover {
+      background-color: var(--bg-tertiary);
+      color: var(--brand-primary);
+    }
+    
+    .sidebar-link.active {
+      background-color: var(--brand-primary);
+      color: white;
+    }
+    
+    .sidebar-footer {
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .add-server-button {
+      display: block;
+      background-color: var(--brand-primary);
+      color: white;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    
+    .add-server-button:hover {
+      background-color: var(--brand-secondary);
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      margin-left: 250px;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .dashboard-container {
+      padding: 20px;
+    }
+    
+    .section-title {
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    
+    .dashboard-stats {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 20px;
+      flex: 1;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      border-left: 4px solid var(--brand-primary);
+    }
+    
+    .stat-card h3 {
+      margin-top: 0;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 10px 0 0;
+    }
+    
+    .card {
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card h2 {
+      margin-top: 0;
+      color: var(--text-primary);
+    }
+    
+    .premium-badge {
+      background-color: var(--warning);
+      color: black;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="layout-container dark-theme">
+      <div class="sidebar dark-theme">
+        <div class="sidebar-header">
+          <h2>Guard-shin</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li>
+              <a href="#" class="sidebar-link active">Dashboard</a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link">Commands</a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link">Settings</a>
+            </li>
+            <li>
+              <a href="#" class="sidebar-link">Premium</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <a 
+            href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="add-server-button"
+          >
+            Add Server
+          </a>
+        </div>
+      </div>
+      
+      <div class="main-content dark-theme">
+        <div class="dashboard-container">
+          <h1 class="section-title">Dashboard</h1>
+          
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <h3>Total Servers</h3>
+              <p class="stat-number">2</p>
+            </div>
+            <div class="stat-card">
+              <h3>Users Protected</h3>
+              <p class="stat-number">150+</p>
+            </div>
+            <div class="stat-card">
+              <h3>Commands Available</h3>
+              <p class="stat-number">40+</p>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h2>Welcome to Guard-shin Dashboard</h2>
+            <p>
+              Guard-shin is your advanced Discord moderation and security bot.
+              Use the sidebar to navigate through different sections and manage your bot settings.
+            </p>
+            <p>
+              <strong>Getting Started:</strong> Use the "Add Server" button in the sidebar to add Guard-shin to your Discord server.
+            </p>
+          </div>
+          
+          <div class="card">
+            <h2>Recent Updates</h2>
+            <ul>
+              <li>Added new auto-moderation features</li>
+              <li>Improved raid protection system</li>
+              <li>Added custom welcome messages</li>
+              <li>Enhanced verification system</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
