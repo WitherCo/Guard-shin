@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | Guard-shin</title>
+  <link rel="icon" type="image/png" href="generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --color-bg-primary: #0f0f0f;
+      --color-bg-secondary: #1a1a1a;
+      --color-bg-tertiary: #252525;
+      --color-text-primary: #fff;
+      --color-text-secondary: #ccc;
+      --color-text-tertiary: #999;
+      --color-accent-primary: #8249F0;
+      --color-accent-secondary: #7339e0;
+      --color-accent-hover: #9166f4;
+      --color-error: #f04747;
+      --color-success: #43b581;
+      --color-warning: #faa61a;
+      --color-premium: #ffb800;
+      --color-border: #333;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    body {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #101010;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--color-accent-primary);
+      border-radius: 8px;
+      margin-right: 0.75rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+      border-left: 3px solid transparent;
+      transition: all var(--transition-speed);
+    }
+    
+    .nav-item:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-item.active {
+      background-color: rgba(130, 73, 240, 0.2);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-icon {
+      width: 20px;
+      margin-right: 0.75rem;
+      text-align: center;
+    }
+    
+    .nav-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .premium-badge {
+      background-color: var(--color-premium);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0 1.5rem;
+    }
+    
+    .discord-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+    }
+    
+    .discord-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .discord-icon {
+      margin-right: 0.5rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 220px;
+      padding: 1.5rem;
+      width: calc(100% - 220px);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.5rem 0 2rem;
+    }
+    
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Support Header */
+    .support-header {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .support-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    
+    .support-description {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    
+    .support-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .support-btn {
+      display: flex;
+      align-items: center;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+    }
+    
+    .support-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .support-btn-icon {
+      margin-right: 0.75rem;
+    }
+    
+    .support-btn.secondary {
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .support-btn.secondary:hover {
+      background-color: var(--color-bg-primary);
+    }
+    
+    /* Support Grid */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Discord Server Card */
+    .discord-server-card {
+      background: linear-gradient(135deg, #5865F2, #4752C4);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .discord-icon-large {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .discord-server-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    
+    .discord-server-description {
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+    
+    .join-discord-btn {
+      background-color: white;
+      color: #5865F2;
+      font-weight: 600;
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--border-radius);
+      transition: opacity var(--transition-speed);
+    }
+    
+    .join-discord-btn:hover {
+      opacity: 0.9;
+    }
+    
+    /* Contact Card */
+    .contact-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .contact-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .contact-description {
+      color: var(--color-text-secondary);
+      margin-bottom: 1.5rem;
+    }
+    
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-label {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .form-input {
+      background-color: var(--color-bg-tertiary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      width: 100%;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .form-textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.8rem;
+      border-radius: var(--border-radius);
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color var(--transition-speed);
+      width: 100%;
+    }
+    
+    .submit-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .faq-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 0;
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .faq-answer {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-speed);
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      margin-top: 0.5rem;
+    }
+    
+    .faq-icon {
+      transition: transform var(--transition-speed);
+    }
+    
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+    
+    /* Documentation Section */
+    .docs-section {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .docs-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    
+    .docs-card {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      transition: transform var(--transition-speed);
+    }
+    
+    .docs-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .docs-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: rgba(130, 73, 240, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--color-accent-primary);
+      font-size: 1.25rem;
+    }
+    
+    .docs-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .docs-card-description {
+      font-size: 0.9rem;
+      color: var(--color-text-tertiary);
+      margin-bottom: 1rem;
+    }
+    
+    .docs-card-link {
+      color: var(--color-accent-primary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+    
+    .docs-card-link-icon {
+      margin-left: 0.25rem;
+      font-size: 0.8rem;
+      transition: transform var(--transition-speed);
+    }
+    
+    .docs-card:hover .docs-card-link-icon {
+      transform: translateX(3px);
+    }
+    
+    /* Premium Support */
+    .premium-support {
+      background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .premium-support-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .premium-support-icon {
+      margin-right: 0.75rem;
+      color: var(--color-premium);
+    }
+    
+    .premium-support-description {
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .premium-support-btn {
+      display: inline-block;
+      background-color: white;
+      color: var(--color-accent-primary);
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: var(--border-radius);
+      transition: opacity var(--transition-speed);
+    }
+    
+    .premium-support-btn:hover {
+      opacity: 0.9;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .docs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 64px;
+        padding: 1rem 0;
+      }
+      
+      .logo-text,
+      .nav-text,
+      .premium-badge {
+        display: none;
+      }
+      
+      .sidebar-logo {
+        justify-content: center;
+        padding: 0;
+      }
+      
+      .logo-icon {
+        margin-right: 0;
+      }
+      
+      .nav-item {
+        justify-content: center;
+        padding: 0.75rem;
+      }
+      
+      .nav-icon {
+        margin-right: 0;
+      }
+      
+      .discord-btn {
+        padding: 0.75rem;
+        justify-content: center;
+      }
+      
+      .discord-icon {
+        margin-right: 0;
+      }
+      
+      .main-content {
+        margin-left: 64px;
+        width: calc(100% - 64px);
+      }
+      
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .support-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .support-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">Guard-shin</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a href="modern_dashboard.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-home"></i></div>
+        <div class="nav-text">Dashboard</div>
+      </a>
+      
+      <a href="modern_commands.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
+        <div class="nav-text">Commands</div>
+      </a>
+      
+      <a href="modern_premium.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-crown"></i></div>
+        <div class="nav-text">Premium</div>
+      </a>
+      
+      <a href="modern_support.html" class="nav-item active">
+        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="nav-text">Support</div>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
+        <span class="discord-icon"><i class="fas fa-plus"></i></span>
+        <span>Add to Discord</span>
+      </a>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="user-avatar">
+        U
+      </div>
+    </header>
+    
+    <!-- Support Header -->
+    <section class="support-header">
+      <h1 class="support-title">How Can We Help You?</h1>
+      <p class="support-description">We're here to help you get the most out of Guard-shin. Find answers to common questions, learn how to use commands, or get in touch with our support team.</p>
+      <div class="support-actions">
+        <a href="#faq" class="support-btn">
+          <span class="support-btn-icon"><i class="fas fa-question-circle"></i></span>
+          <span>Frequently Asked Questions</span>
+        </a>
+        <a href="#contact" class="support-btn secondary">
+          <span class="support-btn-icon"><i class="fas fa-envelope"></i></span>
+          <span>Contact Support</span>
+        </a>
+      </div>
+    </section>
+    
+    <!-- Support Grid -->
+    <section class="support-grid">
+      <!-- Discord Server Card -->
+      <div class="discord-server-card">
+        <i class="fab fa-discord discord-icon-large"></i>
+        <h2 class="discord-server-title">Join Our Discord Server</h2>
+        <p class="discord-server-description">Get real-time support, connect with other users, and be the first to know about new features and updates.</p>
+        <a href="https://discord.gg/1233495879223345172" class="join-discord-btn" target="_blank" rel="noopener noreferrer">
+          Join Now
+        </a>
+      </div>
+      
+      <!-- Contact Card -->
+      <div class="contact-card" id="contact">
+        <h2 class="contact-title">Contact Support</h2>
+        <p class="contact-description">Have a specific question or need personalized help? Fill out the form below and our support team will get back to you as soon as possible.</p>
+        <form class="contact-form" id="supportForm">
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="serverId" class="form-label">Discord Server ID (Optional)</label>
+            <input type="text" id="serverId" class="form-input" placeholder="Server ID where the bot is used">
+          </div>
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" id="subject" class="form-input" placeholder="What do you need help with?" required>
+          </div>
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" class="form-input form-textarea" placeholder="Describe your issue in detail..." required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+      </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+      <h2 class="faq-title">Frequently Asked Questions</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I add Guard-shin to my server?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          You can add Guard-shin to your server by clicking the "Add to Discord" button in the sidebar or by visiting our homepage. You'll need to have the "Manage Server" permission in the Discord server you want to add the bot to.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          What permissions does Guard-shin need?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          Guard-shin requires several permissions to function properly, including "Manage Messages", "Kick Members", "Ban Members", "Manage Roles", and more. When you add the bot to your server, you'll see a list of all required permissions. For optimal performance, we recommend using the default permission setup.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I set up auto-moderation?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          You can set up auto-moderation using the <code>g!automod</code> command. This will allow you to configure filters for inappropriate content, spam protection, and more. Use <code>g!automod help</code> for a detailed guide on all available options.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          What's the difference between free and premium?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          The free version of Guard-shin includes basic moderation commands, auto-moderation for text content, server statistics, and a limited music player. Premium unlocks advanced features like raid protection, custom welcome images, unlimited music player, custom auto-responders, advanced analytics, and priority support. Check out our Premium page for a detailed comparison.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I change the bot's prefix?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          You can change the bot's prefix using the <code>g!prefix</code> command. For example, to change the prefix to "!", use <code>g!prefix !</code>. This feature is available to premium users only.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How does the music player work?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          The music player allows you to play music in voice channels. Use <code>g!play [song name or URL]</code> to add a song to the queue. You can manage the queue with commands like <code>g!skip</code>, <code>g!pause</code>, <code>g!resume</code>, and <code>g!queue</code>. Free users can play up to 5 songs per server, while premium users have unlimited access.
+        </div>
+      </div>
+    </section>
+    
+    <!-- Documentation Section -->
+    <section class="docs-section">
+      <h2 class="docs-title">Quick Guides</h2>
+      <div class="docs-grid">
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="docs-card-title">Getting Started</h3>
+          <p class="docs-card-description">Learn how to set up Guard-shin in your server and configure basic settings.</p>
+          <a href="modern_commands.html" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-gavel"></i>
+          </div>
+          <h3 class="docs-card-title">Moderation Guide</h3>
+          <p class="docs-card-description">Master the moderation tools to keep your server safe and organized.</p>
+          <a href="modern_commands.html#moderation" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3 class="docs-card-title">Music Player</h3>
+          <p class="docs-card-description">Learn how to use the music player and create playlists for your server.</p>
+          <a href="modern_commands.html#music" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3 class="docs-card-title">Advanced Settings</h3>
+          <p class="docs-card-description">Configure advanced settings and customizations for your server.</p>
+          <a href="modern_commands.html#setup" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-crown"></i>
+          </div>
+          <h3 class="docs-card-title">Premium Features</h3>
+          <p class="docs-card-description">Explore the premium features and how to get the most out of them.</p>
+          <a href="modern_premium.html" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+        
+        <div class="docs-card">
+          <div class="docs-card-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h3 class="docs-card-title">Raid Protection</h3>
+          <p class="docs-card-description">Set up advanced raid protection to keep your server safe.</p>
+          <a href="modern_premium.html#raid-protection" class="docs-card-link">
+            Read Guide <span class="docs-card-link-icon"><i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Premium Support -->
+    <section class="premium-support">
+      <h2 class="premium-support-title">
+        <span class="premium-support-icon"><i class="fas fa-crown"></i></span>
+        Premium Support
+      </h2>
+      <p class="premium-support-description">Upgrade to premium for priority support, faster response times, and dedicated assistance with your server setup and configuration.</p>
+      <a href="modern_premium.html" class="premium-support-btn">
+        Upgrade to Premium
+      </a>
+    </section>
+  </main>
+
+  <script>
+    // FAQ Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+          item.classList.toggle('active');
+        });
+      });
+      
+      // Support Form Submission
+      const supportForm = document.getElementById('supportForm');
+      
+      supportForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const email = document.getElementById('email').value;
+        const serverId = document.getElementById('serverId').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+        
+        // Here you would normally send the form data to your server
+        // For now, just show a success message
+        alert('Thank you for your message. Our support team will get back to you soon!');
+        
+        // Reset the form
+        supportForm.reset();
+      });
+    });
+  </script>
+</body>
+</html>

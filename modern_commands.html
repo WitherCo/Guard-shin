@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commands | Guard-shin</title>
+  <link rel="icon" type="image/png" href="generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --color-bg-primary: #0f0f0f;
+      --color-bg-secondary: #1a1a1a;
+      --color-bg-tertiary: #252525;
+      --color-text-primary: #fff;
+      --color-text-secondary: #ccc;
+      --color-text-tertiary: #999;
+      --color-accent-primary: #8249F0;
+      --color-accent-secondary: #7339e0;
+      --color-accent-hover: #9166f4;
+      --color-error: #f04747;
+      --color-success: #43b581;
+      --color-warning: #faa61a;
+      --color-premium: #ffb800;
+      --color-moderation: #f87171;
+      --color-utility: #22c55e;
+      --color-fun: #3b82f6;
+      --color-music: #ec4899;
+      --color-setup: #8b5cf6;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    body {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #101010;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--color-accent-primary);
+      border-radius: 8px;
+      margin-right: 0.75rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+      border-left: 3px solid transparent;
+      transition: all var(--transition-speed);
+    }
+    
+    .nav-item:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-item.active {
+      background-color: rgba(130, 73, 240, 0.2);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-icon {
+      width: 20px;
+      margin-right: 0.75rem;
+      text-align: center;
+    }
+    
+    .nav-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .premium-badge {
+      background-color: var(--color-premium);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0 1.5rem;
+    }
+    
+    .discord-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+    }
+    
+    .discord-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .discord-icon {
+      margin-right: 0.5rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 220px;
+      padding: 1.5rem;
+      width: calc(100% - 220px);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.5rem 0 2rem;
+    }
+    
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Page Header */
+    .page-header {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .page-description {
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      max-width: 80%;
+    }
+    
+    /* Commands Section */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .section-title-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+      font-size: 1rem;
+    }
+    
+    .moderation-icon {
+      background-color: rgba(248, 113, 113, 0.2);
+      color: var(--color-moderation);
+    }
+    
+    .utility-icon {
+      background-color: rgba(34, 197, 94, 0.2);
+      color: var(--color-utility);
+    }
+    
+    .fun-icon {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: var(--color-fun);
+    }
+    
+    .music-icon {
+      background-color: rgba(236, 72, 153, 0.2);
+      color: var(--color-music);
+    }
+    
+    .setup-icon {
+      background-color: rgba(139, 92, 246, 0.2);
+      color: var(--color-setup);
+    }
+    
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    
+    .command-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .command-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    
+    .command-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .command-category {
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+    
+    .category-moderation {
+      background-color: rgba(248, 113, 113, 0.2);
+      color: var(--color-moderation);
+    }
+    
+    .category-utility {
+      background-color: rgba(34, 197, 94, 0.2);
+      color: var(--color-utility);
+    }
+    
+    .category-fun {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: var(--color-fun);
+    }
+    
+    .category-music {
+      background-color: rgba(236, 72, 153, 0.2);
+      color: var(--color-music);
+    }
+    
+    .category-setup {
+      background-color: rgba(139, 92, 246, 0.2);
+      color: var(--color-setup);
+    }
+    
+    .command-description {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    
+    .command-usage {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.85rem;
+      background-color: var(--color-bg-tertiary);
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .command-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-top: auto;
+    }
+    
+    .command-permission {
+      color: var(--color-text-tertiary);
+    }
+    
+    .premium-only {
+      display: flex;
+      align-items: center;
+      color: var(--color-premium);
+    }
+    
+    .premium-icon {
+      margin-right: 0.25rem;
+    }
+    
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      color: var(--color-text-primary);
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-accent-primary);
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-text-tertiary);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+      .commands-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 64px;
+        padding: 1rem 0;
+      }
+      
+      .logo-text,
+      .nav-text,
+      .premium-badge {
+        display: none;
+      }
+      
+      .sidebar-logo {
+        justify-content: center;
+        padding: 0;
+      }
+      
+      .logo-icon {
+        margin-right: 0;
+      }
+      
+      .nav-item {
+        justify-content: center;
+        padding: 0.75rem;
+      }
+      
+      .nav-icon {
+        margin-right: 0;
+      }
+      
+      .discord-btn {
+        padding: 0.75rem;
+        justify-content: center;
+      }
+      
+      .discord-icon {
+        margin-right: 0;
+      }
+      
+      .main-content {
+        margin-left: 64px;
+        width: calc(100% - 64px);
+      }
+      
+      .page-description {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">Guard-shin</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a href="modern_dashboard.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-home"></i></div>
+        <div class="nav-text">Dashboard</div>
+      </a>
+      
+      <a href="modern_commands.html" class="nav-item active">
+        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
+        <div class="nav-text">Commands</div>
+      </a>
+      
+      <a href="modern_premium.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-crown"></i></div>
+        <div class="nav-text">Premium</div>
+      </a>
+      
+      <a href="modern_support.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="nav-text">Support</div>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
+        <span class="discord-icon"><i class="fas fa-plus"></i></span>
+        <span>Add to Discord</span>
+      </a>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="user-avatar">
+        U
+      </div>
+    </header>
+    
+    <!-- Page Header -->
+    <section class="page-header">
+      <h1 class="page-title">Commands</h1>
+      <p class="page-description">Browse and learn how to use Guard-shin's commands. Some commands are only available with a premium subscription.</p>
+    </section>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-input" placeholder="Search commands...">
+    </div>
+    
+    <!-- Moderation Commands -->
+    <section class="commands-section">
+      <h2 class="section-title">
+        <div class="section-title-icon moderation-icon">
+          <i class="fas fa-gavel"></i>
+        </div>
+        Moderation Commands
+      </h2>
+      <div class="commands-grid">
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">ban</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Ban a user from the server with an optional reason.</p>
+          <div class="command-usage">g!ban @user [reason]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Ban Members</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">kick</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Kick a user from the server with an optional reason.</p>
+          <div class="command-usage">g!kick @user [reason]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Kick Members</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">mute</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Mute a user for a specified duration, preventing them from sending messages.</p>
+          <div class="command-usage">g!mute @user [duration] [reason]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Manage Roles</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">purge</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Delete a specified number of messages from a channel.</p>
+          <div class="command-usage">g!purge [amount]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Manage Messages</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">warn</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Warn a user for rule violations with an optional reason.</p>
+          <div class="command-usage">g!warn @user [reason]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Manage Messages</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">lockdown</h3>
+            <span class="command-category category-moderation">Moderation</span>
+          </div>
+          <p class="command-description">Lock a channel during raids or emergencies, preventing new messages.</p>
+          <div class="command-usage">g!lockdown [duration]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Manage Channels</div>
+            <div class="premium-only">
+              <span class="premium-icon"><i class="fas fa-crown"></i></span>
+              Premium
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Utility Commands -->
+    <section class="commands-section">
+      <h2 class="section-title">
+        <div class="section-title-icon utility-icon">
+          <i class="fas fa-tools"></i>
+        </div>
+        Utility Commands
+      </h2>
+      <div class="commands-grid">
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">help</h3>
+            <span class="command-category category-utility">Utility</span>
+          </div>
+          <p class="command-description">Display a list of available commands or information about a specific command.</p>
+          <div class="command-usage">g!help [command]</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">info</h3>
+            <span class="command-category category-utility">Utility</span>
+          </div>
+          <p class="command-description">Display information about the bot, including uptime and version.</p>
+          <div class="command-usage">g!info</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">serverinfo</h3>
+            <span class="command-category category-utility">Utility</span>
+          </div>
+          <p class="command-description">Display detailed information about the server.</p>
+          <div class="command-usage">g!serverinfo</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">userinfo</h3>
+            <span class="command-category category-utility">Utility</span>
+          </div>
+          <p class="command-description">Display detailed information about a user.</p>
+          <div class="command-usage">g!userinfo [@user]</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Music Commands -->
+    <section class="commands-section">
+      <h2 class="section-title">
+        <div class="section-title-icon music-icon">
+          <i class="fas fa-music"></i>
+        </div>
+        Music Commands
+      </h2>
+      <div class="commands-grid">
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">play</h3>
+            <span class="command-category category-music">Music</span>
+          </div>
+          <p class="command-description">Play a song or add it to the queue.</p>
+          <div class="command-usage">g!play [song name or URL]</div>
+          <div class="command-footer">
+            <div class="command-permission">Free: 5 songs per server</div>
+            <div class="premium-only">
+              <span class="premium-icon"><i class="fas fa-crown"></i></span>
+              Unlimited
+            </div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">queue</h3>
+            <span class="command-category category-music">Music</span>
+          </div>
+          <p class="command-description">Display the current music queue.</p>
+          <div class="command-usage">g!queue</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">skip</h3>
+            <span class="command-category category-music">Music</span>
+          </div>
+          <p class="command-description">Skip the currently playing song.</p>
+          <div class="command-usage">g!skip</div>
+          <div class="command-footer">
+            <div class="command-permission">DJ role or song requester</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">playlist</h3>
+            <span class="command-category category-music">Music</span>
+          </div>
+          <p class="command-description">Load and play a saved playlist.</p>
+          <div class="command-usage">g!playlist [name]</div>
+          <div class="command-footer">
+            <div class="command-permission">No special permissions required</div>
+            <div class="premium-only">
+              <span class="premium-icon"><i class="fas fa-crown"></i></span>
+              Premium
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Setup Commands -->
+    <section class="commands-section">
+      <h2 class="section-title">
+        <div class="section-title-icon setup-icon">
+          <i class="fas fa-cogs"></i>
+        </div>
+        Setup Commands
+      </h2>
+      <div class="commands-grid">
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">setup</h3>
+            <span class="command-category category-setup">Setup</span>
+          </div>
+          <p class="command-description">Launch the interactive setup wizard for the bot.</p>
+          <div class="command-usage">g!setup</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Administrator</div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">prefix</h3>
+            <span class="command-category category-setup">Setup</span>
+          </div>
+          <p class="command-description">Change the bot's command prefix for your server.</p>
+          <div class="command-usage">g!prefix [new prefix]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Administrator</div>
+            <div class="premium-only">
+              <span class="premium-icon"><i class="fas fa-crown"></i></span>
+              Premium
+            </div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">autorole</h3>
+            <span class="command-category category-setup">Setup</span>
+          </div>
+          <p class="command-description">Set up automatic role assignment for new members.</p>
+          <div class="command-usage">g!autorole [role]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Manage Roles</div>
+            <div class="premium-only">
+              <span class="premium-icon"><i class="fas fa-crown"></i></span>
+              Premium
+            </div>
+          </div>
+        </div>
+        
+        <div class="command-card">
+          <div class="command-header">
+            <h3 class="command-name">logs</h3>
+            <span class="command-category category-setup">Setup</span>
+          </div>
+          <p class="command-description">Set up a logging channel for moderation actions.</p>
+          <div class="command-usage">g!logs [#channel]</div>
+          <div class="command-footer">
+            <div class="command-permission">Requires: Administrator</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.querySelector('.search-input');
+      const commandCards = document.querySelectorAll('.command-card');
+      
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        commandCards.forEach(card => {
+          const commandName = card.querySelector('.command-name').textContent.toLowerCase();
+          const commandDescription = card.querySelector('.command-description').textContent.toLowerCase();
+          
+          if (commandName.includes(searchTerm) || commandDescription.includes(searchTerm)) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

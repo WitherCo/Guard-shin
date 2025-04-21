@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium | Guard-shin</title>
+  <link rel="icon" type="image/png" href="generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --color-bg-primary: #0f0f0f;
+      --color-bg-secondary: #1a1a1a;
+      --color-bg-tertiary: #252525;
+      --color-text-primary: #fff;
+      --color-text-secondary: #ccc;
+      --color-text-tertiary: #999;
+      --color-accent-primary: #8249F0;
+      --color-accent-secondary: #7339e0;
+      --color-accent-hover: #9166f4;
+      --color-error: #f04747;
+      --color-success: #43b581;
+      --color-warning: #faa61a;
+      --color-premium: #ffb800;
+      --color-border: #333;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    body {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #101010;
+      height: 100vh;
+      padding: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
+    
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background-color: var(--color-accent-primary);
+      border-radius: 8px;
+      margin-right: 0.75rem;
+    }
+    
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-accent-primary);
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+      border-left: 3px solid transparent;
+      transition: all var(--transition-speed);
+    }
+    
+    .nav-item:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-item.active {
+      background-color: rgba(130, 73, 240, 0.2);
+      color: var(--color-text-primary);
+      border-left-color: var(--color-accent-primary);
+    }
+    
+    .nav-icon {
+      width: 20px;
+      margin-right: 0.75rem;
+      text-align: center;
+    }
+    
+    .nav-text {
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    
+    .premium-badge {
+      background-color: var(--color-premium);
+      color: #000;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+    
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 0 1.5rem;
+    }
+    
+    .discord-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+    }
+    
+    .discord-btn:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .discord-icon {
+      margin-right: 0.5rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 220px;
+      padding: 1.5rem;
+      width: calc(100% - 220px);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0.5rem 0 2rem;
+    }
+    
+    .notification-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    /* Premium Header */
+    .premium-header {
+      background: linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-secondary));
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .premium-header::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      left: -50px;
+      width: 100px;
+      height: 100px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .premium-header::after {
+      content: "";
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+    
+    .premium-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .premium-title-icon {
+      margin-right: 0.75rem;
+      color: var(--color-premium);
+    }
+    
+    .premium-subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+    }
+    
+    /* Pricing Section */
+    .pricing-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+    
+    .pricing-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--color-border);
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+    
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .pricing-card.featured {
+      border: 2px solid var(--color-accent-primary);
+      position: relative;
+    }
+    
+    .featured-badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+    
+    .pricing-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .pricing-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .pricing-price {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+      color: var(--color-accent-primary);
+    }
+    
+    .pricing-frequency {
+      font-size: 0.9rem;
+      color: var(--color-text-tertiary);
+    }
+    
+    .pricing-features {
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    
+    .feature-icon {
+      color: var(--color-success);
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    
+    .feature-text {
+      font-size: 0.95rem;
+    }
+    
+    .pricing-cta {
+      text-align: center;
+    }
+    
+    .pricing-button {
+      display: inline-block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed);
+      width: 100%;
+      text-align: center;
+    }
+    
+    .pricing-button:hover {
+      background-color: var(--color-accent-hover);
+    }
+    
+    .pricing-button.secondary {
+      background-color: transparent;
+      border: 1px solid var(--color-accent-primary);
+      color: var(--color-text-primary);
+    }
+    
+    .pricing-button.secondary:hover {
+      background-color: rgba(130, 73, 240, 0.1);
+    }
+    
+    /* Feature Grid */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .feature-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      border: 1px solid var(--color-border);
+    }
+    
+    .feature-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background-color: rgba(130, 73, 240, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--color-accent-primary);
+      font-size: 1.25rem;
+    }
+    
+    .feature-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-card-description {
+      font-size: 0.9rem;
+      color: var(--color-text-tertiary);
+    }
+    
+    /* FAQ Section */
+    .faq-section {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .faq-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+      padding: 1rem 0;
+    }
+    
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+    
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .faq-answer {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-speed);
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      margin-top: 0.5rem;
+    }
+    
+    .faq-icon {
+      transition: transform var(--transition-speed);
+    }
+    
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+    
+    /* Payment Methods */
+    .payment-methods {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    
+    .payment-method {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.75rem 1.25rem;
+    }
+    
+    .payment-icon {
+      margin-right: 0.5rem;
+      font-size: 1.25rem;
+    }
+    
+    .payment-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    /* Testimonials */
+    .testimonials-section {
+      margin-bottom: 3rem;
+    }
+    
+    .testimonials-container {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    .testimonials-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .testimonial-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      min-width: 300px;
+      max-width: 350px;
+      border: 1px solid var(--color-border);
+    }
+    
+    .testimonial-quote {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+    
+    .testimonial-user {
+      display: flex;
+      align-items: center;
+    }
+    
+    .testimonial-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .testimonial-info {
+      flex: 1;
+    }
+    
+    .testimonial-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    
+    .testimonial-server {
+      font-size: 0.8rem;
+      color: var(--color-text-tertiary);
+    }
+    
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-accent-secondary), var(--color-accent-primary));
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .cta-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .cta-description {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background-color: white;
+      color: var(--color-accent-primary);
+      font-weight: 600;
+      padding: 0.8rem 2rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform var(--transition-speed);
+    }
+    
+    .cta-button:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      transform: scale(1.05);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 1100px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 64px;
+        padding: 1rem 0;
+      }
+      
+      .logo-text,
+      .nav-text,
+      .premium-badge {
+        display: none;
+      }
+      
+      .sidebar-logo {
+        justify-content: center;
+        padding: 0;
+      }
+      
+      .logo-icon {
+        margin-right: 0;
+      }
+      
+      .nav-item {
+        justify-content: center;
+        padding: 0.75rem;
+      }
+      
+      .nav-icon {
+        margin-right: 0;
+      }
+      
+      .discord-btn {
+        padding: 0.75rem;
+        justify-content: center;
+      }
+      
+      .discord-icon {
+        margin-right: 0;
+      }
+      
+      .main-content {
+        margin-left: 64px;
+        width: calc(100% - 64px);
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .pricing-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .pricing-card {
+        width: 100%;
+        max-width: 320px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"></div>
+      <div class="logo-text">Guard-shin</div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a href="modern_dashboard.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-home"></i></div>
+        <div class="nav-text">Dashboard</div>
+      </a>
+      
+      <a href="modern_commands.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-terminal"></i></div>
+        <div class="nav-text">Commands</div>
+      </a>
+      
+      <a href="modern_premium.html" class="nav-item active">
+        <div class="nav-icon"><i class="fas fa-crown"></i></div>
+        <div class="nav-text">Premium</div>
+      </a>
+      
+      <a href="modern_support.html" class="nav-item">
+        <div class="nav-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="nav-text">Support</div>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="discord-btn" target="_blank" rel="noopener noreferrer">
+        <span class="discord-icon"><i class="fas fa-plus"></i></span>
+        <span>Add to Discord</span>
+      </a>
+    </div>
+  </aside>
+  
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="header">
+      <div class="notification-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="user-avatar">
+        U
+      </div>
+    </header>
+    
+    <!-- Premium Header -->
+    <section class="premium-header">
+      <h1 class="premium-title">
+        <span class="premium-title-icon"><i class="fas fa-crown"></i></span>
+        Guard-shin Premium
+      </h1>
+      <p class="premium-subtitle">Unlock the full potential of Guard-shin with premium features designed to enhance your server management and moderation capabilities.</p>
+      <div class="payment-methods">
+        <div class="payment-method">
+          <span class="payment-icon"><i class="fab fa-cc-stripe"></i></span>
+          <span class="payment-name">Stripe</span>
+        </div>
+        <div class="payment-method">
+          <span class="payment-icon"><i class="fab fa-paypal"></i></span>
+          <span class="payment-name">PayPal</span>
+        </div>
+        <div class="payment-method">
+          <span class="payment-icon"><i class="fas fa-dollar-sign"></i></span>
+          <span class="payment-name">CashApp</span>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing-container">
+      <div class="pricing-card">
+        <div class="pricing-header">
+          <h2 class="pricing-name">Free</h2>
+          <div class="pricing-price">$0</div>
+          <div class="pricing-frequency">forever</div>
+        </div>
+        <div class="pricing-features">
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Basic moderation commands</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Auto-moderation for text content</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Server statistics</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Music player (5 songs limit)</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Basic welcome messages</span>
+          </div>
+        </div>
+        <div class="pricing-cta">
+          <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="pricing-button secondary">Add to Server</a>
+        </div>
+      </div>
+      
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="pricing-header">
+          <h2 class="pricing-name">Premium</h2>
+          <div class="pricing-price">$9.99</div>
+          <div class="pricing-frequency">per month</div>
+        </div>
+        <div class="pricing-features">
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Everything in Free plan</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Advanced raid protection</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Custom welcome images</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Unlimited music player</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Custom auto-responders</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Advanced server analytics</span>
+          </div>
+        </div>
+        <div class="pricing-cta">
+          <a href="checkout.html" class="pricing-button">Subscribe Now</a>
+        </div>
+      </div>
+      
+      <div class="pricing-card">
+        <div class="pricing-header">
+          <h2 class="pricing-name">Enterprise</h2>
+          <div class="pricing-price">$24.99</div>
+          <div class="pricing-frequency">per month</div>
+        </div>
+        <div class="pricing-features">
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Everything in Premium plan</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Priority support</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Custom bot commands</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Advanced verification system</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Custom bot branding</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon"><i class="fas fa-check"></i></span>
+            <span class="feature-text">Multi-server management</span>
+          </div>
+        </div>
+        <div class="pricing-cta">
+          <a href="checkout.html?plan=enterprise" class="pricing-button">Subscribe Now</a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features-section">
+      <h2 class="section-title">Premium Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="feature-card-title">Advanced Raid Protection</h3>
+          <p class="feature-card-description">Intelligent detection and prevention of raid attacks to keep your server safe from malicious users.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3 class="feature-card-title">Unlimited Music Player</h3>
+          <p class="feature-card-description">Play unlimited songs in your server's voice channels with high-quality audio and playlist support.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-image"></i>
+          </div>
+          <h3 class="feature-card-title">Custom Welcome Images</h3>
+          <p class="feature-card-description">Personalized welcome images for new members with custom backgrounds, fonts, and messages.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3 class="feature-card-title">Advanced Analytics</h3>
+          <p class="feature-card-description">Detailed insights into your server's activity, member engagement, and moderation actions.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-reply"></i>
+          </div>
+          <h3 class="feature-card-title">Auto-Responders</h3>
+          <p class="feature-card-description">Create custom auto-responses triggered by specific keywords or phrases in your server.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card-icon">
+            <i class="fas fa-ticket-alt"></i>
+          </div>
+          <h3 class="feature-card-title">Ticket System</h3>
+          <p class="feature-card-description">Organized support ticket system for your server members to report issues or request assistance.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials-section">
+      <h2 class="section-title">What Our Users Say</h2>
+      <div class="testimonials-container">
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The premium features have completely transformed how we manage our growing community. The raid protection alone has saved us countless hours of cleanup!"</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">S</div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">ShadowKnight</div>
+              <div class="testimonial-server">Gaming Legends</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"Custom welcome images make our server feel so much more professional. Our members love the personalized touch when they join."</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">A</div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">ArtistAlley</div>
+              <div class="testimonial-server">Creative Hub</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The unlimited music player is a game-changer for our community events. We used to hit the song limit constantly with the free version."</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">M</div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">MusicMaster</div>
+              <div class="testimonial-server">Rhythm & Vibes</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="testimonial-card">
+          <p class="testimonial-quote">"The analytics feature has helped us understand our community better and make data-driven decisions about our events and activities."</p>
+          <div class="testimonial-user">
+            <div class="testimonial-avatar">D</div>
+            <div class="testimonial-info">
+              <div class="testimonial-name">DataDriven</div>
+              <div class="testimonial-server">Tech Innovators</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 class="faq-title">Frequently Asked Questions</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I upgrade to Premium?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          To upgrade to Premium, simply click on the "Subscribe Now" button and follow the checkout process. We accept payments through Stripe, PayPal, and CashApp.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          Can I cancel my subscription anytime?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          Yes, you can cancel your subscription at any time. Your premium features will remain active until the end of your current billing period.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How many servers can I use Premium on?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          The Premium plan covers one server. If you need Premium for multiple servers, you can either purchase multiple subscriptions or upgrade to our Enterprise plan which supports multiple servers.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          Do you offer refunds?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          We offer a 7-day refund policy if you're not satisfied with our premium services. Please contact our support team to request a refund within this period.
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I get support for premium features?
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </div>
+        <div class="faq-answer">
+          Premium subscribers get priority support. You can reach our support team through our official Discord server or by using the !support command in your server.
+        </div>
+      </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <h2 class="cta-title">Ready to Enhance Your Discord Server?</h2>
+      <p class="cta-description">Join thousands of servers already using Guard-shin Premium to create safer, more engaging communities.</p>
+      <a href="checkout.html" class="cta-button">Upgrade Now</a>
+    </section>
+  </main>
+
+  <script>
+    // FAQ Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+          item.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
