@@ -826,3 +826,9 @@ class Commands(commands.Cog):
 # Proper setup function for Discord.py extension loading
 def setup(bot):
     bot.add_cog(Commands(bot))
+
+# Proper setup function for Discord.py extension loading
+def setup(bot):
+    # This is a regular function, not async
+    cog = Commands(bot)
+    bot.add_cog(cog)
