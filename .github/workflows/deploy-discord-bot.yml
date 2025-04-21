@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'cogs/**'
-      - 'bot/**'
+      - 'discord-bot/**'
       - 'run_bot.py'
       - '.github/workflows/deploy-discord-bot.yml'
   workflow_dispatch:
@@ -31,7 +31,18 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
         
+      - name: Copy files to discord-bot directory
+        run: |
+          # Make sure bot files are properly organized
+          if [ -f "run_bot.py" ]; then
+            cp run_bot.py discord-bot/run.py
+          fi
+          if [ -d "cogs" ]; then
+            cp -r cogs/* discord-bot/cogs/
+          fi
+          
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        working-directory: ./discord-bot
         run: railway up
