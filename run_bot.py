@@ -156,7 +156,7 @@ class GuardShin(commands.Bot):
                 Make sure your DISCORD_CLIENT_ID matches your bot token and the bot 
                 was invited with the 'applications.commands' scope.
                 
-                Invite URL format: https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands
+                Invite URL format: https://discord.com/api/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
                 """)
             
             # As a fallback, try to sync globally - this might not work with the error
