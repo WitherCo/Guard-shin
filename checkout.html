@@ -352,68 +352,88 @@
         <div id="plan-info" class="payment-info">
           <h3>Your Selected Plan</h3>
           <div class="plan-details">
-            <div class="plan-title" id="plan-title">Loading...</div>
-            <div class="plan-price" id="plan-price">Loading...</div>
-            <div class="plan-description" id="plan-description">Loading...</div>
+            <div class="plan-title" id="plan-title">Premium Plan</div>
+            <div class="plan-price" id="plan-price">$9.99/month</div>
+            <div class="plan-description" id="plan-description">Advanced features for growing communities</div>
           </div>
         </div>
         
-        <h3 id="payment-title">Card Payment</h3>
+        <h3>Choose Payment Method</h3>
         
-        <!-- Stripe Card Payment Form -->
-        <div id="payment-form-container">
-          <form id="payment-form">
-            <div id="payment-element">
-              <!-- Stripe Elements will be inserted here -->
-              <div style="text-align: center; padding: 2rem;">
-                <div class="spinner"></div>
-                <p>Loading payment form...</p>
+        <div class="payment-methods" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
+          <!-- Stripe Payment Option -->
+          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <div style="background-color: #635BFF; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12.5 4H4V7H12.5V4Z" fill="white"/>
+                  <path d="M13.5 10H4V13H13.5V10Z" fill="white"/>
+                  <path d="M15.5 16H4V19H15.5V16Z" fill="white"/>
+                  <path d="M18.5 10H20.5V13H18.5V10Z" fill="white"/>
+                  <path d="M16.5 4H20.5V7H16.5V4Z" fill="white"/>
+                  <path d="M18.5 16H20.5V19H18.5V16Z" fill="white"/>
+                </svg>
+              </div>
+              <div>
+                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with Card</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Secure payment via Stripe</p>
               </div>
             </div>
-            
-            <div id="error-message"></div>
-            
-            <button id="submit-button" class="btn" style="width: 100%;">
-              <span id="button-text">Pay Now</span>
-              <span id="button-spinner" class="spinner" style="display: none;"></span>
-            </button>
-          </form>
-        </div>
-        
-        <!-- PayPal Payment Option -->
-        <div id="paypal-container" style="display: none;">
-          <div style="text-align: center; margin-bottom: 2rem;">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='64' height='64' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal" style="width: 80px; height: 80px;">
-            <h3 style="margin-top: 1rem;">Pay with PayPal</h3>
+            <a href="payment-success.html?plan=premium&payment=stripe" class="btn btn-purchase" data-plan="premium" data-payment="stripe" style="width: 100%;">
+              Pay with Card
+            </a>
           </div>
-          <p style="text-align: center; margin-bottom: 1.5rem;">You will be redirected to PayPal to complete your payment.</p>
-          <a href="https://paypal.me/guardshin" class="btn" style="display: block; width: 100%; text-align: center;" target="_blank" rel="noopener noreferrer">
-            Open PayPal
-          </a>
-          <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary);">
-            After payment, please include your Discord Server ID in the payment note.
-          </p>
-          <button onclick="window.location.href='payment-success.html?plan=' + new URLSearchParams(window.location.search).get('plan')" class="btn outline" style="width: 100%; margin-top: 1rem;">
-            I've Completed My Payment
-          </button>
-        </div>
-        
-        <!-- CashApp Payment Option -->
-        <div id="cashapp-container" style="display: none;">
-          <div style="text-align: center; margin-bottom: 2rem;">
-            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='64' height='64' fill='%2300D54B'><path d='M23.59 3.475a5.9 5.9 0 0 0-3.88-3.88c-.76-.22-1.64-.41-2.87-.46C15.31.04 14.9 0 12 0S8.69.04 7.18.14c-1.23.05-2.11.24-2.87.46a5.9 5.9 0 0 0-3.88 3.88c-.22.76-.41 1.64-.46 2.87C-.09 8.69 0 9.1 0 12s.04 3.31.14 4.82c.05 1.23.24 2.11.46 2.87a5.9 5.9 0 0 0 3.88 3.88c.76.22 1.64.41 2.87.46 1.54.1 1.94.14 4.82.14s3.31-.04 4.82-.14c1.23-.05 2.11-.24 2.87-.46a5.9 5.9 0 0 0 3.88-3.88c.22-.76.41-1.64.46-2.87.1-1.54.14-1.94.14-4.82s-.04-3.31-.14-4.82c-.05-1.26-.24-2.11-.46-2.87zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z'/></svg>" alt="CashApp" style="width: 80px; height: 80px;">
-            <h3 style="margin-top: 1rem;">Pay with CashApp</h3>
+          
+          <!-- PayPal Payment Option -->
+          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <div style="background-color: #0070BA; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208z" fill="white"/>
+                  <path d="M14.501 21.337h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838z" fill="white"/>
+                  <path d="M21.53 21.337h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z" fill="white"/>
+                </svg>
+              </div>
+              <div>
+                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with PayPal</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Fast and secure payment</p>
+              </div>
+            </div>
+            <a href="https://paypal.me/guardshin" class="btn btn-purchase" data-plan="premium" data-payment="paypal" target="_blank" rel="noopener noreferrer" style="width: 100%;">
+              Pay with PayPal
+            </a>
+            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
+              After payment, please include your Discord Server ID in the payment note.
+            </p>
+            <a href="payment-success.html?plan=premium&payment=paypal" class="btn outline" style="width: 100%; margin-top: 0.5rem; text-align: center;">
+              I've Completed My Payment
+            </a>
           </div>
-          <p style="text-align: center; margin-bottom: 1.5rem;">You will be redirected to CashApp to complete your payment.</p>
-          <a href="https://cash.app/$guardshin" class="btn" style="display: block; width: 100%; text-align: center;" target="_blank" rel="noopener noreferrer">
-            Open CashApp
-          </a>
-          <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary);">
-            After payment, please include your Discord Server ID in the payment note.
-          </p>
-          <button onclick="window.location.href='payment-success.html?plan=' + new URLSearchParams(window.location.search).get('plan')" class="btn outline" style="width: 100%; margin-top: 1rem;">
-            I've Completed My Payment
-          </button>
+          
+          <!-- CashApp Payment Option -->
+          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <div style="background-color: #00D54B; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="black"/>
+                  <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="white"/>
+                </svg>
+              </div>
+              <div>
+                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with CashApp</h4>
+                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Quick and easy payment</p>
+              </div>
+            </div>
+            <a href="https://cash.app/$guardshin" class="btn btn-purchase" data-plan="premium" data-payment="cashapp" target="_blank" rel="noopener noreferrer" style="width: 100%;">
+              Pay with CashApp
+            </a>
+            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
+              After payment, please include your Discord Server ID in the payment note.
+            </p>
+            <a href="payment-success.html?plan=premium&payment=cashapp" class="btn outline" style="width: 100%; margin-top: 0.5rem; text-align: center;">
+              I've Completed My Payment
+            </a>
+          </div>
         </div>
         
         <div style="text-align: center; margin-top: 1.5rem;">
@@ -442,13 +462,11 @@
       // Get the plan and payment method from the URL
       const params = new URLSearchParams(window.location.search);
       const plan = params.get('plan') || 'premium';
-      const paymentMethod = params.get('payment') || 'stripe';
       
       // Update plan details
       const planTitle = document.getElementById('plan-title');
       const planPrice = document.getElementById('plan-price');
       const planDescription = document.getElementById('plan-description');
-      const paymentTitle = document.getElementById('payment-title');
       
       if (plan === 'premium') {
         planTitle.textContent = 'Premium Plan';
@@ -460,142 +478,17 @@
         planDescription.textContent = 'Complete solution for large servers and communities';
       }
       
-      // Update content based on payment method
-      if (paymentMethod === 'paypal') {
-        paymentTitle.textContent = 'PayPal Checkout';
-        document.getElementById('payment-form-container').style.display = 'none';
-        document.getElementById('paypal-container').style.display = 'block';
-        document.getElementById('cashapp-container').style.display = 'none';
-        return; // Exit early since we don't need Stripe for PayPal
-      } else if (paymentMethod === 'cashapp') {
-        paymentTitle.textContent = 'CashApp Checkout';
-        document.getElementById('payment-form-container').style.display = 'none';
-        document.getElementById('paypal-container').style.display = 'none';
-        document.getElementById('cashapp-container').style.display = 'block';
-        return; // Exit early since we don't need Stripe for CashApp
-      } else {
-        paymentTitle.textContent = 'Card Payment';
-        document.getElementById('payment-form-container').style.display = 'block';
-        document.getElementById('paypal-container').style.display = 'none';
-        document.getElementById('cashapp-container').style.display = 'none';
-      }
-      
-      // Initialize Stripe with real public key
-      const stripe = Stripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-      const paymentForm = document.getElementById('payment-form');
-      const submitButton = document.getElementById('submit-button');
-      const buttonText = document.getElementById('button-text');
-      const buttonSpinner = document.getElementById('button-spinner');
-      const errorElement = document.getElementById('error-message');
-      
-      let elements;
-      
-      // Initialize the payment form
-      async function initializePaymentForm() {
-        try {
-          // Get the amount based on the plan
-          const planAmount = plan === 'premium' ? 999 : 2499; // $9.99 or $24.99
-          
-          // Fetch payment intent from server
-          const response = await fetch('/api/create-payment-intent', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              amount: planAmount,
-              plan: plan
-            })
-          });
-          
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to create payment intent');
-          }
-          
-          const data = await response.json();
-          
-          if (!data.clientSecret) {
-            throw new Error('No client secret returned from server');
-          }
-          
-          // Create Elements instance
-          elements = stripe.elements({
-            clientSecret: data.clientSecret,
-            appearance: {
-              theme: 'night',
-              variables: {
-                colorPrimary: '#5865f2',
-                colorBackground: '#2a2a2a',
-                colorText: '#ffffff',
-                colorDanger: '#f04747',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-                spacingUnit: '4px',
-                borderRadius: '8px',
-              }
-            }
-          });
-          
-          // Create and mount the Payment Element
-          const paymentElement = elements.create('payment');
-          paymentElement.mount('#payment-element');
-          
-        } catch (error) {
-          console.error('Error initializing payment:', error);
-          errorElement.textContent = error.message;
-        }
-      }
-      
-      // Initialize the payment form
-      initializePaymentForm();
-      
-      // Handle form submission
-      paymentForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (!stripe || !elements) {
-          // Stripe.js has not yet loaded
-          // Make sure to disable the form submission until Stripe.js has loaded
-          return;
-        }
-        
-        // Clear error message
-        errorElement.textContent = '';
-        
-        // Show loading state
-        submitButton.disabled = true;
-        buttonText.style.display = 'none';
-        buttonSpinner.style.display = 'inline-block';
-        
-        try {
-          // Confirm payment with Stripe
-          const { error } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-              // Success redirect URL after payment completion
-              return_url: window.location.origin + '/payment-success.html?plan=' + plan,
-            }
-          });
-          
-          if (error) {
-            // Payment failed, display error
-            errorElement.textContent = error.message;
-            
-            // Reset button state
-            submitButton.disabled = false;
-            buttonText.style.display = 'inline-block';
-            buttonSpinner.style.display = 'none';
-          }
-          // For successful payment, the page will redirect to the return_url
-          
-        } catch (e) {
-          console.error('Payment error:', e);
-          errorElement.textContent = 'An unexpected error occurred. Please try again.';
-          
-          // Reset button state
-          submitButton.disabled = false;
-          buttonText.style.display = 'inline-block';
-          buttonSpinner.style.display = 'none';
+      // Update all payment buttons to include the correct plan parameter
+      document.querySelectorAll('.btn-purchase').forEach(button => {
+        const payment = button.getAttribute('data-payment');
+        const currentHref = button.getAttribute('href');
+        if (currentHref && currentHref.includes('?')) {
+          button.setAttribute('href', currentHref.split('?')[0] + '?plan=' + plan + '&payment=' + payment);
         }
       });
+      
+      // We don't need the Stripe integration for our showcase
+      // These buttons already handle redirection to the payment success page
     });
   </script>
 </body>
