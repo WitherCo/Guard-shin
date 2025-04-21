@@ -480,3 +480,9 @@ class ImageCommands(commands.Cog):
 # Proper setup function for Discord.py extension loading
 def setup(bot):
     bot.add_cog(ImageCommands(bot))
+
+# Proper setup function for Discord.py extension loading
+def setup(bot):
+    # This is a regular function, not async
+    cog = ImageCommands(bot)
+    bot.add_cog(cog)
