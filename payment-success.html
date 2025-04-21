@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - Guard-shin</title>
+  <link rel="icon" type="image/png" href="generated-icon.png">
+  
+  <style>
+    :root {
+      --color-bg-primary: #1a1a1a;
+      --color-bg-secondary: #2a2a2a;
+      --color-bg-tertiary: #3a3a3a;
+      --color-text-primary: #fff;
+      --color-text-secondary: #ccc;
+      --color-text-tertiary: #999;
+      --color-accent-primary: #5865f2;
+      --color-accent-secondary: #4955e0;
+      --color-success: #4BB543;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+      --max-width: 1200px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+    }
+    
+    a {
+      color: var(--color-accent-primary);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+    
+    a:hover {
+      color: var(--color-accent-secondary);
+    }
+    
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 250px;
+      background-color: var(--color-bg-secondary);
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo-container {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo {
+      max-width: 150px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .title {
+      margin-top: 1rem;
+      color: var(--color-text-primary);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    
+    .nav-links {
+      padding: 1rem 0;
+    }
+    
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: var(--color-text-primary);
+      transition: background-color var(--transition-speed);
+      position: relative;
+    }
+    
+    .nav-link:hover {
+      background-color: var(--color-bg-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .nav-link.active {
+      background-color: var(--color-accent-primary);
+      color: white;
+    }
+    
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .add-bot-btn {
+      display: block;
+      background-color: var(--color-accent-primary);
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background-color var(--transition-speed), transform 0.2s;
+    }
+    
+    .add-bot-btn:hover {
+      background-color: var(--color-accent-secondary);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 250px;
+      padding: 2rem;
+      width: calc(100% - 250px);
+    }
+    
+    /* Card Styles */
+    .card {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .success-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      text-align: center;
+    }
+    
+    .success-icon {
+      color: var(--color-success);
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      width: 80px;
+      height: 80px;
+    }
+    
+    .success-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .transaction-details {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      text-align: left;
+      margin: 1.5rem 0;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--color-accent-primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color var(--transition-speed), transform 0.2s;
+    }
+    
+    .btn:hover {
+      background-color: var(--color-accent-secondary);
+      transform: translateY(-2px);
+    }
+    
+    .btn.secondary {
+      background-color: transparent;
+      border: 1px solid var(--color-text-tertiary);
+      color: var(--color-text-primary);
+    }
+    
+    .btn.secondary:hover {
+      background-color: var(--color-bg-tertiary);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .layout {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="logo-container">
+        <div class="title">Guard-shin</div>
+      </div>
+      
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="commands.html" class="nav-link">Commands</a>
+        <a href="premium.html" class="nav-link active">Premium</a>
+        <a href="support.html" class="nav-link">Support</a>
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+      
+      <div class="sidebar-footer">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">Add to Server</a>
+      </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="success-container">
+        <div class="card">
+          <svg class="success-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1952 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          
+          <h1 class="success-title">Payment Successful!</h1>
+          <p>Thank you for your subscription to Guard-shin Premium. Your premium features are now active!</p>
+          
+          <div class="transaction-details">
+            <div id="plan-details">
+              <p><strong>Plan:</strong> <span id="plan-name">Premium</span></p>
+              <p><strong>Amount:</strong> <span id="plan-price">$9.99/month</span></p>
+              <p><strong>Date:</strong> <span id="payment-date"></span></p>
+              <p><strong>Transaction ID:</strong> <span id="transaction-id">GS-12345678</span></p>
+            </div>
+          </div>
+          
+          <p>You will receive a confirmation email shortly. Your premium features have been activated for your Discord server.</p>
+          
+          <div style="margin-top: 1.5rem;">
+            <a href="index.html" class="btn">Go to Dashboard</a>
+            <a href="support.html" class="btn secondary" style="margin-left: 1rem;">Need Help?</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Get the plan and payment intent from the URL
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan') || 'premium';
+      const paymentIntent = params.get('payment_intent');
+      const redirectStatus = params.get('redirect_status');
+      
+      // Update plan details
+      const planName = document.getElementById('plan-name');
+      const planPrice = document.getElementById('plan-price');
+      
+      if (plan === 'enterprise') {
+        planName.textContent = 'Enterprise';
+        planPrice.textContent = '$24.99/month';
+      } else {
+        planName.textContent = 'Premium';
+        planPrice.textContent = '$9.99/month';
+      }
+      
+      // Default values
+      let paymentDate = new Date();
+      let transactionId = 'Processing...';
+      
+      // Verify the payment with the server
+      if (paymentIntent && redirectStatus === 'succeeded') {
+        try {
+          const response = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              paymentIntent: paymentIntent,
+              plan: plan
+            })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+              // Update with real transaction data
+              transactionId = data.transactionId;
+              paymentDate = new Date(data.date);
+            }
+          }
+        } catch (error) {
+          console.error('Error verifying payment:', error);
+        }
+      }
+      
+      // Set current date
+      document.getElementById('payment-date').textContent = paymentDate.toLocaleDateString();
+      
+      // Set transaction ID
+      document.getElementById('transaction-id').textContent = transactionId;
+    });
+  </script>
+</body>
+</html>
