@@ -534,17 +534,10 @@ class MusicCommands(commands.Cog):
                 await last_channel.send(embed=embed)
             except discord.HTTPException:
                 # Failed to send the message, ignore
-                pass
-                
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(MusicCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(MusicCommands(bot))
+                pass))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = MusicCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[MusicCommands.__name__] = MusicCommands(bot)
