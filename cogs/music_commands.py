@@ -539,3 +539,6 @@ class MusicCommands(commands.Cog):
     # Function to set up the cog
     async def setup(bot):
         await bot.add_cog(MusicCommands(bot))
+# Proper setup function for Discord.py extension loading
+def setup(bot):
+    bot.add_cog(MusicCommands(bot))
