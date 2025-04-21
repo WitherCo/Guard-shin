@@ -1040,17 +1040,10 @@ class GameCommands(commands.Cog):
                 description=f"The correct word was **{original_word}**.",
                 color=0xFF0000
             )
-            await ctx.send(embed=timeout_embed)
-            
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(GameCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(GameCommands(bot))
+            await ctx.send(embed=timeout_embed)))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = GameCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[GameCommands.__name__] = GameCommands(bot)
