@@ -45,7 +45,8 @@ class GuardShin(commands.Bot):
             command_prefix=self.get_prefix,
             intents=intents,
             description="Advanced Discord moderation and security bot",
-            activity=discord.Game(name="Starting up...")
+            activity=discord.Game(name="Starting up..."),
+            application_id=os.getenv('DISCORD_CLIENT_ID')
         )
         
         # Guild prefixes
@@ -58,6 +59,10 @@ class GuardShin(commands.Bot):
         
         # Premium servers
         self.premium_guilds = self.load_premium_guilds()
+        
+        # Command registration
+        logger.info("Initializing command tree")
+        self.synced = False
         
     async def get_prefix(self, bot, message):
         """Get the appropriate prefix for a guild"""
@@ -115,6 +120,27 @@ class GuardShin(commands.Bot):
         # Set demo server and chill zone as premium by default
         return {1234567890123456789, 9876543210987654321}  # Replace with actual server IDs
         
+    async def register_commands(self):
+        """Register all slash commands with Discord"""
+        logger.info("Registering application commands with Discord...")
+        try:
+            # Sync commands globally
+            synced = await self.tree.sync()
+            logger.info(f"Synced {len(synced)} commands globally")
+            
+            # Sync commands to each guild for faster updates during development
+            for guild in self.guilds:
+                try:
+                    guild_commands = await self.tree.sync(guild=guild)
+                    logger.info(f"Synced {len(guild_commands)} commands to guild: {guild.name}")
+                except Exception as e:
+                    logger.error(f"Failed to sync commands to guild {guild.name}: {e}")
+            
+            return True
+        except Exception as e:
+            logger.error(f"Error registering commands: {e}")
+            return False
+    
     async def setup_hook(self):
         """Initialize modules and tasks when the bot starts"""
         # Load core commands
@@ -153,6 +179,9 @@ class GuardShin(commands.Bot):
         self.bg_task = self.loop.create_task(self.rotate_status())
         logger.info("Started background tasks")
         
+        # Register commands with Discord
+        await self.register_commands()
+        
     async def rotate_status(self):
         """Rotate bot status regularly"""
         await self.wait_until_ready()
@@ -165,6 +194,9 @@ class GuardShin(commands.Bot):
         """Event triggered when the bot is fully ready"""
         logger.info(f'Logged in as {self.user.name} (ID: {self.user.id})')
         logger.info(f'Connected to {len(self.guilds)} guilds, serving {sum(g.member_count for g in self.guilds)} users')
+        
+        # Register slash commands to ensure they're available
+        await self.register_commands()
         
         # Save server information to a file
         try:
