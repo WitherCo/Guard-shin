@@ -823,3 +823,6 @@ class Commands(commands.Cog):
     # Function to set up the cog
     async def setup(bot):
         await bot.add_cog(Commands(bot))
+# Proper setup function for Discord.py extension loading
+def setup(bot):
+    bot.add_cog(Commands(bot))
