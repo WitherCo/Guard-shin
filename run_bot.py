@@ -64,6 +64,94 @@ class GuardShin(commands.Bot):
         logger.info("Initializing command tree")
         self.synced = False
         
+        # Add basic slash commands to the tree
+        @self.tree.command(name="ping", description="Check the bot's latency")
+        async def ping(interaction: discord.Interaction):
+            await interaction.response.send_message(f"Pong! {round(self.latency * 1000)}ms")
+            
+        @self.tree.command(name="info", description="Get information about Guard-shin")
+        async def info(interaction: discord.Interaction):
+            await interaction.response.send_message(
+                "Guard-shin is an advanced Discord moderation and security bot. "
+                "Visit https://witherco.github.io/Guard-shin/ for more information!"
+            )
+            
+        @self.tree.command(name="invite", description="Get the bot invite link")
+        async def invite(interaction: discord.Interaction):
+            invite_url = f"https://discord.com/oauth2/authorize?client_id={self.application_id}&permissions=8&scope=bot%20applications.commands"
+            await interaction.response.send_message(f"Invite Guard-shin to your server: {invite_url}")
+            
+        # Create a moderation command group
+        moderation = discord.app_commands.Group(name="mod", description="Moderation commands")
+        
+        @moderation.command(name="ban", description="Ban a member from the server")
+        @discord.app_commands.describe(user="The user to ban", reason="Reason for the ban")
+        async def ban(interaction: discord.Interaction, user: discord.User, reason: str = None):
+            if not interaction.guild:
+                await interaction.response.send_message("This command can only be used in a server", ephemeral=True)
+                return
+                
+            # Check if user has permission to ban
+            if not interaction.user.guild_permissions.ban_members:
+                await interaction.response.send_message("You don't have permission to ban members", ephemeral=True)
+                return
+                
+            try:
+                await interaction.guild.ban(user, reason=reason)
+                await interaction.response.send_message(f"Banned {user.mention}" + (f" for {reason}" if reason else ""))
+            except discord.Forbidden:
+                await interaction.response.send_message("I don't have permission to ban that user", ephemeral=True)
+            except Exception as e:
+                await interaction.response.send_message(f"Error banning user: {e}", ephemeral=True)
+        
+        # Add the moderation group to the command tree
+        self.tree.add_command(moderation)
+        
+        # Add a help command
+        @self.tree.command(name="help", description="View available commands")
+        async def help_command(interaction: discord.Interaction):
+            help_text = """
+**Guard-shin Commands**
+
+*Basic Commands*
+/ping - Check the bot's latency
+/info - Get information about Guard-shin
+/invite - Get the bot invite link
+/help - View this help message
+
+*Moderation Commands*
+/mod ban - Ban a member from the server
+
+Visit our dashboard for more information and a full command list:
+https://witherco.github.io/Guard-shin/
+"""
+            await interaction.response.send_message(help_text)
+        
+        # Add premium command
+        @self.tree.command(name="premium", description="Get information about premium features")
+        async def premium(interaction: discord.Interaction):
+            premium_text = """
+**Guard-shin Premium**
+
+Upgrade to premium for access to:
+- Music commands
+- Advanced moderation
+- Custom welcome images
+- Auto-response system
+- Analytics and more!
+
+Pricing:
+- Basic: $4.99/month
+- Standard: $9.99/month
+- Premium: $24.99/month
+
+Visit our dashboard to purchase:
+https://witherco.github.io/Guard-shin/
+"""
+            await interaction.response.send_message(premium_text)
+            
+        logger.info("Added slash commands to command tree")
+        
     async def get_prefix(self, bot, message):
         """Get the appropriate prefix for a guild"""
         # DM channel has no guild
@@ -127,10 +215,18 @@ class GuardShin(commands.Bot):
             # Instead of global sync, sync per guild for better reliability
             success = False
             
-            # If we have no guilds yet, just return
+            # If we have no guilds yet, try to log diagnostic info and return
             if len(self.guilds) == 0:
                 logger.warning("No guilds available yet to register commands")
+                logger.info(f"Application ID: {self.application_id}")
+                logger.info(f"User ID: {self.user.id if self.user else 'Not available yet'}")
+                logger.info(f"Is bot ready: {self.is_ready()}")
                 return False
+                
+            # Log guilds we're going to try to register commands to 
+            logger.info(f"Bot is connected to {len(self.guilds)} guilds:")
+            for guild in self.guilds:
+                logger.info(f"  - {guild.name} (ID: {guild.id})")
             
             # Sync commands to each guild individually
             for guild in self.guilds:
