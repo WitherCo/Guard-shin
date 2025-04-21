@@ -509,14 +509,14 @@
     </div>
     
     <div class="category-tabs">
-      <div class="category-tab active">All Commands</div>
-      <div class="category-tab">Moderation</div>
-      <div class="category-tab">Admin</div>
-      <div class="category-tab">Utility</div>
-      <div class="category-tab">Fun</div>
-      <div class="category-tab">Music</div>
-      <div class="category-tab">Economy</div>
-      <div class="category-tab">Leveling</div>
+      <div class="category-tab active" data-category="all">All Commands</div>
+      <div class="category-tab" data-category="moderation">Moderation</div>
+      <div class="category-tab" data-category="admin">Admin</div>
+      <div class="category-tab" data-category="utility">Utility</div>
+      <div class="category-tab" data-category="fun">Fun</div>
+      <div class="category-tab" data-category="music">Music</div>
+      <div class="category-tab" data-category="economy">Economy</div>
+      <div class="category-tab" data-category="leveling">Leveling</div>
     </div>
     
     <table class="commands-table">
@@ -529,65 +529,222 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Moderation Commands -->
         <tr>
-          <td class="command-name">!ban</td>
+          <td class="command-name">/ban</td>
           <td class="command-description">Ban a user from the server with an optional reason</td>
-          <td class="command-syntax">!ban @user [reason]</td>
+          <td class="command-syntax">/ban user:@username reason:Breaking rules delete_days:7</td>
           <td><span class="command-category">Moderation</span></td>
         </tr>
         <tr>
-          <td class="command-name">!kick</td>
+          <td class="command-name">/unban</td>
+          <td class="command-description">Unban a user from the server</td>
+          <td class="command-syntax">/unban user_id:123456789012345678</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/kick</td>
           <td class="command-description">Kick a user from the server with an optional reason</td>
-          <td class="command-syntax">!kick @user [reason]</td>
+          <td class="command-syntax">/kick user:@username reason:Disruptive behavior</td>
           <td><span class="command-category">Moderation</span></td>
         </tr>
         <tr>
-          <td class="command-name">!mute</td>
-          <td class="command-description">Temporarily mute a user in the server</td>
-          <td class="command-syntax">!mute @user [duration] [reason]</td>
-          <td><span class="command-category">Moderation</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">!warn</td>
+          <td class="command-name">/warn</td>
           <td class="command-description">Issue a warning to a user</td>
-          <td class="command-syntax">!warn @user [reason]</td>
+          <td class="command-syntax">/warn user:@username reason:Spamming in chat</td>
           <td><span class="command-category">Moderation</span></td>
         </tr>
         <tr>
-          <td class="command-name">!clear</td>
+          <td class="command-name">/warnings</td>
+          <td class="command-description">View warnings for a specific user</td>
+          <td class="command-syntax">/warnings user:@username</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/clearwarnings</td>
+          <td class="command-description">Clear all warnings for a user</td>
+          <td class="command-syntax">/clearwarnings user:@username</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/mute</td>
+          <td class="command-description">Temporarily mute a user in the server</td>
+          <td class="command-syntax">/mute user:@username duration:1h reason:Excessive noise</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/unmute</td>
+          <td class="command-description">Unmute a previously muted user</td>
+          <td class="command-syntax">/unmute user:@username</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/purge</td>
           <td class="command-description">Delete a specified number of messages from a channel</td>
-          <td class="command-syntax">!clear [amount]</td>
+          <td class="command-syntax">/purge amount:50</td>
           <td><span class="command-category">Moderation</span></td>
         </tr>
         <tr>
-          <td class="command-name">!play <span class="command-pro-badge">Pro</span></td>
+          <td class="command-name">/slowmode</td>
+          <td class="command-description">Set the slowmode cooldown for a channel</td>
+          <td class="command-syntax">/slowmode seconds:10</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        
+        <!-- Premium Moderation Commands -->
+        <tr>
+          <td class="command-name">/lockdown <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Temporarily lock a channel, preventing messages</td>
+          <td class="command-syntax">/lockdown duration:30m reason:Server raid in progress</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/unlock <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Unlock a previously locked channel</td>
+          <td class="command-syntax">/unlock</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/massban <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Ban multiple users at once</td>
+          <td class="command-syntax">/massban users:id1,id2 reason:Raid participants</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/hackban <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Ban a user that isn't in the server yet</td>
+          <td class="command-syntax">/hackban user_id:123456789012345678 reason:Known raider</td>
+          <td><span class="command-category">Moderation</span></td>
+        </tr>
+        
+        <!-- Auto-Moderation Commands -->
+        <tr>
+          <td class="command-name">/automod</td>
+          <td class="command-description">View and configure the automod settings</td>
+          <td class="command-syntax">/automod setting:invites value:on</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/filter</td>
+          <td class="command-description">Add or remove words from the word filter</td>
+          <td class="command-syntax">/filter action:add word:badword</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/antispam</td>
+          <td class="command-description">Configure anti-spam settings</td>
+          <td class="command-syntax">/antispam status:on threshold:5 timeframe:3</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        
+        <!-- Utility Commands -->
+        <tr>
+          <td class="command-name">/autorole <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Automatically assign roles to new members</td>
+          <td class="command-syntax">/autorole status:on role:@Member</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/logs <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Configure server logging</td>
+          <td class="command-syntax">/logs channel:#mod-logs type:moderation</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/botinfo</td>
+          <td class="command-description">Display information about the bot</td>
+          <td class="command-syntax">/botinfo</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/uptime</td>
+          <td class="command-description">Check how long the bot has been online</td>
+          <td class="command-syntax">/uptime</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/invite</td>
+          <td class="command-description">Get an invite link for the bot</td>
+          <td class="command-syntax">/invite</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/premium</td>
+          <td class="command-description">Get information about Guard-shin Premium</td>
+          <td class="command-syntax">/premium</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/support</td>
+          <td class="command-description">Get a link to the support server</td>
+          <td class="command-syntax">/support</td>
+          <td><span class="command-category">Utility</span></td>
+        </tr>
+        
+        <!-- Admin Commands -->
+        <tr>
+          <td class="command-name">/setup</td>
+          <td class="command-description">Run the initial setup for Guard-shin</td>
+          <td class="command-syntax">/setup</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/config</td>
+          <td class="command-description">View and modify bot configuration</td>
+          <td class="command-syntax">/config setting:modlogs value:#mod-logs</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/permission</td>
+          <td class="command-description">Configure command permissions for roles</td>
+          <td class="command-syntax">/permission command:ban role:@Moderator permission:allow</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/reset</td>
+          <td class="command-description">Reset all bot settings to default</td>
+          <td class="command-syntax">/reset</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        
+        <!-- Premium Admin Commands -->
+        <tr>
+          <td class="command-name">/backup <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Create a backup of server settings and configurations</td>
+          <td class="command-syntax">/backup action:create</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/banlist <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">View, import, or export the server ban list</td>
+          <td class="command-syntax">/banlist action:view</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        <tr>
+          <td class="command-name">/verification <span class="command-pro-badge">Pro</span></td>
+          <td class="command-description">Set up member verification system</td>
+          <td class="command-syntax">/verification action:setup method:captcha channel:#verify</td>
+          <td><span class="command-category">Admin</span></td>
+        </tr>
+        
+        <!-- Music Commands (Premium only) -->
+        <tr>
+          <td class="command-name">/play <span class="command-pro-badge">Pro</span></td>
           <td class="command-description">Play a song or add it to the queue</td>
-          <td class="command-syntax">!play [song/URL]</td>
+          <td class="command-syntax">/play song:URL or song name</td>
           <td><span class="command-category">Music</span></td>
         </tr>
         <tr>
-          <td class="command-name">!skip <span class="command-pro-badge">Pro</span></td>
+          <td class="command-name">/skip <span class="command-pro-badge">Pro</span></td>
           <td class="command-description">Skip the currently playing song</td>
-          <td class="command-syntax">!skip</td>
+          <td class="command-syntax">/skip</td>
           <td><span class="command-category">Music</span></td>
         </tr>
         <tr>
-          <td class="command-name">!queue <span class="command-pro-badge">Pro</span></td>
+          <td class="command-name">/queue <span class="command-pro-badge">Pro</span></td>
           <td class="command-description">Display the current music queue</td>
-          <td class="command-syntax">!queue</td>
+          <td class="command-syntax">/queue</td>
           <td><span class="command-category">Music</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">!help</td>
-          <td class="command-description">Get help with commands or view the command list</td>
-          <td class="command-syntax">!help [command]</td>
-          <td><span class="command-category">Utility</span></td>
-        </tr>
-        <tr>
-          <td class="command-name">!serverinfo</td>
-          <td class="command-description">Display information about the server</td>
-          <td class="command-syntax">!serverinfo</td>
-          <td><span class="command-category">Utility</span></td>
         </tr>
       </tbody>
     </table>
@@ -602,5 +759,107 @@
       <div class="pagination-btn"><i class="fas fa-chevron-right"></i></div>
     </div>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Command filtering functionality
+      const searchInput = document.querySelector('.search-input');
+      const filterDropdown = document.querySelector('.filter-dropdown');
+      const categoryTabs = document.querySelectorAll('.category-tab');
+      const commandRows = document.querySelectorAll('.commands-table tbody tr');
+      
+      // Initialize data for each row
+      commandRows.forEach(row => {
+        const categoryElement = row.querySelector('.command-category');
+        if (categoryElement) {
+          const category = categoryElement.textContent.toLowerCase();
+          row.setAttribute('data-category', category);
+          
+          // Check if it's a premium command
+          const isPremium = row.querySelector('.command-pro-badge') !== null;
+          row.setAttribute('data-premium', isPremium ? 'true' : 'false');
+        }
+      });
+      
+      // Function to filter commands based on current criteria
+      function filterCommands() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedFilter = filterDropdown.value;
+        const activeTab = document.querySelector('.category-tab.active');
+        const selectedCategory = activeTab ? activeTab.getAttribute('data-category') : 'all';
+        
+        commandRows.forEach(row => {
+          // Get command data
+          const commandName = row.querySelector('.command-name') ? 
+                              row.querySelector('.command-name').textContent.toLowerCase() : '';
+          const commandDescription = row.querySelector('.command-description') ? 
+                                    row.querySelector('.command-description').textContent.toLowerCase() : '';
+          const rowCategory = row.getAttribute('data-category');
+          const isPremium = row.getAttribute('data-premium') === 'true';
+          
+          // Match criteria
+          const matchesSearch = searchTerm === '' || 
+                               commandName.includes(searchTerm) || 
+                               commandDescription.includes(searchTerm);
+          const matchesCategory = selectedCategory === 'all' || rowCategory === selectedCategory;
+          const matchesPremiumFilter = selectedFilter === 'all' || 
+                                     (selectedFilter === 'premium' && isPremium) || 
+                                     (selectedFilter === 'free' && !isPremium);
+          
+          // Show/hide row based on criteria
+          if (matchesSearch && matchesCategory && matchesPremiumFilter) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+        
+        console.log('Filtering by category:', selectedCategory);
+      }
+      
+      // Hook up event listeners
+      if (searchInput) {
+        searchInput.addEventListener('input', filterCommands);
+      }
+      
+      if (filterDropdown) {
+        filterDropdown.addEventListener('change', filterCommands);
+      }
+      
+      // Set up category tab functionality
+      categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Update active tab
+          categoryTabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Apply filters
+          filterCommands();
+        });
+      });
+      
+      // Pagination functionality
+      const paginationBtns = document.querySelectorAll('.pagination-btn');
+      
+      paginationBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          if (this.textContent === '...' || this.querySelector('i')) {
+            return; // Skip ellipsis and arrow buttons for now
+          }
+          
+          // Update active page button
+          paginationBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          // In a real implementation, this would load the appropriate page of commands
+          // For now, it's just visual feedback
+        });
+      });
+      
+      // Run initial filtering
+      filterCommands();
+    });
+  </script>
 </body>
 </html>

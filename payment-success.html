@@ -271,61 +271,124 @@
     </main>
   </div>
   
-  <script src="https://js.stripe.com/v3/"></script>
   <script>
     document.addEventListener('DOMContentLoaded', async function() {
-      // Get the plan and payment intent from the URL
+      // Get the plan and payment method from the URL
       const params = new URLSearchParams(window.location.search);
       const plan = params.get('plan') || 'premium';
-      const paymentIntent = params.get('payment_intent');
-      const redirectStatus = params.get('redirect_status');
+      const paymentMethod = params.get('payment') || 'stripe';
+      const discordServerId = params.get('server_id') || '';
       
-      // Update plan details
+      // Generate a transaction ID
+      const generateTransactionId = () => {
+        const prefix = 'GS';
+        const timestamp = new Date().getTime().toString().slice(-10);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `${prefix}-${timestamp}-${random}`;
+      };
+      
+      // Update plan details based on the plan
       const planName = document.getElementById('plan-name');
       const planPrice = document.getElementById('plan-price');
       
-      if (plan === 'enterprise') {
-        planName.textContent = 'Enterprise';
-        planPrice.textContent = '$24.99/month';
+      // Set plan details based on selected plan
+      const plans = {
+        'basic': {
+          name: 'Basic',
+          price: '$4.99/month'
+        },
+        'standard': {
+          name: 'Standard',
+          price: '$7.99/month'
+        },
+        'premium': {
+          name: 'Premium',
+          price: '$9.99/month'
+        },
+        'enterprise': {
+          name: 'Enterprise',
+          price: '$24.99/month'
+        }
+      };
+      
+      if (plans[plan]) {
+        planName.textContent = plans[plan].name;
+        planPrice.textContent = plans[plan].price;
       } else {
         planName.textContent = 'Premium';
         planPrice.textContent = '$9.99/month';
       }
       
-      // Default values
-      let paymentDate = new Date();
-      let transactionId = 'Processing...';
-      
-      // Verify the payment with the server
-      if (paymentIntent && redirectStatus === 'succeeded') {
-        try {
-          const response = await fetch('/api/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              paymentIntent: paymentIntent,
-              plan: plan
-            })
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-              // Update with real transaction data
-              transactionId = data.transactionId;
-              paymentDate = new Date(data.date);
-            }
-          }
-        } catch (error) {
-          console.error('Error verifying payment:', error);
-        }
-      }
-      
-      // Set current date
+      // Set current date and transaction ID
+      const paymentDate = new Date();
       document.getElementById('payment-date').textContent = paymentDate.toLocaleDateString();
       
-      // Set transaction ID
+      // Generate and display transaction ID
+      const transactionId = generateTransactionId();
       document.getElementById('transaction-id').textContent = transactionId;
+      
+      // Send webhook to Discord with payment details
+      try {
+        // Only send webhook if we're not in local development
+        if (window.location.hostname !== 'localhost') {
+          // Prepare the webhook data
+          const webhookData = {
+            embeds: [{
+              title: '💰 New Payment Received!',
+              color: 0x8249F0, // Purple color
+              fields: [
+                {
+                  name: 'Plan',
+                  value: plans[plan]?.name || 'Premium',
+                  inline: true
+                },
+                {
+                  name: 'Price',
+                  value: plans[plan]?.price || '$9.99/month',
+                  inline: true
+                },
+                {
+                  name: 'Payment Method',
+                  value: paymentMethod.charAt(0).toUpperCase() + paymentMethod.slice(1),
+                  inline: true
+                },
+                {
+                  name: 'Transaction ID',
+                  value: transactionId,
+                  inline: false
+                },
+                {
+                  name: 'Discord Server ID',
+                  value: discordServerId || 'Not provided',
+                  inline: false
+                },
+                {
+                  name: 'Date',
+                  value: paymentDate.toLocaleString(),
+                  inline: false
+                }
+              ],
+              timestamp: new Date().toISOString()
+            }]
+          };
+          
+          // Send the webhook using the direct webhook URL
+          const webhookUrl = 'https://discord.com/api/webhooks/1234208267429068871/MCCYX_-9Ic1QLfvzCRnLJbv2GBFdH5UdCCBMwQ0_wESTJ1A-ywm0N_aTMEP8g9rNSOXn';
+          const webhookResponse = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(webhookData)
+          });
+          
+          if (!webhookResponse.ok) {
+            console.error('Failed to send Discord webhook');
+          }
+        }
+      } catch (error) {
+        console.error('Error sending webhook:', error);
+      }
     });
   </script>
 </body>
