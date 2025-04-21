@@ -159,25 +159,15 @@ class GuardShin(commands.Bot):
                 Invite URL format: https://discord.com/api/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
                 """)
             
-            # For global sync, we need to handle the Entry Point command issue
-            # Discord doesn't allow removing certain commands in bulk updates
-            try:
-                # Get currently registered global commands
-                existing_commands = await self.http.request(
-                    discord.http.Route('GET', f'/applications/{self.application_id}/commands')
-                )
-                
-                # If we have existing commands, we need to include Entry Point commands
-                if existing_commands:
-                    entry_points = [cmd for cmd in existing_commands if cmd.get('type') == 3]  # Type 3 is context menu
-                    if entry_points:
-                        logger.info(f"Found {len(entry_points)} Entry Point commands that must be preserved")
-                
-                # Sync with careful handling of entry points
-                synced = await self.tree.sync()
-                logger.info(f"Also synced {len(synced)} commands globally")
-            except Exception as e:
-                logger.warning(f"Failed to sync commands globally: {e}")
+            # Instead of trying to sync globally, let's just skip it for now
+            # This avoids the Entry Point command error
+            logger.info("Skipping global command sync to avoid Entry Point command issues")
+            
+            # Log success based on guild-specific syncs
+            if success:
+                logger.info("Successfully registered commands to individual guilds")
+            else:
+                logger.warning("Failed to register commands to any guilds")
             
             return success
         except Exception as e:
