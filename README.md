@@ -120,7 +120,7 @@ We offer several subscription options:
 ### Payment Methods
 - Stripe (Credit/Debit Cards)
 - PayPal ($ChristopherThomas429)
-- CashApp ($kingsweets2004)
+- CashApp ($guardshin)
 
 Visit our [dashboard](https://witherco.github.io/Guard-shin/) to subscribe and unlock all premium features instantly.
 
