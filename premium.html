@@ -347,6 +347,36 @@
       max-height: 500px; /* Adjust as needed */
     }
     
+    /* Payment Buttons */
+    .payment-options {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .payment-btn {
+      background-color: var(--color-bg-tertiary);
+      border-radius: var(--border-radius);
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--transition-speed), transform 0.2s;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .payment-btn:hover {
+      background-color: var(--color-bg-primary);
+      transform: translateY(-2px);
+    }
+    
+    .payment-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    
     /* Payment methods */
     .payment-methods {
       display: flex;
@@ -427,12 +457,12 @@
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           
-          // Get the plan name from the data attribute
+          // Get the plan name and payment method from the data attributes
           const plan = this.getAttribute('data-plan');
+          const paymentMethod = this.getAttribute('data-payment') || 'stripe';
           
-          // Simulate redirect to payment page
-          alert(`Taking you to payment page for the ${plan} plan. This feature will be implemented soon.`);
-          // In a real implementation, you would redirect to Stripe checkout or another payment processor
+          // Redirect to the checkout page with plan and payment method parameters
+          window.location.href = `checkout.html?plan=${plan}&payment=${paymentMethod}`;
         });
       });
     });
@@ -526,7 +556,15 @@
           </ul>
           
           <div class="plan-cta">
-            <button class="btn btn-purchase" data-plan="premium">Upgrade Now</button>
+            <a href="checkout.html?plan=premium&payment=stripe" class="btn">Upgrade with Stripe</a>
+            <div class="payment-options">
+              <a href="checkout.html?plan=premium&payment=paypal" class="payment-btn">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal">
+              </a>
+              <a href="checkout.html?plan=premium&payment=cashapp" class="payment-btn">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2300D54B'><path d='M23.59 3.475a5.9 5.9 0 0 0-3.88-3.88c-.76-.22-1.64-.41-2.87-.46C15.31.04 14.9 0 12 0S8.69.04 7.18.14c-1.23.05-2.11.24-2.87.46a5.9 5.9 0 0 0-3.88 3.88c-.22.76-.41 1.64-.46 2.87C-.09 8.69 0 9.1 0 12s.04 3.31.14 4.82c.05 1.23.24 2.11.46 2.87a5.9 5.9 0 0 0 3.88 3.88c.76.22 1.64.41 2.87.46 1.54.1 1.94.14 4.82.14s3.31-.04 4.82-.14c1.23-.05 2.11-.24 2.87-.46a5.9 5.9 0 0 0 3.88-3.88c.22-.76.41-1.64.46-2.87.1-1.54.14-1.94.14-4.82s-.04-3.31-.14-4.82c-.05-1.26-.24-2.11-.46-2.87zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z'/></svg>" alt="CashApp">
+              </a>
+            </div>
           </div>
         </div>
         
@@ -551,7 +589,15 @@
           </ul>
           
           <div class="plan-cta">
-            <button class="btn btn-purchase" data-plan="enterprise">Contact Sales</button>
+            <a href="checkout.html?plan=enterprise&payment=stripe" class="btn">Upgrade with Stripe</a>
+            <div class="payment-options">
+              <a href="checkout.html?plan=enterprise&payment=paypal" class="payment-btn">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2301315a'><path d='M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208zm7.425 0h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838zm7.029 0h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z'/></svg>" alt="PayPal">
+              </a>
+              <a href="checkout.html?plan=enterprise&payment=cashapp" class="payment-btn">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24' fill='%2300D54B'><path d='M23.59 3.475a5.9 5.9 0 0 0-3.88-3.88c-.76-.22-1.64-.41-2.87-.46C15.31.04 14.9 0 12 0S8.69.04 7.18.14c-1.23.05-2.11.24-2.87.46a5.9 5.9 0 0 0-3.88 3.88c-.22.76-.41 1.64-.46 2.87C-.09 8.69 0 9.1 0 12s.04 3.31.14 4.82c.05 1.23.24 2.11.46 2.87a5.9 5.9 0 0 0 3.88 3.88c.76.22 1.64.41 2.87.46 1.54.1 1.94.14 4.82.14s3.31-.04 4.82-.14c1.23-.05 2.11-.24 2.87-.46a5.9 5.9 0 0 0 3.88-3.88c.22-.76.41-1.64.46-2.87.1-1.54.14-1.94.14-4.82s-.04-3.31-.14-4.82c-.05-1.26-.24-2.11-.46-2.87zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z'/></svg>" alt="CashApp">
+              </a>
+            </div>
           </div>
         </div>
       </div>

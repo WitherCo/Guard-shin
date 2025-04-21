@@ -422,7 +422,7 @@
             </thead>
             <tbody>
               <!-- Moderation Commands -->
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!ban</span>
                 </td>
@@ -433,7 +433,7 @@
                 <td><code>!ban @user [reason]</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!unban</span>
                 </td>
@@ -444,7 +444,7 @@
                 <td><code>!unban 123456789012345678</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!kick</span>
                 </td>
@@ -455,7 +455,7 @@
                 <td><code>!kick @user [reason]</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!mute</span>
                 </td>
@@ -466,7 +466,7 @@
                 <td><code>!mute @user 1h spamming</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!unmute</span>
                 </td>
@@ -477,7 +477,7 @@
                 <td><code>!unmute @user</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Moderation">
                 <td>
                   <span class="command-name">!warn</span>
                 </td>
@@ -488,7 +488,7 @@
                 <td><code>!warn @user inappropriate language</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Premium Configuration">
                 <td>
                   <span class="command-name">!autorole</span>
                   <span class="premium-badge">Premium</span>
@@ -500,7 +500,7 @@
                 <td><code>!autorole enable @Member</code></td>
               </tr>
               
-              <tr>
+              <tr class="command-row" data-category="Security">
                 <td>
                   <span class="command-name">!lockdown</span>
                 </td>
@@ -522,5 +522,50 @@
       </div>
     </main>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Category switching functionality
+      const categoryTabs = document.querySelectorAll('.category-tab');
+      const commandRows = document.querySelectorAll('.command-row');
+      
+      // Add click listeners to category tabs
+      categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          // Remove active class from all tabs
+          categoryTabs.forEach(t => t.classList.remove('active'));
+          
+          // Add active class to clicked tab
+          this.classList.add('active');
+          
+          const selectedCategory = this.textContent.trim();
+          
+          // Show/hide commands based on category
+          commandRows.forEach(row => {
+            if (selectedCategory === 'All Commands') {
+              row.style.display = ''; // Show all
+            } else if (selectedCategory === 'Premium') {
+              // Show commands with Premium badge
+              if (row.querySelector('.premium-badge')) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            } else {
+              // Show commands that match the category
+              const rowCategory = row.getAttribute('data-category');
+              if (rowCategory && rowCategory.includes(selectedCategory)) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            }
+          });
+        });
+      });
+      
+      // Initialize with All Commands selected
+      categoryTabs[0].click();
+    });
+  </script>
 </body>
 </html>
