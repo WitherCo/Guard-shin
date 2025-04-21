@@ -818,17 +818,10 @@ class Commands(commands.Cog):
         if member.bot:
             embed.set_footer(text="This user is a bot")
             
-        await ctx.send(embed=embed)
-        
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(Commands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(Commands(bot))
+        await ctx.send(embed=embed))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = Commands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[Commands.__name__] = Commands(bot)
