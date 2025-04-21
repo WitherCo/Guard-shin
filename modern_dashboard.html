@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guard-shin - Commands</title>
+    <title>Guard-shin - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -80,6 +80,10 @@
             color: var(--primary);
         }
         
+        .nav-links a.active {
+            color: var(--primary);
+        }
+        
         .btn {
             padding: 0.5rem 1rem;
             border-radius: 4px;
@@ -99,8 +103,81 @@
             background-color: var(--primary-dark);
         }
         
-        .main {
-            padding: 3rem 0;
+        .hero {
+            background-color: var(--secondary);
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 10px 10px;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(130, 73, 240, 0.1);
+        }
+        
+        .stats {
+            margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background-color: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
         }
         
         .section-title {
@@ -110,167 +187,261 @@
             font-size: 2rem;
         }
         
-        .commands-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+        .server-list {
+            margin-bottom: 3rem;
         }
         
-        .category {
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .server-card {
             background-color: var(--secondary);
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
         }
         
-        .category-header {
+        .server-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .server-banner {
+            height: 80px;
             background-color: var(--primary);
-            padding: 1rem;
+            position: relative;
+        }
+        
+        .server-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: absolute;
+            bottom: -32px;
+            left: 20px;
+            border: 4px solid var(--secondary);
+            background-color: var(--dark);
+        }
+        
+        .server-content {
+            padding: 2rem 1rem 1rem;
+        }
+        
+        .server-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .server-members {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+        
+        .server-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .server-btn {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .bot-status {
+            margin-bottom: 3rem;
+        }
+        
+        .status-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
+            margin-bottom: 2rem;
         }
         
-        .category-title {
-            font-size: 1.2rem;
+        .status-title {
+            font-size: 1.5rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
-        .category-count {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 0.2rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .command-list {
-            padding: 1rem;
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+        }
+        
+        .indicator-text {
+            font-size: 0.9rem;
+        }
+        
+        .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        .command-card {
+        .status-metric {
             background-color: rgba(0, 0, 0, 0.2);
             padding: 1rem;
             border-radius: 5px;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .restart-history {
+            margin-top: 2rem;
+        }
+        
+        .history-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-time {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        .restart-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.8rem;
+            text-align: center;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+        
+        .restart-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .features {
+            margin-bottom: 3rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s;
         }
         
-        .command-card:hover {
+        .feature-card:hover {
             transform: translateY(-5px);
         }
         
-        .command-name {
+        .feature-icon {
+            font-size: 2.5rem;
             color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.2rem;
             font-weight: bold;
-            margin-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
         
-        .command-description {
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-        
-        .command-usage {
-            font-family: monospace;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 0.5rem;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .command-premium {
-            font-size: 0.8rem;
-            color: var(--warning);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-        
-        .search-bar {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .search-input {
-            width: 100%;
-            max-width: 500px;
-            padding: 0.8rem 1rem;
-            border-radius: 50px;
-            border: none;
-            background-color: var(--secondary);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: box-shadow 0.3s;
-        }
-        
-        .search-input:focus {
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-        
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .filter-btn.active {
+        .cta {
             background-color: var(--primary);
-        }
-        
-        .filter-btn:hover:not(.active) {
-            background-color: rgba(130, 73, 240, 0.2);
-        }
-        
-        .stats {
-            background-color: var(--secondary);
+            padding: 4rem 2rem;
             border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .stat-item {
             text-align: center;
-            flex: 1;
-            min-width: 150px;
+            margin-bottom: 3rem;
         }
         
-        .stat-value {
+        .cta-title {
             font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
         
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
+        .cta-description {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cta {
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+        
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-cta-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-cta-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         footer {
@@ -337,37 +508,14 @@
                 display: block;
             }
             
-            .command-list {
-                grid-template-columns: 1fr;
+            .hero-title {
+                font-size: 2rem;
             }
-        }
-        
-        .command-search-results {
-            margin-top: 1rem;
-        }
-        
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .collapse-icon {
-            transition: transform 0.3s;
-        }
-        
-        .collapsed .collapse-icon {
-            transform: rotate(-90deg);
-        }
-        
-        .category-content {
-            max-height: 1000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-        }
-        
-        .collapsed .category-content {
-            max-height: 0;
+            
+            .server-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -380,8 +528,8 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <ul class="nav-links" id="nav-links">
-                    <li><a href="modern_dashboard.html">Dashboard</a></li>
-                    <li><a href="modern_commands.html" class="active">Commands</a></li>
+                    <li><a href="modern_dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="modern_commands.html">Commands</a></li>
                     <li><a href="modern_premium.html">Premium</a></li>
                     <li><a href="modern_support.html">Support</a></li>
                     <li><a href="modern_settings.html">Settings</a></li>
@@ -391,48 +539,181 @@
         </div>
     </header>
     
-    <main class="main">
+    <section class="hero">
         <div class="container">
-            <h1 class="section-title">Bot Commands</h1>
-            
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-value">400+</div>
-                    <div class="stat-label">Total Commands</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">12</div>
-                    <div class="stat-label">Categories</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">250+</div>
-                    <div class="stat-label">Free Commands</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">150+</div>
-                    <div class="stat-label">Premium Commands</div>
-                </div>
-            </div>
-            
-            <div class="search-bar">
-                <input type="text" class="search-input" id="command-search" placeholder="Search commands...">
-            </div>
-            
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">All Commands</button>
-                <button class="filter-btn" data-filter="free">Free</button>
-                <button class="filter-btn" data-filter="premium">Premium</button>
-                <button class="filter-btn" data-filter="moderation">Moderation</button>
-                <button class="filter-btn" data-filter="utility">Utility</button>
-                <button class="filter-btn" data-filter="fun">Fun</button>
-            </div>
-            
-            <div class="command-search-results" id="search-results"></div>
-            
-            <div class="commands-container" id="commands-container">
-                <!-- Categories will be dynamically loaded here -->
+            <h1 class="hero-title">Welcome to Guard-shin Dashboard</h1>
+            <p class="hero-subtitle">Advanced Discord moderation and security platform. Protect your server with intelligent features and manage your community with ease.</p>
+            <div class="hero-buttons">
+                <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn btn-primary" target="_blank">Add to Server</a>
+                <a href="modern_premium.html" class="btn btn-outline">Upgrade to Premium</a>
             </div>
         </div>
+    </section>
+    
+    <main class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <i class="fas fa-server stat-icon"></i>
+                <div class="stat-value">1,500+</div>
+                <div class="stat-label">Servers Protected</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-value">2.5M+</div>
+                <div class="stat-label">Users Protected</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-shield-alt stat-icon"></i>
+                <div class="stat-value">175K+</div>
+                <div class="stat-label">Threats Blocked</div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star stat-icon"></i>
+                <div class="stat-value">99.9%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+        
+        <section class="server-list">
+            <h2 class="section-title">Your Servers</h2>
+            <div class="server-grid">
+                <div class="server-card">
+                    <div class="server-banner"></div>
+                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
+                    <div class="server-content">
+                        <div class="server-name">Gaming Community</div>
+                        <div class="server-members">
+                            <i class="fas fa-user"></i> 
+                            5,283 members
+                        </div>
+                        <div class="server-actions">
+                            <a href="#" class="btn btn-primary server-btn">Manage</a>
+                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="server-card">
+                    <div class="server-banner"></div>
+                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
+                    <div class="server-content">
+                        <div class="server-name">Anime Fans</div>
+                        <div class="server-members">
+                            <i class="fas fa-user"></i> 
+                            2,157 members
+                        </div>
+                        <div class="server-actions">
+                            <a href="#" class="btn btn-primary server-btn">Manage</a>
+                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="server-card">
+                    <div class="server-banner"></div>
+                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
+                    <div class="server-content">
+                        <div class="server-name">Study Group</div>
+                        <div class="server-members">
+                            <i class="fas fa-user"></i> 
+                            328 members
+                        </div>
+                        <div class="server-actions">
+                            <a href="#" class="btn btn-primary server-btn">Manage</a>
+                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="bot-status">
+            <h2 class="section-title">Bot Status</h2>
+            <div class="status-card">
+                <div class="status-header">
+                    <div class="status-title">
+                        <i class="fas fa-robot"></i>
+                        Guard-shin Status
+                    </div>
+                    <div class="status-indicator">
+                        <div class="indicator-dot"></div>
+                        <div class="indicator-text">Online</div>
+                    </div>
+                </div>
+                <div class="status-grid">
+                    <div class="status-metric">
+                        <div class="metric-label">Uptime</div>
+                        <div class="metric-value">99.9%</div>
+                    </div>
+                    <div class="status-metric">
+                        <div class="metric-label">Ping</div>
+                        <div class="metric-value">42ms</div>
+                    </div>
+                    <div class="status-metric">
+                        <div class="metric-label">Servers</div>
+                        <div class="metric-value">1,523</div>
+                    </div>
+                    <div class="status-metric">
+                        <div class="metric-label">Commands Used</div>
+                        <div class="metric-value">156,783</div>
+                    </div>
+                </div>
+                <div class="restart-history">
+                    <h3 class="history-title">Restart History</h3>
+                    <div class="history-item">
+                        <div class="history-event">Scheduled Restart</div>
+                        <div class="history-time">Today, 03:00 AM</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-event">Maintenance</div>
+                        <div class="history-time">Apr 18, 2025, 07:15 PM</div>
+                    </div>
+                    <div class="history-item">
+                        <div class="history-event">Scheduled Restart</div>
+                        <div class="history-time">Apr 17, 2025, 03:00 AM</div>
+                    </div>
+                </div>
+                <button class="restart-btn">Restart Bot</button>
+            </div>
+        </section>
+        
+        <section class="features">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Advanced Security</h3>
+                    <p>Protect your server with anti-raid, anti-spam, and auto-moderation features to keep your community safe.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Moderation</h3>
+                    <p>Easily manage your server with powerful moderation tools, logs, warnings, and automated actions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="feature-title">Customization</h3>
+                    <p>Customize the bot to fit your server's needs with custom commands, welcome messages, and more.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cta">
+            <h2 class="cta-title">Upgrade to Premium</h2>
+            <p class="cta-description">Get access to all premium features, including custom welcome images, advanced verification, priority support, and more.</p>
+            <div class="cta-buttons">
+                <a href="modern_premium.html" class="btn btn-cta btn-light">View Plans</a>
+                <a href="modern_commands.html" class="btn btn-cta btn-cta-outline">View All Commands</a>
+            </div>
+        </section>
     </main>
     
     <footer>
@@ -451,356 +732,7 @@
     </footer>
     
     <script>
-        // Command data structure
-        const commands = [
-            // Moderation Commands
-            {"name": "ban", "category": "moderation", "description": "Ban a user from the server", "usage": "g!ban @user [reason]", "premium": false},
-            {"name": "kick", "category": "moderation", "description": "Kick a user from the server", "usage": "g!kick @user [reason]", "premium": false},
-            {"name": "clear", "category": "moderation", "description": "Clear messages from a channel", "usage": "g!clear [amount]", "premium": false},
-            {"name": "warn", "category": "moderation", "description": "Warn a user", "usage": "g!warn @user [reason]", "premium": false},
-            {"name": "mute", "category": "moderation", "description": "Mute a user", "usage": "g!mute @user [duration] [reason]", "premium": false},
-            {"name": "unmute", "category": "moderation", "description": "Unmute a user", "usage": "g!unmute @user", "premium": false},
-            {"name": "slowmode", "category": "moderation", "description": "Set slowmode for a channel", "usage": "g!slowmode [seconds]", "premium": false},
-            {"name": "lock", "category": "moderation", "description": "Lock a channel", "usage": "g!lock [channel]", "premium": false},
-            {"name": "unlock", "category": "moderation", "description": "Unlock a channel", "usage": "g!unlock [channel]", "premium": false},
-            {"name": "tempban", "category": "moderation", "description": "Temporarily ban a user", "usage": "g!tempban @user [duration] [reason]", "premium": true},
-            {"name": "unban", "category": "moderation", "description": "Unban a user", "usage": "g!unban [user_id/name]", "premium": false},
-            {"name": "softban", "category": "moderation", "description": "Softban a user (ban + unban to clear messages)", "usage": "g!softban @user [reason]", "premium": true},
-            {"name": "hackban", "category": "moderation", "description": "Ban a user who isn't in the server", "usage": "g!hackban [user_id] [reason]", "premium": true},
-            {"name": "voicekick", "category": "moderation", "description": "Kick a user from voice channel", "usage": "g!voicekick @user", "premium": false},
-            {"name": "warnings", "category": "moderation", "description": "View warnings for a user", "usage": "g!warnings @user", "premium": false},
-            {"name": "clearwarns", "category": "moderation", "description": "Clear warnings for a user", "usage": "g!clearwarns @user", "premium": false},
-            
-            // Utility Commands
-            {"name": "ping", "category": "utility", "description": "Check the bot's latency", "usage": "g!ping", "premium": false},
-            {"name": "help", "category": "utility", "description": "Show help information", "usage": "g!help [command]", "premium": false},
-            {"name": "server", "category": "utility", "description": "Get information about the server", "usage": "g!server", "premium": false},
-            {"name": "avatar", "category": "utility", "description": "Get a user's avatar", "usage": "g!avatar [user]", "premium": false},
-            {"name": "botinfo", "category": "utility", "description": "Get information about the bot", "usage": "g!botinfo", "premium": false},
-            {"name": "userinfo", "category": "utility", "description": "Get information about a user", "usage": "g!userinfo [user]", "premium": false},
-            {"name": "servericon", "category": "utility", "description": "Get the server's icon", "usage": "g!servericon", "premium": false},
-            {"name": "roleinfo", "category": "utility", "description": "Get information about a role", "usage": "g!roleinfo [role]", "premium": false},
-            {"name": "channelinfo", "category": "utility", "description": "Get information about a channel", "usage": "g!channelinfo [channel]", "premium": false},
-            {"name": "invite", "category": "utility", "description": "Get the bot's invite link", "usage": "g!invite", "premium": false},
-            {"name": "support", "category": "utility", "description": "Get a link to the support server", "usage": "g!support", "premium": false},
-            {"name": "stats", "category": "utility", "description": "Get the bot's stats", "usage": "g!stats", "premium": false},
-            {"name": "uptime", "category": "utility", "description": "Get the bot's uptime", "usage": "g!uptime", "premium": false},
-            {"name": "channelstats", "category": "utility", "description": "Get statistics about a channel", "usage": "g!channelstats [channel]", "premium": true},
-            
-            // Admin Commands
-            {"name": "prefix", "category": "admin", "description": "Set the server's custom prefix", "usage": "g!prefix [new_prefix]", "premium": false},
-            {"name": "setup", "category": "admin", "description": "Set up the bot for your server", "usage": "g!setup", "premium": false},
-            {"name": "settings", "category": "admin", "description": "View and edit bot settings", "usage": "g!settings [setting] [value]", "premium": false},
-            {"name": "module", "category": "admin", "description": "Enable or disable modules", "usage": "g!module [enable/disable] [module]", "premium": false},
-            {"name": "autorole", "category": "admin", "description": "Configure auto role for new members", "usage": "g!autorole [role]", "premium": true},
-            {"name": "logs", "category": "admin", "description": "Configure logging channels", "usage": "g!logs [channel]", "premium": false},
-            {"name": "welcome", "category": "admin", "description": "Configure welcome messages", "usage": "g!welcome [channel] [message]", "premium": true},
-            {"name": "goodbye", "category": "admin", "description": "Configure goodbye messages", "usage": "g!goodbye [channel] [message]", "premium": true},
-            {"name": "automod", "category": "admin", "description": "Configure auto-moderation", "usage": "g!automod [setting] [value]", "premium": false},
-            {"name": "verification", "category": "admin", "description": "Configure verification system", "usage": "g!verification [setting] [value]", "premium": false},
-            {"name": "config", "category": "admin", "description": "View the server's configuration", "usage": "g!config", "premium": false},
-            {"name": "backup", "category": "admin", "description": "Create a server backup", "usage": "g!backup", "premium": true},
-            {"name": "restore", "category": "admin", "description": "Restore a server backup", "usage": "g!restore [backup_id]", "premium": true},
-            
-            // Fun Commands
-            {"name": "8ball", "category": "fun", "description": "Ask the magic 8-ball a question", "usage": "g!8ball [question]", "premium": false},
-            {"name": "roll", "category": "fun", "description": "Roll a dice", "usage": "g!roll [sides]", "premium": false},
-            {"name": "coin", "category": "fun", "description": "Flip a coin", "usage": "g!coin", "premium": false},
-            {"name": "rps", "category": "fun", "description": "Play rock, paper, scissors", "usage": "g!rps [choice]", "premium": false},
-            {"name": "joke", "category": "fun", "description": "Get a random joke", "usage": "g!joke", "premium": false},
-            {"name": "meme", "category": "fun", "description": "Get a random meme", "usage": "g!meme", "premium": false},
-            {"name": "quote", "category": "fun", "description": "Get a random quote", "usage": "g!quote", "premium": false},
-            {"name": "fact", "category": "fun", "description": "Get a random fact", "usage": "g!fact", "premium": false},
-            {"name": "ascii", "category": "fun", "description": "Convert text to ASCII art", "usage": "g!ascii [text]", "premium": true},
-            {"name": "reverse", "category": "fun", "description": "Reverse text", "usage": "g!reverse [text]", "premium": false},
-            {"name": "emojify", "category": "fun", "description": "Convert text to emojis", "usage": "g!emojify [text]", "premium": false},
-            
-            // Image Commands
-            {"name": "cat", "category": "images", "description": "Get a random cat image", "usage": "g!cat", "premium": false},
-            {"name": "dog", "category": "images", "description": "Get a random dog image", "usage": "g!dog", "premium": false},
-            {"name": "bird", "category": "images", "description": "Get a random bird image", "usage": "g!bird", "premium": false},
-            {"name": "fox", "category": "images", "description": "Get a random fox image", "usage": "g!fox", "premium": false},
-            {"name": "panda", "category": "images", "description": "Get a random panda image", "usage": "g!panda", "premium": false},
-            {"name": "koala", "category": "images", "description": "Get a random koala image", "usage": "g!koala", "premium": false},
-            {"name": "captcha", "category": "images", "description": "Generate a captcha image", "usage": "g!captcha [text]", "premium": true},
-            {"name": "pokemon", "category": "images", "description": "Get a Pokémon image", "usage": "g!pokemon [name]", "premium": false},
-            {"name": "achievement", "category": "images", "description": "Create a Minecraft achievement", "usage": "g!achievement [text]", "premium": true},
-            
-            // Economy Commands
-            {"name": "balance", "category": "economy", "description": "Check your economy balance", "usage": "g!balance", "premium": false},
-            {"name": "daily", "category": "economy", "description": "Claim your daily reward", "usage": "g!daily", "premium": false},
-            {"name": "work", "category": "economy", "description": "Work to earn money", "usage": "g!work", "premium": false},
-            {"name": "transfer", "category": "economy", "description": "Transfer money to another user", "usage": "g!transfer @user [amount]", "premium": false},
-            {"name": "shop", "category": "economy", "description": "View the economy shop", "usage": "g!shop", "premium": false},
-            {"name": "buy", "category": "economy", "description": "Buy an item from the shop", "usage": "g!buy [item_id]", "premium": false},
-            {"name": "inventory", "category": "economy", "description": "View your inventory", "usage": "g!inventory", "premium": false},
-            {"name": "leaderboard", "category": "economy", "description": "View the money leaderboard", "usage": "g!leaderboard", "premium": false},
-            {"name": "rob", "category": "economy", "description": "Rob another user", "usage": "g!rob @user", "premium": true},
-            {"name": "slots", "category": "economy", "description": "Play slots", "usage": "g!slots [amount]", "premium": true},
-            {"name": "gamble", "category": "economy", "description": "Gamble your money", "usage": "g!gamble [amount]", "premium": true},
-            
-            // Level Commands
-            {"name": "rank", "category": "levels", "description": "Check your rank", "usage": "g!rank [user]", "premium": false},
-            {"name": "levels", "category": "levels", "description": "View the server's leaderboard", "usage": "g!levels", "premium": false},
-            {"name": "rewards", "category": "levels", "description": "View level rewards", "usage": "g!rewards", "premium": true},
-            {"name": "setlevel", "category": "levels", "description": "Set a user's level", "usage": "g!setlevel @user [level]", "premium": true},
-            {"name": "resetlevels", "category": "levels", "description": "Reset all levels", "usage": "g!resetlevels", "premium": true},
-            
-            // Music Commands
-            {"name": "play", "category": "music", "description": "Play a song", "usage": "g!play [song]", "premium": false},
-            {"name": "skip", "category": "music", "description": "Skip the current song", "usage": "g!skip", "premium": false},
-            {"name": "stop", "category": "music", "description": "Stop playing music", "usage": "g!stop", "premium": false},
-            {"name": "queue", "category": "music", "description": "View the music queue", "usage": "g!queue", "premium": false},
-            {"name": "volume", "category": "music", "description": "Set the music volume", "usage": "g!volume [0-100]", "premium": false},
-            {"name": "pause", "category": "music", "description": "Pause the current song", "usage": "g!pause", "premium": false},
-            {"name": "resume", "category": "music", "description": "Resume the current song", "usage": "g!resume", "premium": false},
-            {"name": "nowplaying", "category": "music", "description": "Show the current song", "usage": "g!nowplaying", "premium": false},
-            {"name": "shuffle", "category": "music", "description": "Shuffle the queue", "usage": "g!shuffle", "premium": true},
-            {"name": "loop", "category": "music", "description": "Loop the current song", "usage": "g!loop", "premium": true},
-            {"name": "loopqueue", "category": "music", "description": "Loop the queue", "usage": "g!loopqueue", "premium": true},
-            {"name": "lyrics", "category": "music", "description": "Get lyrics for a song", "usage": "g!lyrics [song]", "premium": true},
-            {"name": "playlist", "category": "music", "description": "Load a playlist", "usage": "g!playlist [name]", "premium": true},
-            {"name": "savequeue", "category": "music", "description": "Save the current queue as a playlist", "usage": "g!savequeue [name]", "premium": true},
-            
-            // Social Commands
-            {"name": "hug", "category": "social", "description": "Hug a user", "usage": "g!hug @user", "premium": false},
-            {"name": "slap", "category": "social", "description": "Slap a user", "usage": "g!slap @user", "premium": false},
-            {"name": "kiss", "category": "social", "description": "Kiss a user", "usage": "g!kiss @user", "premium": false},
-            {"name": "pat", "category": "social", "description": "Pat a user", "usage": "g!pat @user", "premium": false},
-            {"name": "marry", "category": "social", "description": "Marry a user", "usage": "g!marry @user", "premium": true},
-            {"name": "divorce", "category": "social", "description": "Divorce a user", "usage": "g!divorce", "premium": true},
-            {"name": "profile", "category": "social", "description": "View your profile", "usage": "g!profile [user]", "premium": true},
-            
-            // Games
-            {"name": "trivia", "category": "games", "description": "Play trivia", "usage": "g!trivia", "premium": false},
-            {"name": "hangman", "category": "games", "description": "Play hangman", "usage": "g!hangman", "premium": true},
-            {"name": "tictactoe", "category": "games", "description": "Play tic-tac-toe", "usage": "g!tictactoe @user", "premium": true},
-            {"name": "connect4", "category": "games", "description": "Play Connect 4", "usage": "g!connect4 @user", "premium": true},
-            {"name": "akinator", "category": "games", "description": "Play Akinator", "usage": "g!akinator", "premium": true},
-            
-            // Premium Commands
-            {"name": "premium", "category": "premium", "description": "Check premium status", "usage": "g!premium", "premium": true},
-            {"name": "redeem", "category": "premium", "description": "Redeem a premium code", "usage": "g!redeem [code]", "premium": true},
-            {"name": "customize", "category": "premium", "description": "Customize bot responses", "usage": "g!customize [setting] [value]", "premium": true},
-            {"name": "welcomeimage", "category": "premium", "description": "Set a custom welcome image", "usage": "g!welcomeimage [url]", "premium": true},
-            {"name": "autorole", "category": "premium", "description": "Configure auto role for new members", "usage": "g!autorole [role]", "premium": true},
-            {"name": "reactionroles", "category": "premium", "description": "Set up reaction roles", "usage": "g!reactionroles", "premium": true},
-            
-            // Configuration Commands
-            {"name": "setup", "category": "config", "description": "Initial bot setup", "usage": "g!setup", "premium": false},
-            {"name": "antiraid", "category": "config", "description": "Configure anti-raid protection", "usage": "g!antiraid [setting] [value]", "premium": false},
-            {"name": "antispam", "category": "config", "description": "Configure anti-spam protection", "usage": "g!antispam [setting] [value]", "premium": false},
-            {"name": "antiphishing", "category": "config", "description": "Configure anti-phishing protection", "usage": "g!antiphishing [on/off]", "premium": false},
-            {"name": "mutesettings", "category": "config", "description": "Configure mute settings", "usage": "g!mutesettings [role]", "premium": false},
-            {"name": "bansettings", "category": "config", "description": "Configure ban settings", "usage": "g!bansettings [setting] [value]", "premium": false},
-            {"name": "kicksettings", "category": "config", "description": "Configure kick settings", "usage": "g!kicksettings [setting] [value]", "premium": false},
-            {"name": "warnsettings", "category": "config", "description": "Configure warning settings", "usage": "g!warnsettings [setting] [value]", "premium": false},
-            {"name": "joinrole", "category": "config", "description": "Set role for new members", "usage": "g!joinrole [role]", "premium": false},
-            {"name": "joinmessage", "category": "config", "description": "Set message for new members", "usage": "g!joinmessage [message]", "premium": true},
-            {"name": "leavemessage", "category": "config", "description": "Set message for leaving members", "usage": "g!leavemessage [message]", "premium": true},
-            {"name": "levelup", "category": "config", "description": "Configure level-up messages", "usage": "g!levelup [channel/dm/off]", "premium": true},
-            {"name": "levelrole", "category": "config", "description": "Set roles for specific levels", "usage": "g!levelrole [level] [role]", "premium": true}
-        ];
-        
-        // Category icons
-        const categoryIcons = {
-            "moderation": "fa-shield-alt",
-            "utility": "fa-wrench",
-            "admin": "fa-cog",
-            "fun": "fa-gamepad",
-            "images": "fa-image",
-            "economy": "fa-coins",
-            "levels": "fa-chart-line",
-            "music": "fa-music",
-            "social": "fa-users",
-            "games": "fa-dice",
-            "premium": "fa-star",
-            "config": "fa-sliders-h"
-        };
-        
-        // Category names
-        const categoryNames = {
-            "moderation": "Moderation",
-            "utility": "Utility",
-            "admin": "Administration",
-            "fun": "Fun",
-            "images": "Images",
-            "economy": "Economy",
-            "levels": "Levels",
-            "music": "Music",
-            "social": "Social",
-            "games": "Games",
-            "premium": "Premium",
-            "config": "Configuration"
-        };
-        
-        // Group commands by category
-        function groupByCategory(cmds) {
-            const categories = {};
-            
-            cmds.forEach(cmd => {
-                if (!categories[cmd.category]) {
-                    categories[cmd.category] = [];
-                }
-                categories[cmd.category].push(cmd);
-            });
-            
-            return categories;
-        }
-        
-        // Render commands
-        function renderCommands(filter = 'all') {
-            const container = document.getElementById('commands-container');
-            container.innerHTML = '';
-            
-            let filteredCommands = [...commands];
-            
-            // Apply filters
-            if (filter === 'free') {
-                filteredCommands = commands.filter(cmd => !cmd.premium);
-            } else if (filter === 'premium') {
-                filteredCommands = commands.filter(cmd => cmd.premium);
-            } else if (filter !== 'all') {
-                filteredCommands = commands.filter(cmd => cmd.category === filter);
-            }
-            
-            const groupedCommands = groupByCategory(filteredCommands);
-            
-            // Sort categories by name
-            const sortedCategories = Object.keys(groupedCommands).sort((a, b) => {
-                if (a === 'moderation') return -1;
-                if (b === 'moderation') return 1;
-                return categoryNames[a].localeCompare(categoryNames[b]);
-            });
-            
-            sortedCategories.forEach(category => {
-                const cmds = groupedCommands[category];
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category';
-                
-                const headerElement = document.createElement('div');
-                headerElement.className = 'category-header';
-                headerElement.innerHTML = `
-                    <div class="category-title">
-                        <i class="fas ${categoryIcons[category]}"></i>
-                        ${categoryNames[category]}
-                    </div>
-                    <div class="category-count">${cmds.length} commands</div>
-                    <i class="fas fa-chevron-down collapse-icon"></i>
-                `;
-                
-                const contentElement = document.createElement('div');
-                contentElement.className = 'category-content';
-                
-                const commandListElement = document.createElement('div');
-                commandListElement.className = 'command-list';
-                
-                // Sort commands by name
-                cmds.sort((a, b) => a.name.localeCompare(b.name));
-                
-                cmds.forEach(cmd => {
-                    const commandElement = document.createElement('div');
-                    commandElement.className = 'command-card';
-                    commandElement.innerHTML = `
-                        <div class="command-name">${cmd.name}</div>
-                        <div class="command-description">${cmd.description}</div>
-                        <div class="command-usage">${cmd.usage}</div>
-                        ${cmd.premium ? '<div class="command-premium"><i class="fas fa-star"></i> Premium</div>' : ''}
-                    `;
-                    commandListElement.appendChild(commandElement);
-                });
-                
-                contentElement.appendChild(commandListElement);
-                categoryElement.appendChild(headerElement);
-                categoryElement.appendChild(contentElement);
-                container.appendChild(categoryElement);
-                
-                // Add click event to collapse/expand
-                headerElement.addEventListener('click', () => {
-                    categoryElement.classList.toggle('collapsed');
-                });
-            });
-            
-            // Hide search results
-            document.getElementById('search-results').innerHTML = '';
-        }
-        
-        // Search commands
-        function searchCommands(query) {
-            if (!query) {
-                document.getElementById('search-results').innerHTML = '';
-                document.getElementById('commands-container').style.display = 'flex';
-                return;
-            }
-            
-            query = query.toLowerCase();
-            const results = commands.filter(cmd => 
-                cmd.name.toLowerCase().includes(query) || 
-                cmd.description.toLowerCase().includes(query)
-            );
-            
-            const resultsContainer = document.getElementById('search-results');
-            resultsContainer.innerHTML = '';
-            
-            if (results.length === 0) {
-                resultsContainer.innerHTML = '<div class="no-results">No commands found matching your search.</div>';
-            } else {
-                const categoryElement = document.createElement('div');
-                categoryElement.className = 'category';
-                
-                const headerElement = document.createElement('div');
-                headerElement.className = 'category-header';
-                headerElement.innerHTML = `
-                    <div class="category-title">
-                        <i class="fas fa-search"></i>
-                        Search Results
-                    </div>
-                    <div class="category-count">${results.length} commands</div>
-                `;
-                
-                const contentElement = document.createElement('div');
-                contentElement.className = 'category-content';
-                
-                const commandListElement = document.createElement('div');
-                commandListElement.className = 'command-list';
-                
-                // Sort results by relevance (name match first, then description match)
-                results.sort((a, b) => {
-                    const aInName = a.name.toLowerCase().includes(query);
-                    const bInName = b.name.toLowerCase().includes(query);
-                    
-                    if (aInName && !bInName) return -1;
-                    if (!aInName && bInName) return 1;
-                    return a.name.localeCompare(b.name);
-                });
-                
-                results.forEach(cmd => {
-                    const commandElement = document.createElement('div');
-                    commandElement.className = 'command-card';
-                    commandElement.innerHTML = `
-                        <div class="command-name">${cmd.name}</div>
-                        <div class="command-description">${cmd.description}</div>
-                        <div class="command-usage">${cmd.usage}</div>
-                        ${cmd.premium ? '<div class="command-premium"><i class="fas fa-star"></i> Premium</div>' : ''}
-                    `;
-                    commandListElement.appendChild(commandElement);
-                });
-                
-                contentElement.appendChild(commandListElement);
-                categoryElement.appendChild(headerElement);
-                categoryElement.appendChild(contentElement);
-                resultsContainer.appendChild(categoryElement);
-            }
-            
-            // Hide main command container
-            document.getElementById('commands-container').style.display = 'none';
-        }
-        
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Initial render
-            renderCommands();
-            
             // Mobile menu toggle
             const mobileMenuButton = document.getElementById('mobile-menu');
             const navLinks = document.getElementById('nav-links');
@@ -809,27 +741,23 @@
                 navLinks.classList.toggle('active');
             });
             
-            // Filter buttons
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Update active state
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                    
-                    // Apply filter
-                    const filter = button.getAttribute('data-filter');
-                    renderCommands(filter);
-                    
-                    // Clear search
-                    document.getElementById('command-search').value = '';
-                });
-            });
+            // Restart button functionality
+            const restartBtn = document.querySelector('.restart-btn');
             
-            // Search input
-            const searchInput = document.getElementById('command-search');
-            searchInput.addEventListener('input', () => {
-                searchCommands(searchInput.value.trim());
+            restartBtn.addEventListener('click', () => {
+                restartBtn.textContent = 'Restarting...';
+                restartBtn.disabled = true;
+                
+                // Simulate restart process
+                setTimeout(() => {
+                    restartBtn.textContent = 'Bot Restarted Successfully';
+                    
+                    // Reset button after a delay
+                    setTimeout(() => {
+                        restartBtn.textContent = 'Restart Bot';
+                        restartBtn.disabled = false;
+                    }, 3000);
+                }, 2000);
             });
         });
     </script>
