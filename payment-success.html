@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Success | Guard-shin Premium</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e4e4e4;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #8249F0;
+      margin-bottom: 20px;
+    }
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .success-icon svg {
+      width: 60px;
+      height: 60px;
+      fill: white;
+    }
+    .btn {
+      background-color: #8249F0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #7038e0;
+    }
+    .server-info {
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      display: inline-block;
+    }
+    .features-list {
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .features-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .features-list li:before {
+      content: "✓";
+      margin-right: 10px;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-top: 30px;
+    }
+    .discord-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    .discord-info img {
+      width: 30px;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-10">
+    <div class="card">
+      <div class="logo">Guard-shin</div>
+      
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+        </svg>
+      </div>
+      
+      <h1 class="text-3xl font-bold text-white mb-2">Payment Successful!</h1>
+      <p class="text-xl mb-6">Thank you for subscribing to Guard-shin Premium</p>
+      
+      <div class="server-info">
+        <div class="text-sm text-gray-400">Server ID</div>
+        <div class="text-xl font-mono" id="server-id">Loading...</div>
+      </div>
+      
+      <div class="mt-4">
+        <div class="text-sm text-gray-400">Subscription Plan</div>
+        <div class="text-xl font-bold text-purple-500" id="plan-name">Loading...</div>
+      </div>
+      
+      <div class="mt-6">
+        <h3 class="text-xl font-bold mb-4">Your premium features are now active!</h3>
+        <ul class="features-list" id="features-list">
+          <!-- Features will be populated by JavaScript -->
+        </ul>
+      </div>
+      
+      <div class="mt-8">
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn mr-4" target="_blank">
+          Invite Bot to Server
+        </a>
+        <a href="https://witherco.github.io/Guard-shin/" class="btn">
+          Return to Dashboard
+        </a>
+      </div>
+      
+      <div class="discord-info">
+        <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c0_icon_clyde_white_RGB.svg" alt="Discord">
+        <div>Need help? Join our <a href="https://discord.gg/wq32WcyMNE" class="text-purple-400 underline" target="_blank">Discord server</a></div>
+      </div>
+      
+      <div class="note">
+        Your subscription will renew automatically. You can manage your subscription from the dashboard.
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const serverId = urlParams.get('server_id');
+      const plan = urlParams.get('plan');
+      
+      // Set server ID and plan name
+      document.getElementById('server-id').textContent = serverId || 'Unknown';
+      
+      let planName = 'Unknown';
+      if (plan === 'basic') {
+        planName = 'Basic';
+      } else if (plan === 'standard') {
+        planName = 'Standard';
+      } else if (plan === 'professional') {
+        planName = 'Professional';
+      }
+      document.getElementById('plan-name').textContent = planName;
+      
+      // Set features based on plan
+      const featuresList = document.getElementById('features-list');
+      let features = [];
+      
+      if (plan === 'basic') {
+        features = [
+          '5 Music Channels',
+          'Basic Anti-Raid Protection',
+          'Custom Welcome Messages'
+        ];
+      } else if (plan === 'standard') {
+        features = [
+          '10 Music Channels',
+          'Advanced Anti-Raid Protection',
+          'Auto-Response System',
+          'Custom Bot Prefix',
+          'Discord Server Backup'
+        ];
+      } else if (plan === 'professional') {
+        features = [
+          'Unlimited Music Channels',
+          'Priority Support',
+          'Custom Commands',
+          'Custom Bot Branding',
+          'All Standard Features',
+          'Advanced Analytics'
+        ];
+      }
+      
+      // Populate features list
+      features.forEach(feature => {
+        const li = document.createElement('li');
+        li.textContent = feature;
+        featuresList.appendChild(li);
+      });
+      
+      // Send payment success to server
+      fetch('/api/payment-success', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          server_id: serverId,
+          plan: plan,
+          payment_method: 'stripe'
+        }),
+      }).catch(err => {
+        console.error('Error sending payment confirmation to server:', err);
+      });
+    });
+  </script>
+</body>
+</html>

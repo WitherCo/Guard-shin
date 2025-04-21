@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guard-shin Premium | Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e4e4e4;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #8249F0;
+      margin-bottom: 10px;
+    }
+    .plans {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .plan {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      flex: 1;
+      min-width: 220px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .plan:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+    .plan.selected {
+      border: 2px solid #8249F0;
+    }
+    .plan .badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #8249F0;
+      color: white;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      border-bottom-left-radius: 10px;
+    }
+    .plan-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: white;
+    }
+    .plan-price {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #8249F0;
+    }
+    .plan-features {
+      margin-bottom: 20px;
+    }
+    .plan-features li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .plan-features li:before {
+      content: "✓";
+      margin-right: 8px;
+      color: #8249F0;
+    }
+    .checkout-btn {
+      background-color: #8249F0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+    .checkout-btn:hover {
+      background-color: #7038e0;
+    }
+    .checkout-btn:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+    .payment-method {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #1e1e1e;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .payment-method:hover {
+      background-color: #2a2a2a;
+    }
+    .payment-method.selected {
+      border: 2px solid #8249F0;
+    }
+    .payment-method img {
+      width: 50px;
+      margin-right: 15px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #333;
+      background-color: #252525;
+      color: white;
+    }
+    #card-element {
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #333;
+      background-color: #252525;
+    }
+    #card-errors {
+      color: #ff6b6b;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top-color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Guard-shin</div>
+      <h2 class="text-xl mb-2">Premium Subscription</h2>
+      <p class="text-gray-400">Upgrade your server with advanced features and protection</p>
+    </div>
+
+    <div class="plans">
+      <div class="plan" data-plan="basic" data-price="499">
+        <div class="plan-name">Basic</div>
+        <div class="plan-price">$4.99<span class="text-sm text-gray-400">/month</span></div>
+        <ul class="plan-features">
+          <li>5 Music Channels</li>
+          <li>Basic Anti-Raid Protection</li>
+          <li>Custom Welcome Messages</li>
+        </ul>
+        <button class="checkout-btn select-plan-btn">Select Plan</button>
+      </div>
+
+      <div class="plan" data-plan="standard" data-price="999">
+        <div class="badge">Popular</div>
+        <div class="plan-name">Standard</div>
+        <div class="plan-price">$9.99<span class="text-sm text-gray-400">/month</span></div>
+        <ul class="plan-features">
+          <li>10 Music Channels</li>
+          <li>Advanced Anti-Raid Protection</li>
+          <li>Auto-Response System</li>
+          <li>Custom Bot Prefix</li>
+          <li>Discord Server Backup</li>
+        </ul>
+        <button class="checkout-btn select-plan-btn">Select Plan</button>
+      </div>
+
+      <div class="plan" data-plan="professional" data-price="1999">
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">$19.99<span class="text-sm text-gray-400">/month</span></div>
+        <ul class="plan-features">
+          <li>Unlimited Music Channels</li>
+          <li>Priority Support</li>
+          <li>Custom Commands</li>
+          <li>Custom Bot Branding</li>
+          <li>All Standard Features</li>
+          <li>Advanced Analytics</li>
+        </ul>
+        <button class="checkout-btn select-plan-btn">Select Plan</button>
+      </div>
+    </div>
+
+    <div id="checkout-form" class="hidden bg-gray-900 p-6 rounded-lg">
+      <h3 class="text-xl mb-4">Complete Your Purchase</h3>
+      
+      <div class="form-group">
+        <label for="server-id" class="form-label">Discord Server ID</label>
+        <input type="text" id="server-id" class="form-control" placeholder="Enter your Discord server ID" required>
+        <p class="text-gray-400 text-sm mt-1">The server where you want to activate premium features</p>
+      </div>
+      
+      <div class="mb-4">
+        <h4 class="mb-2 text-lg">Payment Method</h4>
+        
+        <div class="payment-methods">
+          <div class="payment-method selected" data-method="card">
+            <img src="https://cdn.iconscout.com/icon/free/png-256/free-credit-card-1531432-1300874.png" alt="Credit Card">
+            <div>
+              <div class="font-semibold">Credit/Debit Card</div>
+              <div class="text-sm text-gray-400">Secure payment with Stripe</div>
+            </div>
+          </div>
+          
+          <div class="payment-method" data-method="paypal">
+            <img src="https://cdn.iconscout.com/icon/free/png-256/free-paypal-54-675727.png" alt="PayPal">
+            <div>
+              <div class="font-semibold">PayPal</div>
+              <div class="text-sm text-gray-400">Pay with your PayPal account</div>
+            </div>
+          </div>
+          
+          <div class="payment-method" data-method="cashapp">
+            <img src="https://cdn.iconscout.com/icon/free/png-256/free-cashapp-3521310-2944751.png" alt="CashApp">
+            <div>
+              <div class="font-semibold">CashApp</div>
+              <div class="text-sm text-gray-400">Quick payment via CashApp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="card-payment-form">
+        <div class="form-group">
+          <label class="form-label">Card Information</label>
+          <div id="card-element">
+            <!-- Stripe Card Element will be inserted here -->
+          </div>
+          <div id="card-errors" role="alert"></div>
+        </div>
+        
+        <button id="submit-payment" class="checkout-btn">
+          <span id="button-text">Pay Now</span>
+          <span id="spinner-container" class="hidden">
+            <span class="spinner"></span>
+            Processing...
+          </span>
+        </button>
+      </div>
+      
+      <div id="alternate-payment" class="hidden mt-4">
+        <p class="mb-4">Click the button below to complete payment:</p>
+        <a id="alternate-payment-link" href="#" target="_blank" class="checkout-btn block text-center">
+          Continue to Payment
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize variables for selected plan and payment method
+    let selectedPlan = null;
+    let selectedPaymentMethod = 'card';
+    
+    // Get all plan selection buttons
+    const planButtons = document.querySelectorAll('.select-plan-btn');
+    const plans = document.querySelectorAll('.plan');
+    const checkoutForm = document.getElementById('checkout-form');
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    const cardPaymentForm = document.getElementById('card-payment-form');
+    const alternatePayment = document.getElementById('alternate-payment');
+    const alternatePaymentLink = document.getElementById('alternate-payment-link');
+    
+    // Setup Stripe elements
+    const stripe = Stripe(process.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_TYooMQauvdEDq54NiTphI7jx');
+    const elements = stripe.elements();
+    const cardElement = elements.create('card', {
+      style: {
+        base: {
+          color: '#ffffff',
+          fontFamily: 'Arial, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a'
+        }
+      }
+    });
+    cardElement.mount('#card-element');
+    
+    // Handle real-time validation errors from the card Element
+    cardElement.on('change', function(event) {
+      const displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+    
+    // Handle plan selection
+    plans.forEach(plan => {
+      const button = plan.querySelector('.select-plan-btn');
+      button.addEventListener('click', () => {
+        // Reset all plans
+        plans.forEach(p => p.classList.remove('selected'));
+        
+        // Select this plan
+        plan.classList.add('selected');
+        selectedPlan = {
+          id: plan.dataset.plan,
+          price: plan.dataset.price
+        };
+        
+        // Show checkout form
+        checkoutForm.classList.remove('hidden');
+        
+        // Scroll to checkout form
+        checkoutForm.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+    
+    // Handle payment method selection
+    paymentMethods.forEach(method => {
+      method.addEventListener('click', () => {
+        // Reset all payment methods
+        paymentMethods.forEach(m => m.classList.remove('selected'));
+        
+        // Select this method
+        method.classList.add('selected');
+        selectedPaymentMethod = method.dataset.method;
+        
+        // Show/hide appropriate payment forms
+        if (selectedPaymentMethod === 'card') {
+          cardPaymentForm.classList.remove('hidden');
+          alternatePayment.classList.add('hidden');
+        } else {
+          cardPaymentForm.classList.add('hidden');
+          alternatePayment.classList.remove('hidden');
+          
+          // Set the appropriate payment link
+          if (selectedPaymentMethod === 'paypal') {
+            alternatePaymentLink.href = 'https://paypal.me/ChristopherThomas429?country.x=US&locale.x=en_US';
+            alternatePaymentLink.textContent = 'Continue to PayPal';
+          } else if (selectedPaymentMethod === 'cashapp') {
+            alternatePaymentLink.href = 'https://cash.app/$ChrisThomas429';
+            alternatePaymentLink.textContent = 'Continue to CashApp';
+          }
+        }
+      });
+    });
+    
+    // Handle form submission
+    const form = document.getElementById('submit-payment');
+    const spinner = document.getElementById('spinner-container');
+    const buttonText = document.getElementById('button-text');
+    
+    form.addEventListener('click', async (event) => {
+      event.preventDefault();
+      
+      // Validate server ID
+      const serverId = document.getElementById('server-id').value;
+      if (!serverId) {
+        const errors = document.getElementById('card-errors');
+        errors.textContent = 'Please enter your Discord server ID';
+        return;
+      }
+      
+      // Show loading state
+      form.disabled = true;
+      spinner.classList.remove('hidden');
+      buttonText.classList.add('hidden');
+      
+      try {
+        // Create payment intent
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: [{ id: selectedPlan.id }],
+            amount: parseInt(selectedPlan.price),
+            metadata: {
+              guild_id: serverId,
+              plan: selectedPlan.id
+            }
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
+        
+        // Confirm card payment
+        const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: 'Guard-shin Premium',
+            },
+          },
+        });
+        
+        if (error) {
+          throw new Error(error.message);
+        }
+        
+        // Payment successful
+        if (paymentIntent.status === 'succeeded') {
+          window.location.href = '/payment-success.html?server_id=' + serverId + '&plan=' + selectedPlan.id;
+        }
+        
+      } catch (error) {
+        const errorElement = document.getElementById('card-errors');
+        errorElement.textContent = error.message;
+        
+        // Reset loading state
+        form.disabled = false;
+        spinner.classList.add('hidden');
+        buttonText.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
