@@ -1,241 +1,236 @@
-import fs from 'fs';
-import path from 'path';
-import fetch from 'node-fetch';
+import express from 'express';
+import Stripe from 'stripe';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
 
+dotenv.config();
+
+// Initialize Stripe with the secret key
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error("Error: STRIPE_SECRET_KEY is not set in the environment variables.");
+  process.exit(1);
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: "2023-10-16"
+});
+
+// Initialize webhook endpoint secret
+const webhookSecret = process.env.PAYMENT_WEBHOOK_SECRET || '';
+
+// Setup premium updates file for Discord bot integration
 const PREMIUM_UPDATES_FILE = 'premium_updates.json';
-const UPDATE_WEBHOOK_URL = process.env.UPDATE_WEBHOOK_URL;
 
-// Calculate premium expiration date (1 month from now)
-const calculateExpiryTime = () => {
-  const now = new Date();
-  const expiryDate = new Date(now);
-  expiryDate.setMonth(now.getMonth() + 1);
-  return Math.floor(expiryDate.getTime() / 1000); // Convert to Unix timestamp
-};
-
-// Add a new premium update
-export const addPremiumUpdate = async (serverId, tier, expiryTime = null) => {
+/**
+ * Load premium updates from file
+ */
+function loadPremiumUpdates() {
   try {
-    if (!serverId) {
-      throw new Error('Server ID is required');
-    }
-    
-    const timestamp = Math.floor(Date.now() / 1000);
-    const expires = expiryTime || calculateExpiryTime();
-    
-    let updates = [];
-    
-    // Load existing updates if file exists
     if (fs.existsSync(PREMIUM_UPDATES_FILE)) {
-      const fileContent = fs.readFileSync(PREMIUM_UPDATES_FILE, 'utf-8');
-      if (fileContent.trim()) {
-        updates = JSON.parse(fileContent);
-      }
+      const data = fs.readFileSync(PREMIUM_UPDATES_FILE, 'utf8');
+      return data ? JSON.parse(data) : [];
     }
-    
-    // Add new update
-    updates.push({
-      guild_id: serverId,
-      tier: tier,
-      expires: expires,
-      timestamp: timestamp,
-      processed: false
-    });
-    
-    // Save updates
-    fs.writeFileSync(PREMIUM_UPDATES_FILE, JSON.stringify(updates, null, 2));
-    
-    console.log(`Added premium update for server ${serverId} (tier: ${tier || 'none'}, expires: ${expires})`);
-    
-    return true;
   } catch (error) {
-    console.error('Error adding premium update:', error);
-    return false;
+    console.error(`Error loading premium updates: ${error.message}`);
   }
-};
+  return [];
+}
 
-// Send webhook notification to Discord
-export const sendWebhookNotification = async (message, embeds = [], username = 'Premium System') => {
-  if (!UPDATE_WEBHOOK_URL) {
-    console.warn('UPDATE_WEBHOOK_URL not set, skipping webhook notification');
-    return false;
-  }
-  
+/**
+ * Save premium updates to file
+ */
+function savePremiumUpdates(updates) {
   try {
-    const response = await fetch(UPDATE_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        content: message,
-        embeds
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error ${response.status}`);
-    }
-    
+    fs.writeFileSync(PREMIUM_UPDATES_FILE, JSON.stringify(updates, null, 2));
     return true;
   } catch (error) {
-    console.error('Error sending webhook notification:', error);
+    console.error(`Error saving premium updates: ${error.message}`);
     return false;
   }
-};
+}
 
-// Handle Stripe webhook 
-export const handleStripeWebhook = async (req, res) => {
-  // Get the event
+/**
+ * Add a premium update for a guild
+ */
+function addPremiumUpdate(guildId, tier, expires) {
+  const updates = loadPremiumUpdates();
+  
+  updates.push({
+    guild_id: guildId,
+    tier: tier,
+    expires: expires,
+    timestamp: Math.floor(Date.now() / 1000),
+    processed: false
+  });
+  
+  return savePremiumUpdates(updates);
+}
+
+/**
+ * Handle Stripe webhook events
+ */
+export async function handleWebhook(req, res) {
+  const sig = req.headers['stripe-signature'];
+  
   let event;
   
   try {
-    // Verify the signature if possible
-    if (process.env.STRIPE_WEBHOOK_SECRET && req.headers['stripe-signature']) {
-      const stripe = await import('stripe');
-      const Stripe = stripe.default;
-      const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY);
-      
-      try {
-        event = stripeClient.webhooks.constructEvent(
-          req.body, 
-          req.headers['stripe-signature'], 
-          process.env.STRIPE_WEBHOOK_SECRET
-        );
-      } catch (err) {
-        console.error('Webhook signature verification failed:', err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-      }
+    // If webhook secret is provided, verify the signature
+    if (webhookSecret) {
+      event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
     } else {
-      // If no signature verification is possible, just use the body
+      // For testing without verification
       event = req.body;
     }
+  } catch (error) {
+    console.error(`Webhook signature verification failed: ${error.message}`);
+    return res.status(400).send(`Webhook Error: ${error.message}`);
+  }
+  
+  // Handle the event
+  switch (event.type) {
+    case 'checkout.session.completed':
+      await handleCheckoutCompleted(event.data.object);
+      break;
+      
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated':
+      await handleSubscriptionUpdated(event.data.object);
+      break;
+      
+    case 'customer.subscription.deleted':
+      await handleSubscriptionDeleted(event.data.object);
+      break;
+      
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
+  }
+  
+  // Return success response
+  res.status(200).json({ received: true });
+}
+
+/**
+ * Handle checkout session completed event
+ */
+async function handleCheckoutCompleted(session) {
+  try {
+    console.log('Processing checkout session completed event:', session.id);
     
-    // Handle the event
-    switch (event.type) {
-      case 'payment_intent.succeeded':
-        const paymentIntent = event.data.object;
+    // Check if the checkout was for a subscription
+    if (session.mode === 'subscription') {
+      // Subscription will be handled by the subscription events
+      return;
+    }
+    
+    // One-time payment
+    if (session.metadata && session.metadata.guild_id) {
+      const guildId = session.metadata.guild_id;
+      const tier = session.metadata.tier || 'basic';
+      
+      // Calculate expiration (default to 30 days)
+      const duration = session.metadata.duration ? parseInt(session.metadata.duration) : 30;
+      const currentTime = Math.floor(Date.now() / 1000);
+      const expires = currentTime + (duration * 24 * 60 * 60);
+      
+      // Add premium update
+      addPremiumUpdate(guildId, tier, expires);
+      
+      console.log(`Added premium update for guild ${guildId} with tier ${tier}, expires in ${duration} days`);
+    } else {
+      console.warn('Checkout session completed but no guild_id found in metadata');
+    }
+  } catch (error) {
+    console.error(`Error handling checkout completed: ${error.message}`);
+  }
+}
+
+/**
+ * Handle subscription updated event
+ */
+async function handleSubscriptionUpdated(subscription) {
+  try {
+    console.log('Processing subscription update event:', subscription.id);
+    
+    // Only process active or trialing subscriptions
+    if (subscription.status !== 'active' && subscription.status !== 'trialing') {
+      console.log(`Ignoring subscription with status: ${subscription.status}`);
+      return;
+    }
+    
+    // Get the customer
+    const customer = await stripe.customers.retrieve(subscription.customer);
+    
+    // Get metadata from either subscription or customer
+    const metadata = subscription.metadata || customer.metadata || {};
+    
+    if (metadata.guild_id) {
+      const guildId = metadata.guild_id;
+      
+      // Determine tier based on the price
+      let tier = metadata.tier || 'basic';
+      
+      if (subscription.items && subscription.items.data && subscription.items.data.length > 0) {
+        const priceId = subscription.items.data[0].price.id;
         
-        // Extract server ID and plan from metadata
-        const serverId = paymentIntent.metadata?.guild_id || paymentIntent.metadata?.server_id;
-        const plan = paymentIntent.metadata?.plan || 'basic';
-        
-        if (serverId) {
-          // Add premium update
-          await addPremiumUpdate(serverId, plan);
-          
-          // Send webhook notification
-          const embedColor = plan === 'professional' ? 0xAA00FF : plan === 'standard' ? 0x5865F2 : 0x43B581;
-          
-          await sendWebhookNotification(
-            `💰 New payment received for server ${serverId}!`,
-            [{
-              title: 'Premium Purchase',
-              color: embedColor,
-              fields: [
-                { name: 'Server ID', value: serverId, inline: true },
-                { name: 'Plan', value: plan.charAt(0).toUpperCase() + plan.slice(1), inline: true },
-                { name: 'Amount', value: `$${(paymentIntent.amount / 100).toFixed(2)} USD`, inline: true }
-              ],
-              timestamp: new Date().toISOString()
-            }]
-          );
-          
-          console.log(`Payment successful for server ${serverId} (plan: ${plan})`);
-        } else {
-          console.warn('Payment succeeded but no server ID in metadata:', paymentIntent.id);
+        // Map price IDs to tiers (customize these based on your actual price IDs)
+        if (priceId.includes('basic')) {
+          tier = 'basic';
+        } else if (priceId.includes('standard')) {
+          tier = 'standard';
+        } else if (priceId.includes('professional')) {
+          tier = 'professional';
         }
-        break;
-        
-      case 'payment_intent.payment_failed':
-        const failedPayment = event.data.object;
-        console.log('Payment failed:', failedPayment.id);
-        break;
-        
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
-    
-    // Return success
-    res.status(200).json({received: true});
-  } catch (error) {
-    console.error('Error handling webhook:', error);
-    res.status(500).send('Webhook handler failed');
-  }
-};
-
-// Handle payment success from frontend
-export const handlePaymentSuccess = async (serverId, plan) => {
-  try {
-    if (!serverId) {
-      throw new Error('Server ID is required');
-    }
-    
-    // Add premium update
-    const success = await addPremiumUpdate(serverId, plan || 'basic');
-    
-    if (success) {
-      // Send webhook notification
-      const embedColor = plan === 'professional' ? 0xAA00FF : plan === 'standard' ? 0x5865F2 : 0x43B581;
+      }
       
-      await sendWebhookNotification(
-        `💰 New premium activation for server ${serverId}!`,
-        [{
-          title: 'Premium Activated',
-          color: embedColor,
-          fields: [
-            { name: 'Server ID', value: serverId, inline: true },
-            { name: 'Plan', value: (plan || 'Basic').charAt(0).toUpperCase() + (plan || 'basic').slice(1), inline: true }
-          ],
-          timestamp: new Date().toISOString()
-        }]
-      );
+      // Calculate expiration date from current period end
+      const expires = subscription.current_period_end;
       
-      console.log(`Premium activated for server ${serverId} (plan: ${plan || 'basic'})`);
+      // Add premium update
+      addPremiumUpdate(guildId, tier, expires);
       
-      return { success: true };
+      console.log(`Added premium update for guild ${guildId} with tier ${tier}, expires at ${new Date(expires * 1000).toISOString()}`);
     } else {
-      return { success: false, error: 'Failed to add premium update' };
+      console.warn('Subscription updated but no guild_id found in metadata');
     }
   } catch (error) {
-    console.error('Error handling payment success:', error);
-    return { success: false, error: error.message };
+    console.error(`Error handling subscription update: ${error.message}`);
   }
-};
+}
 
-// Handle payment cancellation
-export const handlePaymentCancellation = async (serverId) => {
+/**
+ * Handle subscription deleted event
+ */
+async function handleSubscriptionDeleted(subscription) {
   try {
-    if (!serverId) {
-      throw new Error('Server ID is required');
-    }
+    console.log('Processing subscription deleted event:', subscription.id);
     
-    // Add premium update with null tier to remove premium
-    const success = await addPremiumUpdate(serverId, null, 0);
+    // Get the customer
+    const customer = await stripe.customers.retrieve(subscription.customer);
     
-    if (success) {
-      // Send webhook notification
-      await sendWebhookNotification(
-        `⚠️ Premium cancelled for server ${serverId}`,
-        [{
-          title: 'Premium Cancelled',
-          color: 0xF04747,
-          fields: [
-            { name: 'Server ID', value: serverId, inline: true }
-          ],
-          timestamp: new Date().toISOString()
-        }]
-      );
+    // Get metadata from either subscription or customer
+    const metadata = subscription.metadata || customer.metadata || {};
+    
+    if (metadata.guild_id) {
+      const guildId = metadata.guild_id;
       
-      console.log(`Premium cancelled for server ${serverId}`);
+      // Add premium update with null tier to signal removal
+      addPremiumUpdate(guildId, null, 0);
       
-      return { success: true };
+      console.log(`Added premium removal for guild ${guildId}`);
     } else {
-      return { success: false, error: 'Failed to cancel premium' };
+      console.warn('Subscription deleted but no guild_id found in metadata');
     }
   } catch (error) {
-    console.error('Error handling payment cancellation:', error);
-    return { success: false, error: error.message };
+    console.error(`Error handling subscription deleted: ${error.message}`);
   }
-};
+}
+
+/**
+ * Register the webhook route
+ */
+export function registerWebhookRoute(app) {
+  app.post('/api/payment-webhook', express.raw({type: 'application/json'}), handleWebhook);
+  console.log('Registered payment webhook route');
+}
