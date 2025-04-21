@@ -124,19 +124,50 @@ class GuardShin(commands.Bot):
         """Register all slash commands with Discord"""
         logger.info("Registering application commands with Discord...")
         try:
-            # Sync commands globally
-            synced = await self.tree.sync()
-            logger.info(f"Synced {len(synced)} commands globally")
+            # Instead of global sync, sync per guild for better reliability
+            success = False
             
-            # Sync commands to each guild for faster updates during development
+            # If we have no guilds yet, just return
+            if len(self.guilds) == 0:
+                logger.warning("No guilds available yet to register commands")
+                return False
+            
+            # Sync commands to each guild individually
             for guild in self.guilds:
                 try:
-                    guild_commands = await self.tree.sync(guild=guild)
-                    logger.info(f"Synced {len(guild_commands)} commands to guild: {guild.name}")
+                    guild_id = guild.id
+                    guild_obj = discord.Object(id=guild_id)
+                    guild_commands = await self.tree.sync(guild=guild_obj)
+                    logger.info(f"Synced {len(guild_commands)} commands to guild: {guild.name} (ID: {guild_id})")
+                    success = True
+                except discord.errors.Forbidden as e:
+                    logger.error(f"Insufficient permissions for guild {guild.name}: {e}")
                 except Exception as e:
                     logger.error(f"Failed to sync commands to guild {guild.name}: {e}")
             
-            return True
+            # If all guilds were processed but none succeeded
+            if not success:
+                logger.warning("""
+                Failed to register commands in all guilds. Possible reasons:
+                1. Bot application ID and token mismatch
+                2. Bot missing 'applications.commands' scope
+                3. Bot doesn't have sufficient permissions
+                
+                Make sure your DISCORD_CLIENT_ID matches your bot token and the bot 
+                was invited with the 'applications.commands' scope.
+                
+                Invite URL format: https://discord.com/api/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8&scope=bot%20applications.commands
+                """)
+            
+            # As a fallback, try to sync globally - this might not work with the error
+            # but we'll try anyway in case the issue is guild-specific
+            try:
+                synced = await self.tree.sync()
+                logger.info(f"Also synced {len(synced)} commands globally")
+            except Exception as e:
+                logger.warning(f"Failed to sync commands globally: {e}")
+            
+            return success
         except Exception as e:
             logger.error(f"Error registering commands: {e}")
             return False
