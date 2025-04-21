@@ -608,17 +608,10 @@ class ModerationCommands(commands.Cog):
         except discord.Forbidden:
             await ctx.send("I don't have permission to remove the timeout from that user.")
         except discord.HTTPException as e:
-            await ctx.send(f"An error occurred: {e}")
-            
-    # Function to set up the cog
-    async def setup(bot):
-        await bot.add_cog(ModerationCommands(bot))
-# Proper setup function for Discord.py extension loading
-def setup(bot):
-    bot.add_cog(ModerationCommands(bot))
+            await ctx.send(f"An error occurred: {e}")))
 
 # Proper setup function for Discord.py extension loading
 def setup(bot):
-    # This is a regular function, not async
-    cog = ModerationCommands(bot)
-    bot.add_cog(cog)
+    # For Discord.py 2.0, we need to manually register the cog
+    # without using the async add_cog method
+    bot._BotBase__cogs[ModerationCommands.__name__] = ModerationCommands(bot)
