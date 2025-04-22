@@ -7,7 +7,6 @@ services:
     startCommand: python app.py
     numInstances: 1
     healthCheckPath: /
-    port: 8080
     pullRequestPreviewsEnabled: false
     autoDeploy: true
     envVars:
