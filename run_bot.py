@@ -41,12 +41,22 @@ class HelpCog(commands.Cog):
 class GuardShin(commands.Bot):
     def __init__(self):
         intents = discord.Intents.all()
+        # Get application ID from environment and convert to integer
+        client_id = os.getenv('DISCORD_CLIENT_ID')
+        application_id = int(client_id) if client_id and client_id.isdigit() else None
+        
+        # Log application ID for debugging
+        if application_id:
+            print(f"Using application ID: {application_id}")
+        else:
+            print("WARNING: No valid DISCORD_CLIENT_ID found in environment variables")
+            
         super().__init__(
             command_prefix=self.get_prefix,
             intents=intents,
             description="Advanced Discord moderation and security bot",
             activity=discord.Game(name="Starting up..."),
-            application_id=os.getenv('DISCORD_CLIENT_ID')
+            application_id=application_id
         )
         
         # Guild prefixes
@@ -199,30 +209,91 @@ https://witherco.github.io/Guard-shin/
             if os.path.exists('premium_guilds.json'):
                 with open('premium_guilds.json', 'r') as f:
                     data = json.load(f)
-                    premium_guilds = set([int(guild_id) for guild_id in data.get("guild_ids", [])])
+                    if isinstance(data, list):
+                        # Handle flat list format
+                        premium_guilds = set([int(guild_id) for guild_id in data])
+                    else:
+                        # Handle object format with guild_ids property
+                        premium_guilds = set([int(guild_id) for guild_id in data.get("guild_ids", [])])
                     logger.info(f"Loaded {len(premium_guilds)} premium guilds")
                     return premium_guilds
         except Exception as e:
             logger.error(f"Error loading premium guilds: {e}")
         
-        # Set demo server and chill zone as premium by default
-        return {1234567890123456789, 9876543210987654321}  # Replace with actual server IDs
+        # Set Guard-shin support server as premium by default
+        return {1233495879223345172}  # Support server ID is 1233495879223345172
+        
+    def save_premium_guilds(self):
+        """Save premium guild IDs to file"""
+        try:
+            with open('premium_guilds.json', 'w') as f:
+                json.dump(list(self.premium_guilds), f)
+            logger.info(f"Saved {len(self.premium_guilds)} premium guilds")
+        except Exception as e:
+            logger.error(f"Error saving premium guilds: {e}")
+            
+    def add_premium_guild(self, guild_id):
+        """Add a guild to the premium list"""
+        guild_id = int(guild_id)
+        if guild_id not in self.premium_guilds:
+            self.premium_guilds.add(guild_id)
+            self.save_premium_guilds()
+            logger.info(f"Added guild {guild_id} to premium")
+            return True
+        return False
+        
+    def remove_premium_guild(self, guild_id):
+        """Remove a guild from the premium list"""
+        guild_id = int(guild_id)
+        if guild_id in self.premium_guilds:
+            self.premium_guilds.remove(guild_id)
+            self.save_premium_guilds()
+            logger.info(f"Removed guild {guild_id} from premium")
+            return True
+        return False
+        
+    def is_premium(self, guild_id):
+        """Check if a guild has premium access"""
+        return int(guild_id) in self.premium_guilds
         
     async def register_commands(self):
         """Register all slash commands with Discord"""
         logger.info("Registering application commands with Discord...")
         try:
+            # Check if application ID is set
+            if not self.application_id:
+                logger.error("No application ID set. Make sure DISCORD_CLIENT_ID is valid and properly configured.")
+                client_id = os.getenv('DISCORD_CLIENT_ID', 'Not set')
+                logger.info(f"Current DISCORD_CLIENT_ID value: {client_id}")
+                
+                # Try to get user ID as a fallback
+                if self.user:
+                    logger.info(f"Bot user ID: {self.user.id}. This can be used as application ID.")
+                    # Auto-fix: If we have the user ID but not application ID, use that
+                    self.application_id = self.user.id
+                    logger.info(f"Auto-fixing application ID using bot user ID: {self.application_id}")
+                else:
+                    return False
+                
             # Instead of global sync, sync per guild for better reliability
             success = False
             
-            # If we have no guilds yet, try to log diagnostic info and return
+            # If we have no guilds yet, try global sync first
             if len(self.guilds) == 0:
-                logger.warning("No guilds available yet to register commands")
+                logger.warning("No guilds available yet, trying global command registration...")
                 logger.info(f"Application ID: {self.application_id}")
                 logger.info(f"User ID: {self.user.id if self.user else 'Not available yet'}")
                 logger.info(f"Is bot ready: {self.is_ready()}")
-                return False
                 
+                try:
+                    # Try global sync
+                    global_commands = await self.tree.sync()
+                    logger.info(f"Synced {len(global_commands)} commands globally")
+                    success = True
+                except Exception as e:
+                    logger.error(f"Failed to sync commands globally: {e}")
+                    # Continue to try individual guild sync even if global fails
+            
             # Log guilds we're going to try to register commands to 
             logger.info(f"Bot is connected to {len(self.guilds)} guilds:")
             for guild in self.guilds:
@@ -243,25 +314,31 @@ https://witherco.github.io/Guard-shin/
             
             # If all guilds were processed but none succeeded
             if not success:
-                logger.warning("""
-                Failed to register commands in all guilds. Possible reasons:
-                1. Bot application ID and token mismatch
-                2. Bot missing 'applications.commands' scope
-                3. Bot doesn't have sufficient permissions
-                
-                Make sure your DISCORD_CLIENT_ID matches your bot token and the bot 
-                was invited with the 'applications.commands' scope.
-                
-                Invite URL format: https://discord.com/api/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
-                """)
+                # Try again with global sync as a last resort
+                try:
+                    logger.info("Trying global command sync as fallback...")
+                    global_commands = await self.tree.sync()
+                    logger.info(f"Synced {len(global_commands)} commands globally")
+                    success = True
+                except Exception as e:
+                    logger.error(f"Failed to sync commands globally: {e}")
+                    
+                    logger.warning("""
+                    Failed to register commands in all guilds. Possible reasons:
+                    1. Bot application ID and token mismatch
+                    2. Bot missing 'applications.commands' scope
+                    3. Bot doesn't have sufficient permissions
+                    
+                    Make sure your DISCORD_CLIENT_ID matches your bot token and the bot 
+                    was invited with the 'applications.commands' scope.
+                    
+                    Invite URL format: https://discord.com/api/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
+                    """)
             
-            # Instead of trying to sync globally, let's just skip it for now
-            # This avoids the Entry Point command error
-            logger.info("Skipping global command sync to avoid Entry Point command issues")
-            
-            # Log success based on guild-specific syncs
+            # Log success based on sync results
             if success:
-                logger.info("Successfully registered commands to individual guilds")
+                logger.info("Successfully registered commands")
+                self.synced = True
             else:
                 logger.warning("Failed to register commands to any guilds")
             
@@ -355,10 +432,16 @@ https://witherco.github.io/Guard-shin/
                     "plan": plan_type
                 })
             
-            # Save to file for dashboard to read
+            # Save to files for dashboard to read
+            # Save to server_data.json (this is for internal use)
             with open('server_data.json', 'w') as f:
                 json.dump({"servers": servers_data}, f)
-            logger.info(f"Saved data for {len(servers_data)} servers")
+                
+            # Also save to bot_guilds.json (this is expected by our API endpoints)
+            with open('bot_guilds.json', 'w') as f:
+                json.dump(servers_data, f)
+                
+            logger.info(f"Saved data for {len(servers_data)} servers to both server_data.json and bot_guilds.json")
         except Exception as e:
             logger.error(f"Error saving server data: {e}")
         
