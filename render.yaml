@@ -10,6 +10,8 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
+      - key: DISABLE_COMMAND_REGISTRATION
+        value: true
       - key: DISCORD_BOT_TOKEN
         sync: false # This means Render will prompt for this value
       - key: DISCORD_CLIENT_ID
