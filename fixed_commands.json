@@ -1,0 +1,273 @@
+[
+  {
+    "name": "ping",
+    "description": "Check the bot's latency",
+    "type": 1
+  },
+  {
+    "name": "info",
+    "description": "Get information about Guard-shin",
+    "type": 1
+  },
+  {
+    "name": "invite",
+    "description": "Get the bot invite link",
+    "type": 1
+  },
+  {
+    "name": "help",
+    "description": "View available commands",
+    "type": 1
+  },
+  {
+    "name": "premium",
+    "description": "Get information about premium features",
+    "type": 1
+  },
+  {
+    "name": "devmode",
+    "description": "Toggle development mode (admin only)",
+    "type": 1
+  },
+  {
+    "name": "prefix",
+    "description": "View or change the bot's prefix for text commands",
+    "type": 1,
+    "options": [
+      {
+        "name": "new_prefix",
+        "description": "The new prefix to set",
+        "type": 3,
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "mod",
+    "description": "Moderation commands",
+    "type": 1,
+    "options": [
+      {
+        "name": "ban",
+        "description": "Ban a member from the server",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to ban",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "reason",
+            "description": "Reason for the ban",
+            "type": 3,
+            "required": false
+          },
+          {
+            "name": "delete_days",
+            "description": "Number of days of messages to delete (0-7)",
+            "type": 4,
+            "required": false,
+            "min_value": 0,
+            "max_value": 7
+          }
+        ]
+      },
+      {
+        "name": "kick",
+        "description": "Kick a member from the server",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to kick",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "reason",
+            "description": "Reason for the kick",
+            "type": 3,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "timeout",
+        "description": "Timeout (mute) a member for a specific duration",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to timeout",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "duration",
+            "description": "Duration (e.g. 10m, 1h, 1d)",
+            "type": 3,
+            "required": true
+          },
+          {
+            "name": "reason",
+            "description": "Reason for the timeout",
+            "type": 3,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "clear",
+        "description": "Clear a number of messages from a channel",
+        "type": 1,
+        "options": [
+          {
+            "name": "amount",
+            "description": "Number of messages to clear (1-100)",
+            "type": 4,
+            "required": true,
+            "min_value": 1,
+            "max_value": 100
+          },
+          {
+            "name": "user",
+            "description": "Only clear messages from this user",
+            "type": 6,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "warn",
+        "description": "Warn a user",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to warn",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "reason",
+            "description": "Reason for the warning",
+            "type": 3,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "warnings",
+        "description": "View warnings for a user",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to check warnings for",
+            "type": 6,
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "unwarn",
+        "description": "Remove a warning from a user",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user to remove a warning from",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "warning_id",
+            "description": "The ID of the warning to remove",
+            "type": 3,
+            "required": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "config",
+    "description": "Configure server settings",
+    "type": 1,
+    "options": [
+      {
+        "name": "welcome",
+        "description": "Configure welcome messages",
+        "type": 1,
+        "options": [
+          {
+            "name": "channel",
+            "description": "Channel to send welcome messages",
+            "type": 7,
+            "required": true,
+            "channel_types": [0]
+          },
+          {
+            "name": "message",
+            "description": "Welcome message template (use {user} for mention, {server} for server name)",
+            "type": 3,
+            "required": false
+          },
+          {
+            "name": "enabled",
+            "description": "Enable or disable welcome messages",
+            "type": 5,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "autorole",
+        "description": "Configure automatic role assignment for new members",
+        "type": 1,
+        "options": [
+          {
+            "name": "role",
+            "description": "Role to assign to new members",
+            "type": 8,
+            "required": true
+          },
+          {
+            "name": "enabled",
+            "description": "Enable or disable autorole",
+            "type": 5,
+            "required": false
+          }
+        ]
+      },
+      {
+        "name": "logs",
+        "description": "Configure server logs",
+        "type": 1,
+        "options": [
+          {
+            "name": "channel",
+            "description": "Channel to send logs",
+            "type": 7,
+            "required": true,
+            "channel_types": [0]
+          },
+          {
+            "name": "events",
+            "description": "Event types to log (comma separated: message,member,mod,voice,server)",
+            "type": 3,
+            "required": false
+          },
+          {
+            "name": "enabled",
+            "description": "Enable or disable logging",
+            "type": 5,
+            "required": false
+          }
+        ]
+      }
+    ]
+  }
+]
