@@ -3,169 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Checkout - Guard-shin</title>
-  <link rel="icon" type="image/png" href="generated-icon.png">
-  
-  <!-- Stripe JS -->
+  <title>Guard-shin Premium Checkout</title>
+  <link rel="icon" type="image/png" href="./generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://js.stripe.com/v3/"></script>
-  
   <style>
     :root {
       --color-bg-primary: #0f0f0f;
       --color-bg-secondary: #1a1a1a;
-      --color-bg-tertiary: #252525;
       --color-text-primary: #fff;
-      --color-text-secondary: #ccc;
-      --color-text-tertiary: #999;
       --color-accent-primary: #8249F0;
-      --color-accent-secondary: #7339e0;
-      --color-error: #f04747;
-      --border-radius: 8px;
+      --color-accent-secondary: #6c3ad6;
       --transition-speed: 0.3s;
-      --max-width: 1200px;
     }
     
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     }
     
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--color-bg-primary);
       color: var(--color-text-primary);
-      line-height: 1.6;
-    }
-    
-    a {
-      color: var(--color-accent-primary);
-      text-decoration: none;
-      transition: color var(--transition-speed);
-    }
-    
-    a:hover {
-      color: var(--color-accent-secondary);
-    }
-    
-    .layout {
-      display: flex;
       min-height: 100vh;
     }
     
-    /* Sidebar Navigation */
-    .sidebar {
-      width: 250px;
-      background-color: var(--color-bg-secondary);
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    .checkout-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     
-    .logo-container {
-      padding: 1.5rem;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    .navbar {
+      background-color: var(--color-bg-secondary);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     
     .logo {
-      max-width: 150px;
-      height: auto;
-      display: block;
-      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-accent-primary);
+      text-decoration: none;
     }
     
-    .title {
-      margin-top: 1rem;
-      color: var(--color-text-primary);
-      font-size: 1.5rem;
-      font-weight: 800;
+    .logo i {
+      font-size: 1.8rem;
     }
     
     .nav-links {
-      padding: 1rem 0;
+      display: flex;
+      gap: 1.5rem;
     }
     
-    .nav-link {
-      display: block;
-      padding: 0.75rem 1.5rem;
+    .nav-links a {
       color: var(--color-text-primary);
-      transition: background-color var(--transition-speed);
-      position: relative;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-speed);
+      padding: 0.5rem 0;
     }
     
-    .nav-link:hover {
-      background-color: var(--color-bg-tertiary);
-      color: var(--color-text-primary);
+    .nav-links a:hover {
+      color: var(--color-accent-primary);
     }
     
-    .nav-link.active {
-      background-color: var(--color-accent-primary);
-      color: white;
-    }
-    
-    .sidebar-footer {
-      padding: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .add-bot-btn {
-      display: block;
-      background-color: var(--color-accent-primary);
-      color: white;
-      font-weight: 600;
-      text-align: center;
-      padding: 0.75rem 1rem;
-      border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed), transform 0.2s;
-    }
-    
-    .add-bot-btn:hover {
-      background-color: var(--color-accent-secondary);
-      color: white;
-      transform: translateY(-2px);
-    }
-    
-    /* Main Content */
     .main-content {
       flex: 1;
-      margin-left: 250px;
       padding: 2rem;
-      width: calc(100% - 250px);
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
     }
     
-    .page-header {
+    .checkout-header {
       margin-bottom: 2rem;
+      text-align: center;
     }
     
-    .page-header h1 {
-      font-size: 2.25rem;
+    .checkout-title {
+      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     
-    .page-header p {
-      color: var(--color-text-secondary);
-      font-size: 1.1rem;
+    .checkout-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
     }
     
-    /* Card Styles */
-    .card {
+    .checkout-form {
       background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
     
-    .card h3 {
-      margin-bottom: 1rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-    
-    /* Form Styles */
     .form-group {
       margin-bottom: 1.5rem;
     }
@@ -176,362 +117,379 @@
       font-weight: 500;
     }
     
-    input[type="text"],
-    input[type="email"],
     select {
       width: 100%;
       padding: 0.75rem;
-      border-radius: var(--border-radius);
-      border: 1px solid var(--color-bg-tertiary);
-      background-color: var(--color-bg-tertiary);
-      color: var(--color-text-primary);
+      border-radius: 6px;
+      border: 1px solid #333;
+      background-color: #252525;
+      color: white;
       font-size: 1rem;
     }
     
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
+    .payment-element {
+      margin-bottom: 1.5rem;
+    }
+    
+    .checkout-button {
       background-color: var(--color-accent-primary);
       color: white;
       border: none;
-      border-radius: var(--border-radius);
+      width: 100%;
+      padding: 1rem;
+      border-radius: 6px;
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color var(--transition-speed), transform 0.2s;
+      transition: background-color var(--transition-speed);
     }
     
-    .btn:hover {
+    .checkout-button:hover {
       background-color: var(--color-accent-secondary);
-      transform: translateY(-2px);
     }
     
-    .btn.outline {
-      background-color: transparent;
-      border: 2px solid var(--color-accent-primary);
-      color: var(--color-accent-primary);
+    .checkout-button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
     }
     
-    .btn.outline:hover {
-      background-color: var(--color-accent-primary);
-      color: white;
-    }
-    
-    /* Payment Methods */
-    .payment-methods {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .payment-message {
       margin-top: 1rem;
-    }
-    
-    .payment-method {
-      background-color: var(--color-bg-tertiary);
-      border-radius: var(--border-radius);
       padding: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: background-color 0.3s;
+      border-radius: 6px;
+      text-align: center;
     }
     
-    .payment-icon {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
+    .error-message {
+      background-color: rgba(255, 59, 48, 0.1);
+      color: #ff3b30;
     }
     
-    /* Loading Spinner */
-    .spinner {
+    .success-message {
+      background-color: rgba(52, 199, 89, 0.1);
+      color: #34c759;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .loading-spinner {
       display: inline-block;
-      width: 25px;
-      height: 25px;
-      border: 3px solid rgba(255,255,255,.3);
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
-      border-top-color: var(--color-accent-primary);
+      border-top-color: white;
       animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
-    /* Payment Form */
-    #payment-form {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    
-    #payment-element {
-      margin-bottom: 24px;
-    }
-    
-    #error-message {
-      color: var(--color-error);
-      margin-bottom: 1rem;
+    .footer {
+      background-color: var(--color-bg-secondary);
+      padding: 1.5rem 2rem;
       text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
     }
     
-    .payment-info {
-      margin-bottom: 1.5rem;
-    }
-    
-    .plan-details {
-      background-color: var(--color-bg-tertiary);
-      padding: 1rem;
-      border-radius: var(--border-radius);
-      margin-bottom: 1.5rem;
-    }
-    
-    .plan-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    
-    .plan-price {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    
-    .plan-description {
-      color: var(--color-text-secondary);
-    }
-    
-    /* Responsive design */
     @media (max-width: 768px) {
-      .layout {
+      .navbar {
         flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
       }
       
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      .main-content {
-        margin-left: 0;
-        width: 100%;
+      .checkout-form {
+        padding: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar Navigation -->
-    <nav class="sidebar">
-      <div class="logo-container">
-        <div class="title">Guard-shin</div>
-      </div>
-      
+  <div class="checkout-container">
+    <nav class="navbar">
+      <a href="./index.html" class="logo">
+        <i class="fas fa-shield-alt"></i>
+        <span>Guard-shin</span>
+      </a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="commands.html" class="nav-link">Commands</a>
-        <a href="premium.html" class="nav-link active">Premium</a>
-        <a href="support.html" class="nav-link">Support</a>
-        <a href="settings.html" class="nav-link">Settings</a>
-      </div>
-      
-      <div class="sidebar-footer">
-        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">Add to Server</a>
+        <a href="./index.html">Dashboard</a>
+        <a href="./commands.html">Commands</a>
+        <a href="./premium.html">Premium</a>
+        <a href="./modern_support.html">Support</a>
+        <a href="./modern_settings.html">Settings</a>
       </div>
     </nav>
     
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="page-header">
-        <h1>Payment Checkout</h1>
-        <p>Complete your payment to unlock premium features.</p>
+    <div class="main-content">
+      <div class="checkout-header">
+        <h1 class="checkout-title">Complete Your Purchase</h1>
+        <p class="checkout-subtitle">Upgrade your server with Guard-shin Premium features</p>
       </div>
       
-      <div class="card" id="checkout-card">
-        <div id="plan-info" class="payment-info">
-          <h3>Your Selected Plan</h3>
-          <div class="plan-details">
-            <div class="plan-title" id="plan-title">Premium Plan</div>
-            <div class="plan-price" id="plan-price">$9.99/month</div>
-            <div class="plan-description" id="plan-description">Advanced features for growing communities</div>
+      <div class="checkout-form">
+        <div class="form-group">
+          <label for="server-select">Select Your Server</label>
+          <select id="server-select">
+            <option value="" disabled selected>Loading servers...</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="plan-select">Select Plan</label>
+          <select id="plan-select">
+            <option value="basic" data-price="4.99">Basic ($4.99/month)</option>
+            <option value="standard" data-price="9.99" selected>Standard ($9.99/month)</option>
+            <option value="premium" data-price="24.99">Premium ($24.99/month)</option>
+            <option value="enterprise" data-price="99.99">Enterprise ($99.99/month)</option>
+          </select>
+        </div>
+        
+        <div id="payment-element" class="payment-element">
+          <!-- Stripe Elements will be inserted here -->
+          <div style="text-align: center; padding: 2rem 0;">
+            <div class="loading-spinner"></div>
+            <p>Loading payment form...</p>
           </div>
         </div>
         
-        <h3>Choose Payment Method</h3>
+        <button id="checkout-button" class="checkout-button" disabled>
+          <span id="button-text">Subscribe Now</span>
+        </button>
         
-        <div class="payment-methods" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem;">
-          <!-- Stripe Payment Option -->
-          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-              <div style="background-color: #635BFF; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12.5 4H4V7H12.5V4Z" fill="white"/>
-                  <path d="M13.5 10H4V13H13.5V10Z" fill="white"/>
-                  <path d="M15.5 16H4V19H15.5V16Z" fill="white"/>
-                  <path d="M18.5 10H20.5V13H18.5V10Z" fill="white"/>
-                  <path d="M16.5 4H20.5V7H16.5V4Z" fill="white"/>
-                  <path d="M18.5 16H20.5V19H18.5V16Z" fill="white"/>
-                </svg>
-              </div>
-              <div>
-                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with Card</h4>
-                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Secure payment via Stripe</p>
-              </div>
-            </div>
-            <a href="https://buy.stripe.com/fZe7ueeWfeGcbJu5kn" class="btn btn-purchase" data-plan="premium" data-payment="stripe" target="_blank" rel="noopener noreferrer" style="width: 100%;">
-              Pay with Card
-            </a>
-            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
-              After payment, please include your Discord Server ID.
-            </p>
-            <a href="payment-success.html?plan=premium&payment=stripe" class="btn outline" style="width: 100%; margin-top: 0.5rem; text-align: center;">
-              I've Completed My Payment
-            </a>
-          </div>
-          
-          <!-- PayPal Payment Option -->
-          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-              <div style="background-color: #0070BA; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944 3.72a.641.641 0 0 1 .632-.544h4.605c.026 0 .077.154.077.154-.413.166-4.995 19.8-4.995 19.8-.103.412-.187.283-.187.208z" fill="white"/>
-                  <path d="M14.501 21.337h-4.607a.641.641 0 0 1-.631-.74L12.369 3.72A.641.641 0 0 1 13 3.175h4.607c.378 0 .548.311.47.74l-3.106 16.875a.641.641 0 0 1-.632.547h-.838z" fill="white"/>
-                  <path d="M21.53 21.337h-4.605a.641.641 0 0 1-.632-.74L19.4 3.72a.641.641 0 0 1 .631-.544h4.606c.378 0 .549.311.47.74l-3.106 16.875a.641.641 0 0 1-.631.547h-.84z" fill="white"/>
-                </svg>
-              </div>
-              <div>
-                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with PayPal</h4>
-                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Fast and secure payment</p>
-              </div>
-            </div>
-            <a href="https://paypal.me/ChristopherThomas429?country.x=US&locale.x=en_US" class="btn btn-purchase" data-plan="premium" data-payment="paypal" target="_blank" rel="noopener noreferrer" style="width: 100%;">
-              Pay with PayPal
-            </a>
-            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
-              After payment, please include your Discord Server ID in the payment note.
-            </p>
-            <a href="payment-success.html?plan=premium&payment=paypal" class="btn outline" style="width: 100%; margin-top: 0.5rem; text-align: center;">
-              I've Completed My Payment
-            </a>
-          </div>
-          
-          <!-- CashApp Payment Option -->
-          <div class="payment-option-card" style="background-color: var(--color-bg-tertiary); border-radius: var(--border-radius); padding: 1.5rem;">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-              <div style="background-color: #00D54B; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="black"/>
-                  <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" fill="white"/>
-                </svg>
-              </div>
-              <div>
-                <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">Pay with CashApp</h4>
-                <p style="font-size: 0.9rem; color: var(--color-text-tertiary);">Quick and easy payment</p>
-              </div>
-            </div>
-            <a href="https://cash.app/$guardshin" class="btn btn-purchase" data-plan="premium" data-payment="cashapp" target="_blank" rel="noopener noreferrer" style="width: 100%;">
-              Pay with CashApp
-            </a>
-            <p style="text-align: center; margin-top: 1rem; color: var(--color-text-secondary); font-size: 0.9rem;">
-              After payment, please include your Discord Server ID in the payment note.
-            </p>
-            <a href="payment-success.html?plan=premium&payment=cashapp" class="btn outline" style="width: 100%; margin-top: 0.5rem; text-align: center;">
-              I've Completed My Payment
-            </a>
-          </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 1.5rem;">
-          <a href="premium.html">← Back to Plans</a>
-        </div>
+        <div id="payment-message" class="payment-message hidden"></div>
       </div>
-      
-      <div class="card" style="display: none;" id="success-card">
-        <div style="text-align: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #4BB543; margin-bottom: 1rem;">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <h2>Payment Successful!</h2>
-          <p>Thank you for your payment. Your premium features are now active.</p>
-          <div style="margin-top: 1.5rem;">
-            <a href="index.html" class="btn">Go to Dashboard</a>
-          </div>
-        </div>
-      </div>
-    </main>
+    </div>
+    
+    <footer class="footer">
+      &copy; 2025 Guard-shin by WitherCo. All rights reserved.
+    </footer>
   </div>
   
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get the plan and payment method from the URL
-      const params = new URLSearchParams(window.location.search);
-      const plan = params.get('plan') || 'premium';
-      
-      // Update plan details
-      const planTitle = document.getElementById('plan-title');
-      const planPrice = document.getElementById('plan-price');
-      const planDescription = document.getElementById('plan-description');
-      
-      // Define all plan options
-      const plans = {
-        'basic': {
-          title: 'Basic Plan',
-          price: '$4.99/month',
-          description: 'Essential protection for small communities',
-          stripeLink: 'https://buy.stripe.com/9AQ01MeWf41y3cY8wx'
-        },
-        'standard': {
-          title: 'Standard Plan',
-          price: '$7.99/month',
-          description: 'Advanced moderation tools for medium-sized servers',
-          stripeLink: 'https://buy.stripe.com/dR6bKudSb41y6pa9AC'
-        },
-        'premium': {
-          title: 'Premium Plan',
-          price: '$9.99/month',
-          description: 'Advanced features for growing communities',
-          stripeLink: 'https://buy.stripe.com/fZe7ueeWfeGcbJu5kn'
-        },
-        'enterprise': {
-          title: 'Enterprise Plan',
-          price: '$24.99/month',
-          description: 'Complete solution for large servers and communities',
-          stripeLink: 'https://buy.stripe.com/fZe01MbK3eGc4h23cg'
-        }
-      };
-      
-      // Update plan details based on selected plan
-      if (plans[plan]) {
-        planTitle.textContent = plans[plan].title;
-        planPrice.textContent = plans[plan].price;
-        planDescription.textContent = plans[plan].description;
+    // Fetch connected servers
+    async function fetchServers() {
+      try {
+        const response = await fetch('/api/guilds');
+        const data = await response.json();
         
-        // Update Stripe payment link
-        const stripeButton = document.querySelector('[data-payment="stripe"]');
-        if (stripeButton && plans[plan].stripeLink) {
-          stripeButton.setAttribute('href', plans[plan].stripeLink);
+        return data.guilds || [];
+      } catch (error) {
+        console.error('Error fetching servers:', error);
+        
+        // Fallback: Try to load from bot_guilds.json directly in development
+        try {
+          const fallbackResponse = await fetch('/bot_guilds.json');
+          if (!fallbackResponse.ok) {
+            throw new Error('Failed to fetch fallback server data');
+          }
+          
+          const fallbackData = await fallbackResponse.json();
+          return Array.isArray(fallbackData) ? fallbackData : [];
+        } catch (fallbackError) {
+          console.error('Error fetching fallback server data:', fallbackError);
+          return [];
         }
-      } else {
-        // Default to premium if plan not found
-        planTitle.textContent = plans['premium'].title;
-        planPrice.textContent = plans['premium'].price;
-        planDescription.textContent = plans['premium'].description;
+      }
+    }
+    
+    // Populate the server select dropdown
+    async function populateServerSelect() {
+      const serverSelect = document.getElementById('server-select');
+      const servers = await fetchServers();
+      
+      if (servers.length === 0) {
+        serverSelect.innerHTML = '<option value="" disabled selected>No servers available</option>';
+        return;
       }
       
-      // Update the "I've Completed My Payment" buttons to include the correct plan
-      document.querySelectorAll('.btn.outline').forEach(button => {
-        const currentHref = button.getAttribute('href');
-        if (currentHref && currentHref.includes('plan=')) {
-          // Extract the payment method from the current href
-          const hrefParams = new URLSearchParams(currentHref.split('?')[1]);
-          const payment = hrefParams.get('payment');
-          // Set the new href with the correct plan
-          button.setAttribute('href', 'payment-success.html?plan=' + plan + '&payment=' + payment);
+      let options = '<option value="" disabled selected>Select a server</option>';
+      
+      servers.forEach(server => {
+        // Skip servers that already have premium
+        if (server.isPremium) {
+          options += `<option value="${server.id}" disabled>${server.name} (Already Premium)</option>`;
+        } else {
+          options += `<option value="${server.id}">${server.name}</option>`;
         }
       });
-    });
+      
+      serverSelect.innerHTML = options;
+    }
+    
+    // Initialize Stripe
+    function initializeStripe() {
+      if (!STRIPE_PUBLIC_KEY) {
+        document.getElementById('payment-element').innerHTML = '<div class="error-message">Stripe is not configured. Please contact support.</div>';
+        return null;
+      }
+      
+      return Stripe(STRIPE_PUBLIC_KEY);
+    }
+    
+    // Get the selected plan price
+    function getSelectedPrice() {
+      const planSelect = document.getElementById('plan-select');
+      const selectedOption = planSelect.options[planSelect.selectedIndex];
+      return parseFloat(selectedOption.dataset.price);
+    }
+    
+    // Get the selected server ID
+    function getSelectedServerId() {
+      const serverSelect = document.getElementById('server-select');
+      return serverSelect.value;
+    }
+    
+    // Update the button state based on form validity
+    function updateButtonState() {
+      const serverId = getSelectedServerId();
+      const checkoutButton = document.getElementById('checkout-button');
+      
+      if (serverId) {
+        checkoutButton.disabled = false;
+      } else {
+        checkoutButton.disabled = true;
+      }
+    }
+    
+    // Show a payment message (error or success)
+    function showMessage(messageText, isError = false) {
+      const messageElement = document.getElementById('payment-message');
+      messageElement.textContent = messageText;
+      messageElement.classList.remove('hidden', 'error-message', 'success-message');
+      messageElement.classList.add(isError ? 'error-message' : 'success-message');
+    }
+    
+    // Create a payment intent for one-time payment
+    async function createPaymentIntent(amount, metadata) {
+      try {
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ amount, metadata }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error creating payment intent:', error);
+        throw error;
+      }
+    }
+    
+    // Create a subscription
+    async function createSubscription(priceId, metadata) {
+      try {
+        const response = await fetch('/api/get-or-create-subscription', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ priceId, metadata }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error creating subscription:', error);
+        throw error;
+      }
+    }
+    
+    // Redirect to Stripe Checkout
+    function redirectToStripeCheckout(serverId, plan) {
+      let checkoutUrl;
+      
+      // Map plan to the appropriate Stripe Checkout URL
+      switch (plan) {
+        case 'basic':
+          checkoutUrl = 'https://buy.stripe.com/00g01M01l69G4h228d';
+          break;
+        case 'standard':
+          checkoutUrl = 'https://buy.stripe.com/dR65m6cO7eGc6pa3ci';
+          break;
+        case 'premium':
+          checkoutUrl = 'https://buy.stripe.com/3cscOy6pJ9lS9Bm28f';
+          break;
+        case 'enterprise':
+          checkoutUrl = 'https://buy.stripe.com/aEUg0KeWf55C3cY008';
+          break;
+        default:
+          checkoutUrl = 'https://buy.stripe.com/dR65m6cO7eGc6pa3ci'; // Default to standard
+      }
+      
+      // Add the guild_id as a URL parameter
+      const urlWithParams = new URL(checkoutUrl);
+      urlWithParams.searchParams.append('client_reference_id', serverId);
+      
+      // Redirect to Stripe Checkout
+      window.location.href = urlWithParams.toString();
+    }
+    
+    // Handle checkout form submission
+    async function handleCheckout(event) {
+      event.preventDefault();
+      
+      const serverId = getSelectedServerId();
+      if (!serverId) {
+        showMessage('Please select a server.', true);
+        return;
+      }
+      
+      const planSelect = document.getElementById('plan-select');
+      const selectedPlan = planSelect.value;
+      
+      // Set button to loading state
+      const button = document.getElementById('checkout-button');
+      button.disabled = true;
+      button.innerHTML = '<div class="loading-spinner"></div><span>Processing...</span>';
+      
+      try {
+        // Currently, we're using Stripe Checkout hosted pages for simplicity
+        redirectToStripeCheckout(serverId, selectedPlan);
+      } catch (error) {
+        console.error('Payment error:', error);
+        showMessage('An error occurred during checkout: ' + error.message, true);
+        button.disabled = false;
+        button.innerHTML = '<span>Subscribe Now</span>';
+      }
+    }
+    
+    // Initialize the checkout page
+    async function initCheckout() {
+      // Populate the server dropdown
+      await populateServerSelect();
+      
+      // Add event listeners
+      document.getElementById('server-select').addEventListener('change', updateButtonState);
+      document.getElementById('checkout-button').addEventListener('click', handleCheckout);
+      
+      // Update initial button state
+      updateButtonState();
+    }
+    
+    // Use the hardcoded Stripe public key (would be injected by server in production)
+    // For real implementation, this would come from environment variables
+    // In a Vite app, you'd use import.meta.env.VITE_STRIPE_PUBLIC_KEY
+    // We're using direct Stripe checkout links so we don't need this key for now
+    const STRIPE_PUBLIC_KEY = '';
+    
+    // Start the checkout process when the page loads
+    document.addEventListener('DOMContentLoaded', initCheckout);
   </script>
 </body>
 </html>
