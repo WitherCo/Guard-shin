@@ -1,33 +1,36 @@
 services:
-  # A Node.js web service that hosts both the dashboard and the Discord bot
+  # Discord bot service
   - type: web
     name: guard-shin-bot
-    env: node
-    plan: starter
-    buildCommand: npm install
-    startCommand: node server.cjs
-    autoDeploy: true
+    env: python
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: python app.py
+    plan: free # Change to a paid plan for better uptime
+    runtime: python
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
       - key: DISCORD_BOT_TOKEN
-        sync: false
+        sync: false # This means Render will prompt for this value
       - key: DISCORD_CLIENT_ID
-        value: 1361873604882731008
+        sync: false
       - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_BOT_SECRET
+        sync: false
+      - key: GUARD_SHIN_BOT_TOKEN
+        sync: false
+      - key: UPDATE_WEBHOOK_URL
+        sync: false
+      - key: PAYMENT_WEBHOOK_URL
         sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: VITE_STRIPE_PUBLIC_KEY
         sync: false
-      - key: PAYMENT_WEBHOOK_URL
-        fromService:
-          name: guard-shin-bot
-          type: web
-          property: url
-        append: /api/webhook/payment
-      - key: UPDATE_WEBHOOK_URL
-        fromService:
-          name: guard-shin-bot
-          type: web
-          property: url
-        append: /api/webhook/update
-    healthCheckPath: /
+      - key: GITHUB_TOKEN
+        sync: false
+
+# Health check endpoint
+healthCheckPath: /
+healthCheckTimeout: 100
