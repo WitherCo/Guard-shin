@@ -80,7 +80,7 @@ class GuardShinHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """Handle GET requests"""
         if self.path == '/':
-            # Health check endpoint
+            # Main status page
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
@@ -113,6 +113,20 @@ class GuardShinHandler(BaseHTTPRequestHandler):
             """
             
             self.wfile.write(response.encode())
+        elif self.path == '/health':
+            # Simple health check endpoint for Render
+            bot_status = "running" if bot_process and bot_process.poll() is None else "not running"
+            
+            if bot_status == "running":
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"status":"healthy","message":"Bot is running"}')
+            else:
+                self.send_response(503)  # Service Unavailable
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"status":"unhealthy","message":"Bot is not running"}')
         else:
             # 404 for any other path
             self.send_response(404)
