@@ -77,7 +77,14 @@ class GuardShin(commands.Bot):
         # When True, slash commands are only registered to the support server
         # Default to production mode to avoid permissions issues with support server
         self.DEV_MODE = os.getenv('BOT_DEV_MODE', 'false').lower() == 'true'
-        if self.DEV_MODE:
+        
+        # Disable command registration (for Render deployment)
+        # When True, the bot will not attempt to register commands on startup
+        self.DISABLE_COMMAND_REGISTRATION = os.getenv('DISABLE_COMMAND_REGISTRATION', 'false').lower() == 'true'
+        
+        if self.DISABLE_COMMAND_REGISTRATION:
+            logger.info("Command registration is DISABLED. Use external tools to register commands.")
+        elif self.DEV_MODE:
             logger.info("Running in DEVELOPMENT MODE. Commands will only be registered to the support server.")
         else:
             logger.info("Running in PRODUCTION MODE. Commands will be registered globally.")
@@ -301,6 +308,11 @@ https://witherco.github.io/Guard-shin/
         
     async def register_commands(self):
         """Register all slash commands with Discord"""
+        # Skip command registration if disabled
+        if self.DISABLE_COMMAND_REGISTRATION:
+            logger.info("Command registration is disabled. Skipping command sync.")
+            return False
+            
         logger.info("Registering application commands with Discord...")
         try:
             # Check if application ID is set
