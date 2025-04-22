@@ -457,6 +457,54 @@ https://witherco.github.io/Guard-shin/
                         logger.error(f"Failed to load premium extension {module_name}: {e}")
         else:
             logger.warning(f"Premium commands directory not found: {self.premium_commands_path}")
+        
+        # Load basic prefix command cogs
+        try:
+            await self.load_extension("cogs.basic_commands")
+            logger.info("Loaded basic_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load basic_commands cog: {e}")
+            
+        try:
+            await self.load_extension("cogs.moderation_commands")
+            logger.info("Loaded moderation_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load moderation_commands cog: {e}")
+            
+        # Load error handler cog
+        try:
+            await self.load_extension("cogs.error_handler")
+            logger.info("Loaded error_handler cog")
+        except Exception as e:
+            logger.error(f"Failed to load error_handler cog: {e}")
+            
+        # Load utility commands cog
+        try:
+            await self.load_extension("cogs.utility_commands")
+            logger.info("Loaded utility_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load utility_commands cog: {e}")
+            
+        # Load fun commands cog
+        try:
+            await self.load_extension("cogs.fun_commands")
+            logger.info("Loaded fun_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load fun_commands cog: {e}")
+            
+        # Load premium commands cog
+        try:
+            await self.load_extension("cogs.premium_commands")
+            logger.info("Loaded premium_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load premium_commands cog: {e}")
+        
+        # Load music commands cog
+        try:
+            await self.load_extension("cogs.music_commands")
+            logger.info("Loaded music_commands cog")
+        except Exception as e:
+            logger.error(f"Failed to load music_commands cog: {e}")
                 
         # Start background tasks
         self.bg_task = self.loop.create_task(self.rotate_status())
