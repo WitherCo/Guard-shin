@@ -70,6 +70,17 @@ class GuardShin(commands.Bot):
         # Premium servers
         self.premium_guilds = self.load_premium_guilds()
         
+        # Support server ID
+        self.SUPPORT_SERVER_ID = 1233495879223345172
+        
+        # Development mode 
+        # When True, slash commands are only registered to the support server
+        self.DEV_MODE = os.getenv('BOT_DEV_MODE', 'true').lower() == 'true'
+        if self.DEV_MODE:
+            logger.info("Running in DEVELOPMENT MODE. Commands will only be registered to the support server.")
+        else:
+            logger.info("Running in PRODUCTION MODE. Commands will be registered globally.")
+        
         # Command registration
         logger.info("Initializing command tree")
         self.synced = False
@@ -120,6 +131,7 @@ class GuardShin(commands.Bot):
         # Add a help command
         @self.tree.command(name="help", description="View available commands")
         async def help_command(interaction: discord.Interaction):
+            # Standard help text
             help_text = """
 **Guard-shin Commands**
 
@@ -128,6 +140,7 @@ class GuardShin(commands.Bot):
 /info - Get information about Guard-shin
 /invite - Get the bot invite link
 /help - View this help message
+/premium - Get information about premium features
 
 *Moderation Commands*
 /mod ban - Ban a member from the server
@@ -135,6 +148,16 @@ class GuardShin(commands.Bot):
 Visit our dashboard for more information and a full command list:
 https://witherco.github.io/Guard-shin/
 """
+            # Add admin commands if user is an admin
+            is_admin = interaction.user.guild_permissions.administrator if interaction.guild else False
+            
+            if is_admin:
+                admin_text = """
+*Admin Commands*
+/devmode - Toggle between development and production mode for slash commands
+"""
+                help_text += admin_text
+                
             await interaction.response.send_message(help_text)
         
         # Add premium command
@@ -159,6 +182,25 @@ Visit our dashboard to purchase:
 https://witherco.github.io/Guard-shin/
 """
             await interaction.response.send_message(premium_text)
+        
+        # Add development mode toggle command (admin only)
+        @self.tree.command(name="devmode", description="Toggle development mode (admin only)")
+        async def devmode(interaction: discord.Interaction):
+            # Check if user is a bot administrator
+            if interaction.user.id != 1233495879223345172 and not interaction.user.guild_permissions.administrator:
+                await interaction.response.send_message("❌ This command is only available to bot administrators.", ephemeral=True)
+                return
+            
+            # Toggle development mode
+            self.DEV_MODE = not self.DEV_MODE
+            
+            if self.DEV_MODE:
+                await interaction.response.send_message("✅ Development mode **ENABLED**. Commands will only be registered to the support server.")
+            else:
+                await interaction.response.send_message("🌐 Development mode **DISABLED**. Commands will be registered globally.")
+            
+            # Re-register commands with the new mode
+            await self.register_commands()
             
         logger.info("Added slash commands to command tree")
         
@@ -274,7 +316,27 @@ https://witherco.github.io/Guard-shin/
                     logger.info(f"Auto-fixing application ID using bot user ID: {self.application_id}")
                 else:
                     return False
+            
+            # In development mode, only register commands to the support server
+            if self.DEV_MODE:
+                logger.info(f"Development mode active. Only registering commands to support server (ID: {self.SUPPORT_SERVER_ID})")
                 
+                # Check if the bot is in the support server
+                support_guild = discord.Object(id=self.SUPPORT_SERVER_ID)
+                
+                try:
+                    # Sync commands to the support server only
+                    support_commands = await self.tree.sync(guild=support_guild)
+                    logger.info(f"Synced {len(support_commands)} commands to support server")
+                    logger.info("Commands registered in development mode (only visible in support server)")
+                    self.synced = True
+                    return True
+                except Exception as e:
+                    logger.error(f"Failed to sync commands to support server: {e}")
+                    logger.warning("Make sure the bot is a member of the support server.")
+                    return False
+            
+            # PRODUCTION MODE - For all servers
             # Instead of global sync, sync per guild for better reliability
             success = False
             
@@ -332,7 +394,7 @@ https://witherco.github.io/Guard-shin/
                     Make sure your DISCORD_CLIENT_ID matches your bot token and the bot 
                     was invited with the 'applications.commands' scope.
                     
-                    Invite URL format: https://discord.com/api/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
+                    Invite URL format: https://discord.com/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
                     """)
             
             # Log success based on sync results
