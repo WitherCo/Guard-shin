@@ -1,0 +1,79 @@
+# Blueprint for Guard-shin Discord Bot Deployment on Render
+
+services:
+  # Discord Bot Service
+  - type: web
+    name: guard-shin-bot
+    env: python
+    region: ohio  # Choose a region close to Discord servers
+    plan: free    # Adjust based on needs (free, starter, etc.)
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: python run_bot.py
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: guard-shin-db
+          property: connectionString
+    autoDeploy: true
+
+  # Web Dashboard (Optional)
+  - type: web
+    name: guard-shin-dashboard
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 18.x
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_REDIRECT_URI
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: VITE_STRIPE_PUBLIC_KEY
+        sync: false
+    autoDeploy: true
+
+databases:
+  # Database for storing bot data
+  - name: guard-shin-db
+    plan: free
+
+# Optional Discord Bot API
+  - type: web
+    name: guard-shin-api
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: npm ci
+    startCommand: node api_server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 18.x
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: API_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: guard-shin-db
+          property: connectionString
+    autoDeploy: true

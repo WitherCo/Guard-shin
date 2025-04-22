@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: guard-shin-bot
+    env: node
+    buildCommand: |
+      npm init -y && 
+      npm install express &&
+      pip install -r requirements.txt
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: GUARD_SHIN_BOT_TOKEN
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: PAYMENT_WEBHOOK_URL
+        sync: false
+      - key: UPDATE_WEBHOOK_URL
+        sync: false
+    healthCheckPath: /health
+    autoDeploy: true

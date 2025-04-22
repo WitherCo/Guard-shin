@@ -1,0 +1,150 @@
+/**
+ * Guard-shin Dark Theme
+ * This stylesheet provides a dark theme styling similar to WickBot's dashboard
+ */
+
+:root {
+  --dark-bg: #0f0f0f;
+  --dark-surface: #1a1a1a;
+  --dark-border: #2a2a2a;
+  --dark-text: #f0f0f0;
+  --dark-text-secondary: #a0a0a0;
+  --primary: #5865f2;
+  --primary-hover: #4752c4;
+  --danger: #ed4245;
+  --success: #57f287;
+  --warning: #fee75c;
+}
+
+/* Base styles */
+html, body {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Force dark theme on all elements */
+.app-container, .layout-container, .sidebar-container, .main-content, .page-content, .dashboard {
+  background-color: var(--dark-bg) !important;
+  color: var(--dark-text) !important;
+}
+
+/* Cards and containers */
+.card, .stat-card, .feature-card {
+  background-color: var(--dark-surface) !important;
+  border: 1px solid var(--dark-border);
+  color: var(--dark-text) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Navigation elements */
+.top-nav {
+  background-color: var(--dark-surface) !important;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.sidebar {
+  background-color: var(--dark-surface) !important;
+  border-right: 1px solid var(--dark-border);
+}
+
+.sidebar-link {
+  color: var(--dark-text) !important;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+  background-color: rgba(88, 101, 242, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+/* Buttons */
+button, .button, .hero-button {
+  background-color: var(--primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+button:hover, .button:hover, .hero-button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Input elements */
+input, select, textarea {
+  background-color: #2a2a2a !important;
+  color: var(--dark-text) !important;
+  border: 1px solid var(--dark-border) !important;
+}
+
+input::placeholder, select::placeholder, textarea::placeholder {
+  color: var(--dark-text-secondary) !important;
+}
+
+/* Hero section */
+.hero-gradient {
+  background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.hero-title {
+  color: #ffffff !important;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Premium badge */
+.premium-badge {
+  background-color: #ffd700;
+  color: #000000;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+/* Stats and features grid */
+.stats-grid, .features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Ensure dark scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}

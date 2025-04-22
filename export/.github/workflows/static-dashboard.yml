@@ -1,0 +1,60 @@
+name: Deploy Static Dashboard
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'static_dashboard/**'
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Create .nojekyll file
+        run: touch static_dashboard/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: static_dashboard
+          clean: true
+
+      - name: Send Deployment Notification
+        if: success()
+        run: |
+          if [ -n "${{ secrets.UPDATE_WEBHOOK_URL }}" ]; then
+            curl -H "Content-Type: application/json" -d '{
+              "content": "Guard-shin Dashboard has been deployed! 🚀",
+              "embeds": [{
+                "title": "Static Dashboard Deployed",
+                "description": "The Guard-shin Static Dashboard has been deployed to GitHub Pages.",
+                "color": 5814783,
+                "fields": [
+                  {
+                    "name": "Dashboard URL",
+                    "value": "https://witherco.github.io/Guard-shin/",
+                    "inline": false
+                  },
+                  {
+                    "name": "Bot Invite",
+                    "value": "[Add to Server](https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8)",
+                    "inline": true
+                  }
+                ]
+              }]
+            }' ${{ secrets.UPDATE_WEBHOOK_URL }}
+          fi

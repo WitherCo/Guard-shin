@@ -1,0 +1,21 @@
+{
+  "name": "Guard-shin Discord Bot",
+  "description": "Advanced Discord moderation and security bot",
+  "repository": "https://github.com/WitherCo/Guard-shin",
+  "logo": "https://raw.githubusercontent.com/WitherCo/Guard-shin/main/generated-icon.png",
+  "keywords": ["discord", "bot", "moderation", "security", "python"],
+  "env": {
+    "DISCORD_BOT_TOKEN": {
+      "description": "Your Discord bot token. You can use either this or GUARD_SHIN_BOT_TOKEN."
+    },
+    "GUARD_SHIN_BOT_TOKEN": {
+      "description": "Alternative environment variable for your Discord bot token.",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}

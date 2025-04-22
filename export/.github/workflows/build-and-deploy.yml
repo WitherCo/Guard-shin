@@ -1,0 +1,75 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual triggers
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Create Build Directory
+        run: mkdir -p build
+        
+      - name: Copy Frontend Files
+        run: |
+          cp -r public build/
+          cp -r server build/
+          cp -r client build/ || true
+          cp *.html build/ || true
+          cp *.css build/ || true
+          cp *.js build/ || true
+        
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build
+          branch: gh-pages
+          
+      - name: Send Discord Notification
+        if: success() && github.event_name != 'pull_request'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.UPDATE_WEBHOOK_URL }}
+        run: |
+          curl -H "Content-Type: application/json" -d '{
+            "content": "Lifeless rose updated: Guard-shin Dashboard has been deployed successfully!",
+            "embeds": [
+              {
+                "title": "🚀 Deployment Successful",
+                "description": "The Guard-shin Dashboard has been deployed to GitHub Pages.",
+                "color": 3066993,
+                "fields": [
+                  {
+                    "name": "Repository",
+                    "value": "${{ github.repository }}"
+                  },
+                  {
+                    "name": "Branch",
+                    "value": "${{ github.ref_name }}"
+                  },
+                  {
+                    "name": "Timestamp",
+                    "value": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+                  }
+                ]
+              }
+            ]
+          }' $DISCORD_WEBHOOK

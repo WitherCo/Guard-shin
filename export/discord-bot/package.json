@@ -1,0 +1,24 @@
+{
+  "name": "guard-shin-bot",
+  "version": "1.0.0",
+  "description": "Guard-shin Discord bot service wrapper",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "guard-shin",
+    "moderation"
+  ],
+  "author": "WitherCo",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=16.x"
+  }
+}
