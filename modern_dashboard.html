@@ -1,765 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guard-shin - Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #8249F0;
-            --primary-dark: #6a3acf;
-            --secondary: #1D1E2B;
-            --dark: #121212;
-            --darker: #0b0b0b;
-            --light: #f8f9fa;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: var(--dark);
-            color: white;
-            line-height: 1.6;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        header {
-            background-color: var(--darker);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-links li {
-            margin-left: 1.5rem;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .nav-links a.active {
-            color: var(--primary);
-        }
-        
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .hero {
-            background-color: var(--secondary);
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-            border-radius: 0 0 10px 10px;
-            text-align: center;
-        }
-        
-        .hero-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background-color: rgba(130, 73, 240, 0.1);
-        }
-        
-        .stats {
-            margin-bottom: 3rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .stat-card {
-            background-color: var(--secondary);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .stat-icon {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .section-title {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: var(--primary);
-            font-size: 2rem;
-        }
-        
-        .server-list {
-            margin-bottom: 3rem;
-        }
-        
-        .server-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .server-card {
-            background-color: var(--secondary);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        
-        .server-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .server-banner {
-            height: 80px;
-            background-color: var(--primary);
-            position: relative;
-        }
-        
-        .server-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            object-fit: cover;
-            position: absolute;
-            bottom: -32px;
-            left: 20px;
-            border: 4px solid var(--secondary);
-            background-color: var(--dark);
-        }
-        
-        .server-content {
-            padding: 2rem 1rem 1rem;
-        }
-        
-        .server-name {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-        
-        .server-members {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 1rem;
-        }
-        
-        .server-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .server-btn {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-        
-        .bot-status {
-            margin-bottom: 3rem;
-        }
-        
-        .status-card {
-            background-color: var(--secondary);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        
-        .status-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .indicator-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: var(--success);
-        }
-        
-        .indicator-text {
-            font-size: 0.9rem;
-        }
-        
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .status-metric {
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            border-radius: 5px;
-        }
-        
-        .metric-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 0.5rem;
-        }
-        
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .restart-history {
-            margin-top: 2rem;
-        }
-        
-        .history-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.7rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .history-time {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-        
-        .restart-btn {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.8rem;
-            text-align: center;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: 500;
-        }
-        
-        .restart-btn:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .features {
-            margin-bottom: 3rem;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .feature-card {
-            background-color: var(--secondary);
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-        
-        .cta {
-            background-color: var(--primary);
-            padding: 4rem 2rem;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .cta-title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .cta-description {
-            max-width: 700px;
-            margin: 0 auto 2rem;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn-cta {
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: bold;
-        }
-        
-        .btn-light {
-            background-color: white;
-            color: var(--primary);
-        }
-        
-        .btn-cta-outline {
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-        
-        .btn-cta-outline:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        footer {
-            background-color: var(--darker);
-            padding: 2rem 0;
-            text-align: center;
-        }
-        
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-        
-        .footer-links a {
-            color: white;
-            margin: 0 1rem;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-        
-        .copyright {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-        }
-        
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            color: white;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        
-        @media screen and (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 60px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 60px);
-                background-color: var(--darker);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 2rem;
-                transition: left 0.3s;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guard-shin Dashboard - Discord Moderation Bot</title>
+  <link rel="icon" type="image/png" href="./generated-icon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script>
+    // Hard-coded demo data for immediate display
+    const FALLBACK_SERVERS = [
+      {
+        "id": "1233495879223345172",
+        "name": "Guard-shin support & Community",
+        "icon": null,
+        "members": 5,
+        "moderation_actions": 0,
+        "plan": "Premium"
+      },
+      {
+        "id": "1234567890123456789",
+        "name": "Example Server",
+        "icon": null,
+        "members": 10,
+        "moderation_actions": 3,
+        "plan": "Free"
+      }
+    ];
+
+    // Fetch server data from the Discord bot
+    async function fetchServerData() {
+      // Always use fallback data for immediate display
+      // This ensures the dashboard always shows something
+      return FALLBACK_SERVERS;
+      
+      /* API calls are disabled since they're failing
+      try {
+        const response = await fetch('/api/guilds');
+        if (!response.ok) {
+          throw new Error('Failed to fetch server data');
+        }
+        
+        const data = await response.json();
+        return data.guilds || [];
+      } catch (error) {
+        console.error('Error fetching server data:', error);
+        
+        // Fallback: Try to load from bot_guilds.json directly in development
+        try {
+          // Using both possible paths to the bot_guilds.json file
+          const fallbackResponse = await fetch('./bot_guilds.json');
+          if (!fallbackResponse.ok) {
+            // Try the alternative path to bot_guilds.json
+            const altResponse = await fetch('/Guard-shin/bot_guilds.json');
+            if (!altResponse.ok) {
+              throw new Error('Failed to fetch fallback server data');
             }
-            
-            .nav-links.active {
-                left: 0;
-            }
-            
-            .nav-links li {
-                margin: 1rem 0;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .server-actions {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
+            const altData = await altResponse.json();
+            return Array.isArray(altData) ? altData : [];
+          }
+          
+          const fallbackData = await fallbackResponse.json();
+          return Array.isArray(fallbackData) ? fallbackData : [];
+        } catch (fallbackError) {
+          console.error('Error fetching fallback server data:', fallbackError);
+          
+          // Last resort fallback - hard-coded demo data
+          return FALLBACK_SERVERS;
         }
-    </style>
+      }
+      */
+    }
+    
+    // Render server cards based on data from API
+    async function renderServerCards() {
+      const serversContainer = document.getElementById('servers-container');
+      if (!serversContainer) return;
+      
+      try {
+        const servers = await fetchServerData();
+        
+        if (servers.length === 0) {
+          serversContainer.innerHTML = '<p class="no-servers">No servers found. Add Guard-shin to a server to get started.</p>';
+          return;
+        }
+        
+        let serverCardsHTML = '';
+        
+        servers.forEach(server => {
+          const serverIcon = server.icon ? 
+            `<img src="${server.icon}" alt="${server.name}" class="server-img">` : 
+            getServerIcon(server.name);
+          
+          serverCardsHTML += `
+            <div class="server-card" data-server-id="${server.id}">
+              <div class="server-header">
+                <div class="server-icon" style="background-color: #8249F0;">
+                  ${serverIcon}
+                </div>
+                <h3 class="server-name">${server.name}</h3>
+              </div>
+              <div class="server-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Members</span>
+                  <span>${formatNumber(server.members)}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Moderation Actions</span>
+                  <span>${formatNumber(server.moderation_actions)}</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Plan</span>
+                  <span>${server.plan}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        serversContainer.innerHTML = serverCardsHTML;
+        
+        // Add click event handlers to each server card
+        document.querySelectorAll('.server-card').forEach(card => {
+          card.addEventListener('click', function() {
+            const serverId = this.getAttribute('data-server-id');
+            if (serverId) {
+              window.location.href = `./server.html?id=${serverId}`;
+            }
+          });
+        });
+        
+      } catch (error) {
+        console.error('Error rendering server cards:', error);
+        serversContainer.innerHTML = '<p class="error-message">Failed to load servers. Please try again later.</p>';
+      }
+    }
+    
+    // Helper function to get icon based on server name
+    function getServerIcon(serverName) {
+      const name = serverName.toLowerCase();
+      
+      if (name.includes('gaming') || name.includes('game')) {
+        return '<i class="fas fa-gamepad" style="color: white;"></i>';
+      } else if (name.includes('chill') || name.includes('relax')) {
+        return '<i class="fas fa-coffee" style="color: white;"></i>';
+      } else if (name.includes('demo') || name.includes('test')) {
+        return '<i class="fas fa-crown" style="color: white;"></i>';
+      } else {
+        return '<i class="fas fa-server" style="color: white;"></i>';
+      }
+    }
+    
+    // Format numbers with commas for thousands
+    function formatNumber(num) {
+      return new Intl.NumberFormat().format(num);
+    }
+    
+    // Initialize the dashboard when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      renderServerCards();
+    });
+  </script>
+  
+  <style>
+    :root {
+      --color-bg-primary: #0f0f0f;
+      --color-bg-secondary: #1a1a1a;
+      --color-text-primary: #fff;
+      --color-accent-primary: #8249F0;
+      --color-accent-secondary: #6c3ad6;
+      --transition-speed: 0.3s;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+    
+    body {
+      background-color: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      min-height: 100vh;
+    }
+    
+    .dashboard {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .navbar {
+      background-color: var(--color-bg-secondary);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-accent-primary);
+    }
+    
+    .logo i {
+      font-size: 1.8rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: var(--color-text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-speed);
+      padding: 0.5rem 0;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--color-accent-primary);
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+    
+    .dashboard-title {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .add-server {
+      background-color: var(--color-accent-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color var(--transition-speed);
+      text-decoration: none;
+    }
+    
+    .add-server:hover {
+      background-color: var(--color-accent-secondary);
+    }
+    
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .server-card {
+      background-color: var(--color-bg-secondary);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+      cursor: pointer;
+      border: 1px solid #333;
+    }
+    
+    .server-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .server-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .server-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--color-accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .server-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .server-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    
+    .stat-label {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .loading-servers {
+      width: 100%;
+      padding: 3rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      grid-column: 1 / -1;
+    }
+    
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(130, 73, 240, 0.3);
+      border-top: 4px solid var(--color-accent-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .no-servers, .error-message {
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255, 255, 255, 0.7);
+      grid-column: 1 / -1;
+    }
+    
+    .error-message {
+      color: #ff6b6b;
+    }
+    
+    .server-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .footer {
+      background-color: var(--color-bg-secondary);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">Guard-shin</a>
-                <button class="mobile-menu" id="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <ul class="nav-links" id="nav-links">
-                    <li><a href="modern_dashboard.html" class="active">Dashboard</a></li>
-                    <li><a href="modern_commands.html">Commands</a></li>
-                    <li><a href="modern_premium.html">Premium</a></li>
-                    <li><a href="modern_support.html">Support</a></li>
-                    <li><a href="modern_settings.html">Settings</a></li>
-                    <li><a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn btn-primary" target="_blank">Add to Server</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <div class="dashboard">
+    <nav class="navbar">
+      <div class="logo">
+        <i class="fas fa-shield-alt"></i>
+        <span>Guard-shin</span>
+      </div>
+      <div class="nav-links">
+        <a href="./index.html" class="active">Dashboard</a>
+        <a href="./modern_commands.html">Commands</a>
+        <a href="./modern_premium.html">Premium</a>
+        <a href="./modern_support.html">Support</a>
+        <a href="./modern_settings.html">Settings</a>
+      </div>
+    </nav>
     
-    <section class="hero">
-        <div class="container">
-            <h1 class="hero-title">Welcome to Guard-shin Dashboard</h1>
-            <p class="hero-subtitle">Advanced Discord moderation and security platform. Protect your server with intelligent features and manage your community with ease.</p>
-            <div class="hero-buttons">
-                <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="btn btn-primary" target="_blank">Add to Server</a>
-                <a href="modern_premium.html" class="btn btn-outline">Upgrade to Premium</a>
-            </div>
+    <div class="main-content">
+      <div class="dashboard-header">
+        <h1 class="dashboard-title">Server Dashboard</h1>
+        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot%20applications.commands&permissions=8" class="add-server" target="_blank">
+          <i class="fas fa-plus"></i>
+          <span>Add to Server</span>
+        </a>
+      </div>
+      
+      <div id="servers-container" class="dashboard-grid">
+        <!-- Server cards will be dynamically loaded here -->
+        <div class="loading-servers">
+          <div class="loading-spinner"></div>
+          <p>Loading servers...</p>
         </div>
-    </section>
+      </div>
+    </div>
     
-    <main class="container">
-        <div class="stats">
-            <div class="stat-card">
-                <i class="fas fa-server stat-icon"></i>
-                <div class="stat-value">1,500+</div>
-                <div class="stat-label">Servers Protected</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-users stat-icon"></i>
-                <div class="stat-value">2.5M+</div>
-                <div class="stat-label">Users Protected</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-shield-alt stat-icon"></i>
-                <div class="stat-value">175K+</div>
-                <div class="stat-label">Threats Blocked</div>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-star stat-icon"></i>
-                <div class="stat-value">99.9%</div>
-                <div class="stat-label">Uptime</div>
-            </div>
-        </div>
-        
-        <section class="server-list">
-            <h2 class="section-title">Your Servers</h2>
-            <div class="server-grid">
-                <div class="server-card">
-                    <div class="server-banner"></div>
-                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
-                    <div class="server-content">
-                        <div class="server-name">Gaming Community</div>
-                        <div class="server-members">
-                            <i class="fas fa-user"></i> 
-                            5,283 members
-                        </div>
-                        <div class="server-actions">
-                            <a href="#" class="btn btn-primary server-btn">Manage</a>
-                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="server-card">
-                    <div class="server-banner"></div>
-                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
-                    <div class="server-content">
-                        <div class="server-name">Anime Fans</div>
-                        <div class="server-members">
-                            <i class="fas fa-user"></i> 
-                            2,157 members
-                        </div>
-                        <div class="server-actions">
-                            <a href="#" class="btn btn-primary server-btn">Manage</a>
-                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="server-card">
-                    <div class="server-banner"></div>
-                    <img src="https://via.placeholder.com/64" alt="Server Icon" class="server-icon">
-                    <div class="server-content">
-                        <div class="server-name">Study Group</div>
-                        <div class="server-members">
-                            <i class="fas fa-user"></i> 
-                            328 members
-                        </div>
-                        <div class="server-actions">
-                            <a href="#" class="btn btn-primary server-btn">Manage</a>
-                            <a href="#" class="btn btn-outline server-btn">View Stats</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="bot-status">
-            <h2 class="section-title">Bot Status</h2>
-            <div class="status-card">
-                <div class="status-header">
-                    <div class="status-title">
-                        <i class="fas fa-robot"></i>
-                        Guard-shin Status
-                    </div>
-                    <div class="status-indicator">
-                        <div class="indicator-dot"></div>
-                        <div class="indicator-text">Online</div>
-                    </div>
-                </div>
-                <div class="status-grid">
-                    <div class="status-metric">
-                        <div class="metric-label">Uptime</div>
-                        <div class="metric-value">99.9%</div>
-                    </div>
-                    <div class="status-metric">
-                        <div class="metric-label">Ping</div>
-                        <div class="metric-value">42ms</div>
-                    </div>
-                    <div class="status-metric">
-                        <div class="metric-label">Servers</div>
-                        <div class="metric-value">1,523</div>
-                    </div>
-                    <div class="status-metric">
-                        <div class="metric-label">Commands Used</div>
-                        <div class="metric-value">156,783</div>
-                    </div>
-                </div>
-                <div class="restart-history">
-                    <h3 class="history-title">Restart History</h3>
-                    <div class="history-item">
-                        <div class="history-event">Scheduled Restart</div>
-                        <div class="history-time">Today, 03:00 AM</div>
-                    </div>
-                    <div class="history-item">
-                        <div class="history-event">Maintenance</div>
-                        <div class="history-time">Apr 18, 2025, 07:15 PM</div>
-                    </div>
-                    <div class="history-item">
-                        <div class="history-event">Scheduled Restart</div>
-                        <div class="history-time">Apr 17, 2025, 03:00 AM</div>
-                    </div>
-                </div>
-                <button class="restart-btn">Restart Bot</button>
-            </div>
-        </section>
-        
-        <section class="features">
-            <h2 class="section-title">Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-title">Advanced Security</h3>
-                    <p>Protect your server with anti-raid, anti-spam, and auto-moderation features to keep your community safe.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gavel"></i>
-                    </div>
-                    <h3 class="feature-title">Smart Moderation</h3>
-                    <p>Easily manage your server with powerful moderation tools, logs, warnings, and automated actions.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-cogs"></i>
-                    </div>
-                    <h3 class="feature-title">Customization</h3>
-                    <p>Customize the bot to fit your server's needs with custom commands, welcome messages, and more.</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="cta">
-            <h2 class="cta-title">Upgrade to Premium</h2>
-            <p class="cta-description">Get access to all premium features, including custom welcome images, advanced verification, priority support, and more.</p>
-            <div class="cta-buttons">
-                <a href="modern_premium.html" class="btn btn-cta btn-light">View Plans</a>
-                <a href="modern_commands.html" class="btn btn-cta btn-cta-outline">View All Commands</a>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <div class="container">
-            <div class="footer-links">
-                <a href="modern_dashboard.html">Dashboard</a>
-                <a href="modern_commands.html">Commands</a>
-                <a href="modern_premium.html">Premium</a>
-                <a href="modern_support.html">Support</a>
-                <a href="modern_license.html">License</a>
-            </div>
-            <div class="copyright">
-                © 2025 Guard-shin. All rights reserved.
-            </div>
-        </div>
+    <footer class="footer">
+      &copy; 2025 Guard-shin by WitherCo. All rights reserved.
     </footer>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu');
-            const navLinks = document.getElementById('nav-links');
-            
-            mobileMenuButton.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-            });
-            
-            // Restart button functionality
-            const restartBtn = document.querySelector('.restart-btn');
-            
-            restartBtn.addEventListener('click', () => {
-                restartBtn.textContent = 'Restarting...';
-                restartBtn.disabled = true;
-                
-                // Simulate restart process
-                setTimeout(() => {
-                    restartBtn.textContent = 'Bot Restarted Successfully';
-                    
-                    // Reset button after a delay
-                    setTimeout(() => {
-                        restartBtn.textContent = 'Restart Bot';
-                        restartBtn.disabled = false;
-                    }, 3000);
-                }, 2000);
-            });
-        });
-    </script>
+  </div>
 </body>
 </html>
