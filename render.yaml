@@ -1,38 +1,25 @@
 services:
-  # Discord bot service
-  - type: web
+  - type: web_service
     name: guard-shin-bot
     env: python
+    plan: free
     buildCommand: pip install -r requirements-render.txt
     startCommand: python app.py
-    plan: free # Change to a paid plan for better uptime
-    runtime: python
+    numInstances: 1
+    healthCheckPath: /
+    port: 8080
+    pullRequestPreviewsEnabled: false
+    autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
       - key: DISABLE_COMMAND_REGISTRATION
         value: true
-      - key: DISCORD_BOT_TOKEN
-        sync: false # This means Render will prompt for this value
       - key: DISCORD_CLIENT_ID
         sync: false
-      - key: DISCORD_CLIENT_SECRET
-        sync: false
-      - key: DISCORD_BOT_SECRET
+      - key: DISCORD_BOT_TOKEN
         sync: false
       - key: GUARD_SHIN_BOT_TOKEN
         sync: false
-      - key: UPDATE_WEBHOOK_URL
-        sync: false
-      - key: PAYMENT_WEBHOOK_URL
-        sync: false
       - key: STRIPE_SECRET_KEY
         sync: false
-      - key: VITE_STRIPE_PUBLIC_KEY
-        sync: false
-      - key: GITHUB_TOKEN
-        sync: false
-
-# Health check endpoint
-healthCheckPath: /
-healthCheckTimeout: 100
