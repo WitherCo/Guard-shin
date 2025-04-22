@@ -522,8 +522,11 @@ https://witherco.github.io/Guard-shin/
         self.bg_task = self.loop.create_task(self.rotate_status())
         logger.info("Started background tasks")
         
-        # Register commands with Discord
-        await self.register_commands()
+        # Register commands with Discord (if not disabled)
+        if self.DISABLE_COMMAND_REGISTRATION:
+            logger.info("Command registration is disabled. Skipping command sync in setup_hook.")
+        else:
+            await self.register_commands()
         
     async def rotate_status(self):
         """Rotate bot status regularly"""
