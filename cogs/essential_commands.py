@@ -28,7 +28,7 @@ CATEGORIES = {
     "config": "🔧 Configuration"
 }
 
-class Commands(commands.Cog):
+class EssentialCommands(commands.Cog, name="EssentialCommands"):
     """Base commands system for Guard-shin"""
 
     def __init__(self, bot):
@@ -146,8 +146,8 @@ class Commands(commands.Cog):
         
         await ctx.send(embed=embed)
         
-    @commands.command()
-    async def help(self, ctx: commands.Context, *, command_or_category: str = None):
+    @commands.command(name="commandhelp")
+    async def command_help(self, ctx: commands.Context, *, command_or_category: str = None):
         """Show help for commands or categories"""
         if command_or_category is None:
             # Show main help menu with categories
@@ -242,8 +242,8 @@ class Commands(commands.Cog):
         # If input is neither a command nor a category
         await ctx.send(f"No command or category named '{command_or_category}' found.")
         
-    @commands.command()
-    async def avatar(self, ctx: commands.Context, *, member: discord.Member = None):
+    @commands.command(name="useravatar")
+    async def user_avatar(self, ctx: commands.Context, *, member: discord.Member = None):
         """Display a user's avatar"""
         member = member or ctx.author
         
@@ -260,9 +260,9 @@ class Commands(commands.Cog):
         
     # MODERATION COMMANDS
     
-    @commands.command()
+    @commands.command(name="ban_member")
     @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, member: discord.Member, *, reason: str = "No reason provided"):
+    async def ban_member(self, ctx: commands.Context, member: discord.Member, *, reason: str = "No reason provided"):
         """Ban a user from the server with an optional reason"""
         if member.id == ctx.author.id:
             return await ctx.send("You cannot ban yourself.")
@@ -302,9 +302,9 @@ class Commands(commands.Cog):
         except discord.HTTPException as e:
             await ctx.send(f"An error occurred: {e}")
             
-    @commands.command()
+    @commands.command(name="kick_member")
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx: commands.Context, member: discord.Member, *, reason: str = "No reason provided"):
+    async def kick_member(self, ctx: commands.Context, member: discord.Member, *, reason: str = "No reason provided"):
         """Kick a user from the server with an optional reason"""
         if member.id == ctx.author.id:
             return await ctx.send("You cannot kick yourself.")
@@ -344,9 +344,9 @@ class Commands(commands.Cog):
         except discord.HTTPException as e:
             await ctx.send(f"An error occurred: {e}")
             
-    @commands.command()
+    @commands.command(name="essentialclear")
     @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx: commands.Context, amount: int, member: discord.Member = None):
+    async def clear_messages(self, ctx: commands.Context, amount: int, member: discord.Member = None):
         """Clear a specified number of messages"""
         if amount <= 0:
             return await ctx.send("The amount must be greater than 0.")
@@ -395,9 +395,9 @@ class Commands(commands.Cog):
             
     # ADMINISTRATION COMMANDS
     
-    @commands.command()
+    @commands.command(name="setprefix2")
     @commands.has_permissions(administrator=True)
-    async def prefix(self, ctx: commands.Context, new_prefix: str = None):
+    async def set_prefix(self, ctx: commands.Context, new_prefix: str = None):
         """Change the bot's prefix for this server"""
         if new_prefix is None:
             # Show current prefix
@@ -573,8 +573,8 @@ class Commands(commands.Cog):
         # Send the message as the bot
         await ctx.send(message)
         
-    @commands.command(aliases=["8ball"])
-    async def eightball(self, ctx: commands.Context, *, question: str):
+    @commands.command(name="8ballask", aliases=["magicball"])
+    async def magic_eightball(self, ctx: commands.Context, *, question: str):
         """Ask the magic 8-ball a question"""
         responses = [
             "It is certain.",
@@ -610,8 +610,8 @@ class Commands(commands.Cog):
         
         await ctx.send(embed=embed)
         
-    @commands.command()
-    async def coinflip(self, ctx: commands.Context):
+    @commands.command(name="essentialcoinflip")
+    async def coinflip_command(self, ctx: commands.Context):
         """Flip a coin"""
         result = random.choice(["Heads", "Tails"])
         
@@ -631,8 +631,8 @@ class Commands(commands.Cog):
         
     # INFORMATION COMMANDS
     
-    @commands.command()
-    async def serverinfo(self, ctx: commands.Context):
+    @commands.command(name="essentialserverinfo")
+    async def server_info(self, ctx: commands.Context):
         """Display information about the server"""
         guild = ctx.guild
         
@@ -707,8 +707,8 @@ class Commands(commands.Cog):
         
         await ctx.send(embed=embed)
         
-    @commands.command()
-    async def userinfo(self, ctx: commands.Context, *, member: discord.Member = None):
+    @commands.command(name="essentialuserinfo")
+    async def user_info(self, ctx: commands.Context, *, member: discord.Member = None):
         """Display information about a user"""
         member = member or ctx.author
         
@@ -818,10 +818,8 @@ class Commands(commands.Cog):
         if member.bot:
             embed.set_footer(text="This user is a bot")
             
-        await ctx.send(embed=embed))
+        await ctx.send(embed=embed)
 
 # Proper setup function for Discord.py extension loading
-def setup(bot):
-    # For Discord.py 2.0, we need to manually register the cog
-    # without using the async add_cog method
-    bot._BotBase__cogs[Commands.__name__] = Commands(bot)
+async def setup(bot):
+    await bot.add_cog(EssentialCommands(bot))
