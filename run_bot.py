@@ -321,7 +321,21 @@ https://witherco.github.io/Guard-shin/
             if self.DEV_MODE:
                 logger.info(f"Development mode active. Only registering commands to support server (ID: {self.SUPPORT_SERVER_ID})")
                 
-                # Check if the bot is in the support server
+                # Check if the bot is in the support server before trying to sync
+                is_in_support_server = False
+                for guild in self.guilds:
+                    if guild.id == self.SUPPORT_SERVER_ID:
+                        is_in_support_server = True
+                        break
+                
+                if not is_in_support_server:
+                    logger.warning(f"Bot is not in the support server (ID: {self.SUPPORT_SERVER_ID}). Cannot register commands.")
+                    logger.info("Please add the bot to the support server first, then restart.")
+                    # Still mark as synced to avoid repeated attempts
+                    self.synced = True
+                    return False
+                
+                # Create support guild object for command sync
                 support_guild = discord.Object(id=self.SUPPORT_SERVER_ID)
                 
                 try:
@@ -333,7 +347,7 @@ https://witherco.github.io/Guard-shin/
                     return True
                 except Exception as e:
                     logger.error(f"Failed to sync commands to support server: {e}")
-                    logger.warning("Make sure the bot is a member of the support server.")
+                    logger.warning("Make sure the bot has proper permissions in the support server.")
                     return False
             
             # PRODUCTION MODE - For all servers
