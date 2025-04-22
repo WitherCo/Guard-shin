@@ -1,0 +1,21 @@
+# Required Discord Bot Credentials
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
+DISCORD_CLIENT_ID=your_client_id_here
+DISCORD_CLIENT_SECRET=your_client_secret_here
+
+# Alternative Token (can be the same as DISCORD_BOT_TOKEN)
+GUARD_SHIN_BOT_TOKEN=your_discord_bot_token_here
+
+# Webhooks for Notifications (Optional)
+UPDATE_WEBHOOK_URL=your_update_webhook_url
+PAYMENT_WEBHOOK_URL=your_payment_webhook_url
+
+# Stripe API Keys (for Premium Features)
+STRIPE_SECRET_KEY=your_stripe_secret_key
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+
+# GitHub Token (Optional - for Command Registration)
+GITHUB_TOKEN=your_github_token
+
+# Python Version (Must be 3.8 or higher, recommended 3.10)
+PYTHON_VERSION=3.10.0
