@@ -1,98 +1,83 @@
-# Guard-shin Deployment Guide for Render
+# Guard-shin Render Deployment Guide
 
-This guide walks you through deploying Guard-shin to Render, ensuring both the Discord bot and web dashboard are running correctly.
+This guide explains how to deploy the Guard-shin Discord bot to Render.com using the included render.yaml configuration.
 
 ## Prerequisites
 
-1. A [Render](https://render.com/) account
-2. Your Discord application set up with:
-   - Bot token: `DISCORD_BOT_TOKEN`
-   - Application ID: `DISCORD_CLIENT_ID`
-   - Client Secret: `DISCORD_CLIENT_SECRET`
-3. Optional: Stripe payment keys (if using premium features)
+Before deploying, make sure you have:
 
-## Step 1: Create a New Web Service
+1. A Discord application with bot token (from the [Discord Developer Portal](https://discord.com/developers/applications))
+2. A Render.com account
+3. The necessary API keys for services like Stripe (for premium features)
 
-1. Go to the Render dashboard and click "New Web Service"
-2. Connect your GitHub repository (https://github.com/WitherCo/Guard-shin)
-3. Provide these details:
-   - **Name**: guard-shin-bot
-   - **Region**: Choose one close to your users
-   - **Branch**: main
-   - **Runtime**: Node
-   - **Build Command**: `npm install`
-   - **Start Command**: `node server.cjs`
+## Deployment Steps
 
-## Step 2: Set Environment Variables
+### 1. Create a New Render Blueprint
 
-In the "Environment" section, add these variables:
+1. Log in to your [Render Dashboard](https://dashboard.render.com)
+2. Click the "New" button and select "Blueprint"
+3. Connect your GitHub repository containing the Guard-shin code
+4. Select the repository and click "Connect"
 
-| Key | Value | Description |
-|-----|-------|-------------|
-| DISCORD_CLIENT_ID | 1361873604882731008 | Your Discord Application ID |
-| DISCORD_BOT_TOKEN | your_bot_token | Your Discord Bot Token |
-| DISCORD_CLIENT_SECRET | your_client_secret | Your Discord Client Secret |
-| STRIPE_SECRET_KEY | your_stripe_secret | Stripe API Key (Premium) |
-| VITE_STRIPE_PUBLIC_KEY | your_stripe_publishable | Stripe Public Key (Premium) |
-| PAYMENT_WEBHOOK_URL | https://your-render-app.onrender.com/api/webhook/payment | For payment notifications |
-| UPDATE_WEBHOOK_URL | https://your-render-app.onrender.com/api/webhook/update | For deployment updates |
+### 2. Configure Environment Variables
 
-## Step 3: Deploy Your Service
+The render.yaml file already defines the required environment variables, but you'll need to provide the actual values:
 
-1. Click "Create Web Service"
-2. Wait for the initial deployment to complete (5-10 minutes)
-3. Check the logs for any deployment issues
+- **DISCORD_BOT_TOKEN**: Your Discord bot token
+- **DISCORD_CLIENT_ID**: Your Discord application client ID
+- **DISCORD_CLIENT_SECRET**: Your Discord application client secret
+- **STRIPE_SECRET_KEY**: Your Stripe secret key (for premium features)
+- **VITE_STRIPE_PUBLIC_KEY**: Your Stripe publishable key (for premium features)
+- **GITHUB_TOKEN**: (Optional) If you're using GitHub integration
+- **PAYMENT_WEBHOOK_URL**: (Optional) Webhook URL for payment notifications
+- **UPDATE_WEBHOOK_URL**: (Optional) Webhook URL for bot update notifications
 
-## Step 4: Configure Discord Bot
+### 3. Deploy the Service
 
-1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
-2. Select your application
-3. Go to "OAuth2" → "General"
-4. Add a Redirect URL:
-   - `https://your-render-app.onrender.com/auth/callback`
-5. Go to "Bot" section
-6. Enable "Server Members Intent" and "Message Content Intent"
-7. Save changes
+1. Click "Apply" to deploy the service according to the render.yaml configuration
+2. Wait for the build and deployment to complete
+3. Once deployed, Render will provide a URL for your bot service
 
-## Step 5: Update Invite Link
+### 4. Verify Deployment
 
-Update your bot invite link to include required permissions and scopes:
+1. Access the URL provided by Render
+2. You should see a status page showing that the Guard-shin bot is running
+3. You can also check the health endpoint at `/health` to verify the bot is operational
 
-```
-https://discord.com/oauth2/authorize?client_id=1361873604882731008&permissions=8&scope=bot%20applications.commands
-```
+## Environment Variables Explanation
 
-This link includes:
-- Your client ID
-- Administrator permissions (8)
-- Bot and application.commands scopes
-
-## Step 6: Verify Deployment
-
-1. Check Render logs for successful startup
-2. Look for "Logged in as Guard-shin" in the logs
-3. Verify bot connects to your servers
-4. Test slash commands in Discord
+- **PYTHON_VERSION**: Specifies the Python version to use (3.11.3)
+- **DISCORD_BOT_TOKEN**: The token for your Discord bot
+- **DISCORD_CLIENT_ID**: Your Discord application's client ID
+- **DISCORD_CLIENT_SECRET**: Your Discord application's client secret
+- **DISABLE_COMMAND_REGISTRATION**: Set to "true" to prevent command registration issues
+- **STRIPE_SECRET_KEY**: Your Stripe secret key for processing payments
+- **VITE_STRIPE_PUBLIC_KEY**: Your Stripe publishable key for the frontend
 
 ## Troubleshooting
 
-### Bot Not Connecting
-- Verify `DISCORD_BOT_TOKEN` is correct
-- Check Discord Developer Portal for correct settings
-- Make sure intents are enabled
+If you encounter any issues:
 
-### Commands Not Registering
-- Verify `DISCORD_CLIENT_ID` matches your bot token's application
-- Ensure the bot has the `applications.commands` scope when invited
-- Check Render logs for registration errors
+1. Check the Render logs for error messages
+2. Verify that all environment variables are correctly set
+3. Ensure your Discord bot token is valid and has the necessary permissions
+4. Check that your requirements-render.txt file includes all necessary dependencies
 
-### Dashboard Not Loading
-- Check the Render logs for web server errors
-- Verify all environment variables are properly set
-- Make sure GitHub deployment was successful
+For Discord API rate limit errors, consider using the unverified bot approach described in UNVERIFIED_BOT_GUIDE.md.
 
-## Additional Resources
+## Maintenance
 
-- [Render Documentation](https://render.com/docs)
-- [Discord.js Guide](https://discordjs.guide/#before-you-begin)
-- [Discord Developer Portal](https://discord.com/developers/applications)
+To update your deployment:
+
+1. Push changes to your GitHub repository
+2. Render will automatically rebuild and deploy the latest version
+
+## Using the Unverified Bot Approach
+
+If you're experiencing issues with global command registration due to Discord's verification requirements, consider using the unverified bot approach:
+
+1. Follow the instructions in UNVERIFIED_BOT_GUIDE.md to create a new unverified bot
+2. Update your DISCORD_BOT_TOKEN and DISCORD_CLIENT_ID environment variables in Render
+3. Set DISABLE_COMMAND_REGISTRATION to "true" as commands will be registered separately
+
+This approach allows for global command registration without team owner approval requirements.
