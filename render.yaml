@@ -1,5 +1,5 @@
 services:
-  - type: web_service
+  - type: web
     name: guard-shin-bot
     env: python
     plan: free
