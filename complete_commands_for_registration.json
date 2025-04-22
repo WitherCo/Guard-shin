@@ -1,0 +1,1811 @@
+[
+  {
+    "id": "1361879734417625279",
+    "application_id": "1361873604882731008",
+    "version": "1364062495941066762",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "ping",
+    "description": "Check the bot's latency",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1361879734417625280",
+    "application_id": "1361873604882731008",
+    "version": "1364062496868143205",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "info",
+    "description": "Get information about Guard-shin",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054449941446820",
+    "application_id": "1361873604882731008",
+    "version": "1362955692822233229",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "ban",
+    "description": "Ban a user from the server with an optional reason",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to ban",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "The reason for the ban"
+      },
+      {
+        "type": 4,
+        "name": "delete_days",
+        "description": "Number of days of messages to delete (0-7)",
+        "min_value": 0,
+        "max_value": 7
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054449941446821",
+    "application_id": "1361873604882731008",
+    "version": "1362955699725926522",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "warn",
+    "description": "Warn a user with an optional reason",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to warn",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "The reason for the warning"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054450407276594",
+    "application_id": "1361873604882731008",
+    "version": "1362054450407276602",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "infractions",
+    "description": "View a user's infractions",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to check",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054450407276595",
+    "application_id": "1361873604882731008",
+    "version": "1362054450407276603",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "premium_status",
+    "description": "Check the premium status of this server",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054450407276596",
+    "application_id": "1361873604882731008",
+    "version": "1362054450499420330",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "anti_alt",
+    "description": "[PREMIUM] Configure anti-alt account settings",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "min_age",
+        "description": "Minimum account age in days (1-90)",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to take on new accounts (kick, mute, notify)",
+        "required": true,
+        "choices": [
+          {
+            "name": "Kick",
+            "value": "kick"
+          },
+          {
+            "name": "Mute",
+            "value": "mute"
+          },
+          {
+            "name": "Notify",
+            "value": "notify"
+          }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362054450407276597",
+    "application_id": "1361873604882731008",
+    "version": "1362054450499420331",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "advanced_raid",
+    "description": "[PREMIUM+] Configure advanced raid protection",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "join_rate",
+        "description": "Number of joins per minute to trigger protection (5-50)",
+        "required": true
+      },
+      {
+        "type": 5,
+        "name": "lockdown",
+        "description": "Whether to automatically lockdown the server on raid detection",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362512213578879069",
+    "application_id": "1361873604882731008",
+    "version": "1362512213578879070",
+    "default_member_permissions": null,
+    "type": 4,
+    "name": "launch",
+    "description": "Launch an activity",
+    "dm_permission": true,
+    "contexts": [
+      0,
+      1,
+      2
+    ],
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false,
+    "handler": 2
+  },
+  {
+    "id": "1362955694428520539",
+    "application_id": "1361873604882731008",
+    "version": "1362955694428520540",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "unban",
+    "description": "Unban a user from the server",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "user_id",
+        "description": "The user ID to unban",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955697062674584",
+    "application_id": "1361873604882731008",
+    "version": "1362955697062674585",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "kick",
+    "description": "Kick a user from the server with an optional reason",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to kick",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "The reason for the kick"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955701626081330",
+    "application_id": "1361873604882731008",
+    "version": "1362955701626081331",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "warnings",
+    "description": "View warnings for a specific user",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to check warnings for",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955703240753162",
+    "application_id": "1361873604882731008",
+    "version": "1362955703240753163",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "clearwarnings",
+    "description": "Clear all warnings for a user",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to clear warnings for",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955709490135312",
+    "application_id": "1361873604882731008",
+    "version": "1362955709490135313",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "mute",
+    "description": "Mute a user for a specified duration",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to mute",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "duration",
+        "description": "Duration of the mute (e.g., 1h, 30m, 1d)"
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "The reason for the mute"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955780373872791",
+    "application_id": "1361873604882731008",
+    "version": "1362955780373872792",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "unmute",
+    "description": "Unmute a previously muted user",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 6,
+        "name": "user",
+        "description": "The user to unmute",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955783079461048",
+    "application_id": "1361873604882731008",
+    "version": "1362955783079461049",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "purge",
+    "description": "Delete a specified number of messages from a channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "amount",
+        "description": "Number of messages to delete (1-100)",
+        "required": true,
+        "min_value": 1,
+        "max_value": 100
+      },
+      {
+        "type": 6,
+        "name": "user",
+        "description": "Only delete messages from this user"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955784165658796",
+    "application_id": "1361873604882731008",
+    "version": "1362955784165658797",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "slowmode",
+    "description": "Set the slowmode cooldown for a channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "seconds",
+        "description": "Slowmode delay in seconds (0 to disable)",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955785566425372",
+    "application_id": "1361873604882731008",
+    "version": "1362955785566425373",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "lockdown",
+    "description": "Temporarily lock a channel, preventing messages from being sent",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "duration",
+        "description": "Duration of the lockdown (e.g., 30m, 1h)"
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "Reason for the lockdown"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955788477534329",
+    "application_id": "1361873604882731008",
+    "version": "1362955788477534330",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "unlock",
+    "description": "Unlock a previously locked channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955867468599496",
+    "application_id": "1361873604882731008",
+    "version": "1362955867468599497",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "massban",
+    "description": "Ban multiple users at once",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "users",
+        "description": "Comma-separated list of user IDs to ban",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "Reason for the mass ban"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955869842837547",
+    "application_id": "1361873604882731008",
+    "version": "1362955869842837548",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "hackban",
+    "description": "Ban a user that isn't in the server yet",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "user_id",
+        "description": "The user ID to ban",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "reason",
+        "description": "Reason for the ban"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955872048775249",
+    "application_id": "1361873604882731008",
+    "version": "1363240874212983086",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "automod",
+    "description": "View and configure the automod settings",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "setting",
+        "description": "The automod setting to configure",
+        "choices": [
+          {
+            "name": "Invites",
+            "value": "invites"
+          },
+          {
+            "name": "Links",
+            "value": "links"
+          },
+          {
+            "name": "Caps",
+            "value": "caps"
+          },
+          {
+            "name": "Mentions",
+            "value": "mentions"
+          },
+          {
+            "name": "Spam",
+            "value": "spam"
+          },
+          {
+            "name": "Profanity",
+            "value": "profanity"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "value",
+        "description": "The value to set (on/off)",
+        "choices": [
+          {
+            "name": "On",
+            "value": "on"
+          },
+          {
+            "name": "Off",
+            "value": "off"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "threshold",
+        "description": "Threshold value for the selected setting (e.g., max mentions)",
+        "min_value": 1,
+        "max_value": 100
+      },
+      {
+        "type": 7,
+        "name": "log_channel",
+        "description": "Channel to log automod actions"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955874171228412",
+    "application_id": "1361873604882731008",
+    "version": "1363240875487924365",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "filter",
+    "description": "Add or remove words from the word filter",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to perform on the filter",
+        "required": true,
+        "choices": [
+          {
+            "name": "Add",
+            "value": "add"
+          },
+          {
+            "name": "Remove",
+            "value": "remove"
+          },
+          {
+            "name": "List",
+            "value": "list"
+          },
+          {
+            "name": "Clear",
+            "value": "clear"
+          },
+          {
+            "name": "Import",
+            "value": "import"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "word",
+        "description": "The word to add or remove"
+      },
+      {
+        "type": 11,
+        "name": "wordlist",
+        "description": "Text file containing filtered words (one per line)"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955875530047771",
+    "application_id": "1361873604882731008",
+    "version": "1363242655454335196",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "antispam",
+    "description": "Configure anti-spam settings",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "status",
+        "description": "Enable or disable anti-spam",
+        "required": true,
+        "choices": [
+          {
+            "name": "On",
+            "value": "on"
+          },
+          {
+            "name": "Off",
+            "value": "off"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "threshold",
+        "description": "Number of messages that trigger anti-spam",
+        "min_value": 2,
+        "max_value": 20
+      },
+      {
+        "type": 4,
+        "name": "timeframe",
+        "description": "Timeframe in seconds to check messages",
+        "min_value": 1,
+        "max_value": 30
+      },
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to take when spam is detected",
+        "choices": [
+          {
+            "name": "Delete Messages",
+            "value": "delete"
+          },
+          {
+            "name": "Warn User",
+            "value": "warn"
+          },
+          {
+            "name": "Timeout User",
+            "value": "timeout"
+          },
+          {
+            "name": "Delete + Warn",
+            "value": "delete_warn"
+          },
+          {
+            "name": "Delete + Timeout",
+            "value": "delete_timeout"
+          }
+        ]
+      },
+      {
+        "type": 7,
+        "name": "log_channel",
+        "description": "Channel to log anti-spam actions"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955954634625204",
+    "application_id": "1361873604882731008",
+    "version": "1363242738698555412",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "antiraid",
+    "description": "Configure anti-raid protection",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "status",
+        "description": "Enable or disable anti-raid protection",
+        "required": true,
+        "choices": [
+          {
+            "name": "On",
+            "value": "on"
+          },
+          {
+            "name": "Off",
+            "value": "off"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "join_threshold",
+        "description": "Number of joins that trigger anti-raid",
+        "min_value": 3,
+        "max_value": 50
+      },
+      {
+        "type": 4,
+        "name": "timeframe",
+        "description": "Timeframe in seconds to monitor joins",
+        "min_value": 5,
+        "max_value": 60
+      },
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to take when raid is detected",
+        "choices": [
+          {
+            "name": "Notify Moderators",
+            "value": "notify"
+          },
+          {
+            "name": "Temporary Lockdown",
+            "value": "lockdown"
+          },
+          {
+            "name": "Verification Mode",
+            "value": "verification"
+          },
+          {
+            "name": "Kick New Members",
+            "value": "kick"
+          },
+          {
+            "name": "Ban New Members",
+            "value": "ban"
+          }
+        ]
+      },
+      {
+        "type": 7,
+        "name": "alert_channel",
+        "description": "Channel to send raid alerts"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955957377696034",
+    "application_id": "1361873604882731008",
+    "version": "1363242739688538162",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "autorole",
+    "description": "Automatically assign roles to new members",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "status",
+        "description": "Enable or disable autorole",
+        "required": true,
+        "choices": [
+          {
+            "name": "On",
+            "value": "on"
+          },
+          {
+            "name": "Off",
+            "value": "off"
+          }
+        ]
+      },
+      {
+        "type": 8,
+        "name": "role",
+        "description": "Role to automatically assign"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955961144447046",
+    "application_id": "1361873604882731008",
+    "version": "1363242740443381932",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "logs",
+    "description": "Configure server logging",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 7,
+        "name": "channel",
+        "description": "Channel to send logs to (use 'disable' to turn off logging)",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "type",
+        "description": "Type of logs to send",
+        "choices": [
+          {
+            "name": "Moderation",
+            "value": "moderation"
+          },
+          {
+            "name": "Messages",
+            "value": "messages"
+          },
+          {
+            "name": "Members",
+            "value": "members"
+          },
+          {
+            "name": "Server",
+            "value": "server"
+          },
+          {
+            "name": "All",
+            "value": "all"
+          }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955963170164977",
+    "application_id": "1361873604882731008",
+    "version": "1362955963170164978",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "botinfo",
+    "description": "Display information about the bot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362955964944486420",
+    "application_id": "1361873604882731008",
+    "version": "1362955964944486421",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "uptime",
+    "description": "Check how long the bot has been online",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956041083682958",
+    "application_id": "1361873604882731008",
+    "version": "1364062497619054704",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "invite",
+    "description": "Get the bot invite link",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956042673061988",
+    "application_id": "1361873604882731008",
+    "version": "1364062499892232263",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "premium",
+    "description": "Get information about premium features",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956044485132388",
+    "application_id": "1361873604882731008",
+    "version": "1362956044485132389",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "support",
+    "description": "Get a link to the support server",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956046762512446",
+    "application_id": "1361873604882731008",
+    "version": "1363242825885552690",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "setup",
+    "description": "Run the initial setup for Guard-shin",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956049212244198",
+    "application_id": "1361873604882731008",
+    "version": "1363242826741059767",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "config",
+    "description": "View and modify bot configuration",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "setting",
+        "description": "Setting to configure"
+      },
+      {
+        "type": 3,
+        "name": "value",
+        "description": "Value to set"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956127444140174",
+    "application_id": "1361873604882731008",
+    "version": "1362956127444140175",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "permission",
+    "description": "Configure command permissions for roles",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "command",
+        "description": "Command to configure permissions for",
+        "required": true
+      },
+      {
+        "type": 8,
+        "name": "role",
+        "description": "Role to configure permissions for",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "permission",
+        "description": "Allow or deny permission",
+        "required": true,
+        "choices": [
+          {
+            "name": "Allow",
+            "value": "allow"
+          },
+          {
+            "name": "Deny",
+            "value": "deny"
+          }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956129386369324",
+    "application_id": "1361873604882731008",
+    "version": "1362956129386369325",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "reset",
+    "description": "Reset all bot settings to default",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956134226591797",
+    "application_id": "1361873604882731008",
+    "version": "1362956134226591798",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "backup",
+    "description": "Create a backup of server settings and configurations",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to perform",
+        "required": true,
+        "choices": [
+          {
+            "name": "Create",
+            "value": "create"
+          },
+          {
+            "name": "Load",
+            "value": "load"
+          },
+          {
+            "name": "List",
+            "value": "list"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "backup_id",
+        "description": "ID of the backup (required for load)"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956136646574084",
+    "application_id": "1361873604882731008",
+    "version": "1362956136646574085",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "banlist",
+    "description": "View, import, or export the server ban list",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to perform",
+        "required": true,
+        "choices": [
+          {
+            "name": "View",
+            "value": "view"
+          },
+          {
+            "name": "Import",
+            "value": "import"
+          },
+          {
+            "name": "Export",
+            "value": "export"
+          }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956138324426803",
+    "application_id": "1361873604882731008",
+    "version": "1363081679606120623",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "verification",
+    "description": "Set up member verification system",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "action",
+        "description": "Action to perform",
+        "required": true,
+        "choices": [
+          {
+            "name": "Setup",
+            "value": "setup"
+          },
+          {
+            "name": "Status",
+            "value": "status"
+          },
+          {
+            "name": "Disable",
+            "value": "disable"
+          }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "method",
+        "description": "Verification method",
+        "choices": [
+          {
+            "name": "Captcha",
+            "value": "captcha"
+          },
+          {
+            "name": "Reaction",
+            "value": "reaction"
+          },
+          {
+            "name": "Button",
+            "value": "button"
+          },
+          {
+            "name": "Message",
+            "value": "message"
+          }
+        ]
+      },
+      {
+        "type": 7,
+        "name": "channel",
+        "description": "Channel for verification"
+      },
+      {
+        "type": 8,
+        "name": "role",
+        "description": "Role to give after verification"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1362956214019035207",
+    "application_id": "1361873604882731008",
+    "version": "1362956214019035208",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "add_premium",
+    "description": "[DEV] Adds premium status to a server",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "server_id",
+        "description": "The ID of the Discord server to add premium to",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "tier",
+        "description": "Premium tier to assign",
+        "choices": [
+          {
+            "name": "Premium",
+            "value": "premium"
+          },
+          {
+            "name": "Premium Plus",
+            "value": "premium_plus"
+          }
+        ]
+      },
+      {
+        "type": 4,
+        "name": "days",
+        "description": "Number of days to grant premium for"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035923851509790",
+    "application_id": "1361873604882731008",
+    "version": "1363035923851509791",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "play",
+    "description": "Play a song in your voice channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "The song to play (URL or search term)",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035928284762142",
+    "application_id": "1361873604882731008",
+    "version": "1363035928284762143",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "skip",
+    "description": "Skip the current song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035932743172199",
+    "application_id": "1361873604882731008",
+    "version": "1363035932743172200",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "stop",
+    "description": "Stop the music and clear the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035940028944535",
+    "application_id": "1361873604882731008",
+    "version": "1363035940028944536",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "queue",
+    "description": "Display the current music queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035943694503967",
+    "application_id": "1361873604882731008",
+    "version": "1363035943694503968",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "pause",
+    "description": "Pause the current song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363035946605613177",
+    "application_id": "1361873604882731008",
+    "version": "1363059647220809748",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "resume",
+    "description": "Resume paused music",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363036026511298661",
+    "application_id": "1361873604882731008",
+    "version": "1363036026511298662",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "volume",
+    "description": "Change the music volume",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "level",
+        "description": "Volume level (0-100)",
+        "required": true,
+        "min_value": 0,
+        "max_value": 100
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363036028696395931",
+    "application_id": "1361873604882731008",
+    "version": "1363059648709529712",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "loop",
+    "description": "Toggle loop mode for the current song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363036031192006789",
+    "application_id": "1361873604882731008",
+    "version": "1363036031192006790",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "musicinfo",
+    "description": "Display information about the current song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363036038456414218",
+    "application_id": "1361873604882731008",
+    "version": "1363059650244907078",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "playlist",
+    "description": "Play a YouTube or SoundCloud playlist",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "url",
+        "description": "The playlist URL",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076242705748020",
+    "application_id": "1361873604882731008",
+    "version": "1363076242705748021",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmplay",
+    "description": "Play a song using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "The song to play (URL or search term)",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076244073222276",
+    "application_id": "1361873604882731008",
+    "version": "1363076244073222277",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmskip",
+    "description": "Skip the current song using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076245159673927",
+    "application_id": "1361873604882731008",
+    "version": "1363076245159673928",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmstop",
+    "description": "Stop the music and clear the queue using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076246572896278",
+    "application_id": "1361873604882731008",
+    "version": "1363076246572896279",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmqueue",
+    "description": "Display the current music queue from JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076248439619665",
+    "application_id": "1361873604882731008",
+    "version": "1363076248439619666",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmpause",
+    "description": "Pause the current song using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076328307294328",
+    "application_id": "1361873604882731008",
+    "version": "1363076328307294329",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmresume",
+    "description": "Resume paused music using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076329720909825",
+    "application_id": "1361873604882731008",
+    "version": "1363076329720909826",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmvolume",
+    "description": "Change the music volume using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 4,
+        "name": "level",
+        "description": "Volume level (0-100)",
+        "required": true,
+        "min_value": 0,
+        "max_value": 100
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076331746758686",
+    "application_id": "1361873604882731008",
+    "version": "1363076331746758687",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmloop",
+    "description": "Toggle loop mode using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "mode",
+        "description": "Loop mode to set",
+        "required": true,
+        "choices": [
+          {
+            "name": "Off",
+            "value": "off"
+          },
+          {
+            "name": "Song",
+            "value": "song"
+          },
+          {
+            "name": "Queue",
+            "value": "queue"
+          }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076333080674375",
+    "application_id": "1361873604882731008",
+    "version": "1363076333080674376",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmnp",
+    "description": "Display the current playing song information from JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076334603210862",
+    "application_id": "1361873604882731008",
+    "version": "1363076334603210863",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmplaylist",
+    "description": "Play a playlist using JMusicBot",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "url",
+        "description": "The playlist URL",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076415054151702",
+    "application_id": "1361873604882731008",
+    "version": "1363076415054151703",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmlyrics",
+    "description": "Get lyrics for the current song or a specific song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "options": [
+      {
+        "type": 3,
+        "name": "song",
+        "description": "Song to get lyrics for (leave empty for current song)"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076417272938497",
+    "application_id": "1361873604882731008",
+    "version": "1363076417272938498",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmstatus",
+    "description": "Check if JMusicBot is active and working",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363076418774372522",
+    "application_id": "1361873604882731008",
+    "version": "1363076418774372523",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jmhelp",
+    "description": "Show help information for JMusicBot commands",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363247672747888722",
+    "application_id": "1361873604882731008",
+    "version": "1363247672747888723",
+    "default_member_permissions": "8",
+    "type": 1,
+    "name": "automod_rules",
+    "description": "Generate 100 AutoMod rules to earn the AutoMod badge",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1363248586359308451",
+    "application_id": "1361873604882731008",
+    "version": "1363248586359308452",
+    "default_member_permissions": "8",
+    "type": 1,
+    "name": "automod_badge",
+    "description": "Generate 100 AutoMod rules to earn the Discord AutoMod badge",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1364062498319241257",
+    "application_id": "1361873604882731008",
+    "version": "1364062498319241258",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "help",
+    "description": "View available commands",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [
+      0,
+      1
+    ],
+    "nsfw": false
+  }
+]
