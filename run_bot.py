@@ -75,7 +75,8 @@ class GuardShin(commands.Bot):
         
         # Development mode 
         # When True, slash commands are only registered to the support server
-        self.DEV_MODE = os.getenv('BOT_DEV_MODE', 'true').lower() == 'true'
+        # Default to production mode to avoid permissions issues with support server
+        self.DEV_MODE = os.getenv('BOT_DEV_MODE', 'false').lower() == 'true'
         if self.DEV_MODE:
             logger.info("Running in DEVELOPMENT MODE. Commands will only be registered to the support server.")
         else:
