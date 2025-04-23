@@ -3,569 +3,717 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commands - Guard-shin Discord Bot</title>
-  <meta name="description" content="View all available commands for Guard-shin Discord moderation and security bot.">
-  <meta name="author" content="WitherCo">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+  <title>Commands - Guard-shin Bot</title>
   <style>
-    /* Custom properties for theming */
-    :root {
-      --color-bg-primary: #121212;
-      --color-bg-secondary: #1e1e1e; 
-      --color-bg-tertiary: #2a2a2a;
-      --color-text-primary: #ffffff;
-      --color-text-secondary: #b0b0b0;
-      --color-accent-primary: #5865f2; /* Discord Blurple */
-      --color-accent-secondary: #3a46c3;
-      --color-success: #57F287;
-      --color-warning: #FEE75C;
-      --color-danger: #ED4245;
-      --border-radius: 8px;
-      --transition-speed: 0.3s;
-    }
-    
-    /* Base styles */
-    * {
-      box-sizing: border-box;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #0f0f0f;
+      color: #f0f0f0;
       margin: 0;
       padding: 0;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--color-bg-primary);
-      color: var(--color-text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-    
-    a {
-      color: var(--color-accent-primary);
-      text-decoration: none;
-      transition: color var(--transition-speed);
-    }
-    
-    a:hover {
-      color: var(--color-accent-secondary);
-    }
-    
-    /* Layout */
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
-    
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background-color: var(--color-bg-secondary);
-      position: fixed;
-      height: 100vh;
-      padding: 1.5rem 0;
       display: flex;
       flex-direction: column;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-      z-index: 10;
-    }
-    
-    .sidebar-header {
-      padding: 0 1.5rem 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .sidebar-header h1 {
-      font-size: 1.75rem;
-      color: var(--color-accent-primary);
-      margin-bottom: 0.5rem;
-    }
-    
-    .sidebar-header p {
-      font-size: 0.875rem;
-      color: var(--color-text-secondary);
-    }
-    
-    .sidebar-nav {
-      flex: 1;
-      padding: 1.5rem 0;
-      overflow-y: auto;
-    }
-    
-    .nav-list {
-      list-style: none;
-    }
-    
-    .nav-item {
-      margin-bottom: 0.25rem;
-    }
-    
-    .nav-link {
-      display: block;
-      padding: 0.75rem 1.5rem;
-      color: var(--color-text-primary);
-      transition: background-color var(--transition-speed);
+      min-height: 100vh;
       position: relative;
     }
     
-    .nav-link:hover {
-      background-color: var(--color-bg-tertiary);
-      color: var(--color-text-primary);
+    .background {
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      z-index: -1;
     }
     
-    .nav-link.active {
-      background-color: var(--color-accent-primary);
-      color: white;
-    }
-    
-    .sidebar-footer {
-      padding: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .add-bot-btn {
-      display: block;
-      background-color: var(--color-accent-primary);
-      color: white;
-      font-weight: 600;
-      text-align: center;
-      padding: 0.75rem 1rem;
-      border-radius: var(--border-radius);
-      transition: background-color var(--transition-speed), transform 0.2s;
-    }
-    
-    .add-bot-btn:hover {
-      background-color: var(--color-accent-secondary);
-      color: white;
-      transform: translateY(-2px);
-    }
-    
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      margin-left: 250px;
-      padding: 2rem;
-      width: calc(100% - 250px);
-    }
-    
-    .page-header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 1rem;
-    }
-    
-    .page-header h2 {
-      font-size: 2.25rem;
-      font-weight: 700;
-    }
-    
-    /* Card Components */
-    .card {
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+    header {
+      background-color: #1a1a1a;
+      padding: 1rem;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
-    .card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     
-    /* Command Categories */
-    .category-tabs {
+    .logo {
       display: flex;
-      border-bottom: 1px solid var(--color-bg-tertiary);
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #30cfd0;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: #30cfd0;
+    }
+    
+    .nav-links a.active {
+      color: #30cfd0;
+      border-bottom: 2px solid #30cfd0;
+    }
+    
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin: 1rem 0;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+    }
+    
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #333;
       margin-bottom: 2rem;
       overflow-x: auto;
-      padding-bottom: 1px;
+      padding-bottom: 0.5rem;
     }
     
-    .category-tab {
+    .tab-button {
+      background: none;
+      border: none;
+      color: #f0f0f0;
       padding: 0.75rem 1.5rem;
       cursor: pointer;
-      margin-right: 0.5rem;
-      border-radius: 8px 8px 0 0;
-      font-weight: 500;
-      transition: all var(--transition-speed);
+      font-size: 1rem;
+      position: relative;
+      white-space: nowrap;
     }
     
-    .category-tab:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+    .tab-button.active {
+      color: #30cfd0;
     }
     
-    .category-tab.active {
-      background-color: var(--color-accent-primary);
-      color: white;
-    }
-    
-    /* Command table */
-    .command-table {
+    .tab-button.active::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
       width: 100%;
-      border-collapse: collapse;
+      height: 2px;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
     }
     
-    .command-table th {
-      background-color: var(--color-bg-tertiary);
-      text-align: left;
-      padding: 0.75rem 1rem;
-      font-weight: 500;
+    .tab-content {
+      display: none;
     }
     
-    .command-table td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--color-bg-tertiary);
-      vertical-align: top;
+    .tab-content.active {
+      display: block;
     }
     
-    .command-table tr:hover td {
-      background-color: rgba(255, 255, 255, 0.05);
+    .command-group {
+      margin-bottom: 2rem;
+    }
+    
+    .command-group h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #30cfd0;
+    }
+    
+    .commands-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1rem;
+    }
+    
+    .command-card {
+      background-color: #1a1a1a;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-left: 3px solid #30cfd0;
+    }
+    
+    .command-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
     }
     
     .command-name {
-      font-family: 'Consolas', 'Courier New', monospace;
-      color: var(--color-accent-primary);
-      font-weight: 500;
+      font-size: 1.25rem;
+      margin: 0 0 0.5rem;
+      color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .command-description {
+      color: #ccc;
+      margin: 0 0 1rem;
+      line-height: 1.5;
     }
     
     .command-usage {
-      font-family: 'Consolas', 'Courier New', monospace;
-      color: var(--color-text-secondary);
-      font-size: 0.875rem;
+      font-family: monospace;
+      background-color: #2a2a2a;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      overflow-x: auto;
+      font-size: 0.9rem;
     }
     
     .premium-badge {
-      display: inline-block;
-      background-color: var(--color-warning);
-      color: black;
-      padding: 0.125rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      background: linear-gradient(135deg, #ffcc00 0%, #ff6b6b 100%);
+      color: #000;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
       margin-left: 0.5rem;
-      vertical-align: middle;
+      font-weight: bold;
+      text-transform: uppercase;
     }
     
-    /* Search bar */
-    .search-container {
+    .search-bar {
       margin-bottom: 2rem;
-    }
-    
-    .search-input {
-      background-color: var(--color-bg-tertiary);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--border-radius);
-      padding: 0.75rem 1rem;
-      color: var(--color-text-primary);
       width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
       font-size: 1rem;
-      transition: border-color var(--transition-speed);
     }
     
-    .search-input:focus {
+    .search-bar input:focus {
       outline: none;
-      border-color: var(--color-accent-primary);
+      border-color: #30cfd0;
+      box-shadow: 0 0 0 3px rgba(48, 207, 208, 0.2);
     }
     
-    .search-input::placeholder {
-      color: var(--color-text-secondary);
+    footer {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      text-align: center;
+      margin-top: auto;
     }
     
-    /* Command description */
-    .command-description {
-      margin-bottom: 0.5rem;
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #888;
     }
     
-    /* Premium info */
-    .premium-info {
-      background-color: rgba(254, 231, 92, 0.1);
-      border-left: 4px solid var(--color-warning);
-      padding: 1rem;
-      margin: 2rem 0;
-      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0;
     }
     
-    /* Responsive design */
+    .footer-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #30cfd0;
+    }
+    
     @media (max-width: 768px) {
-      .layout {
-        flex-direction: column;
-      }
-      
-      .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        padding: 1rem 0;
-      }
-      
-      .main-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 1.5rem;
-      }
-      
-      .sidebar-nav {
-        max-height: 300px;
-      }
-      
-      .command-table th:nth-child(3),
-      .command-table td:nth-child(3) {
+      .nav-links {
         display: none;
+      }
+      
+      .commands-list {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabs {
+        justify-content: flex-start;
+      }
+      
+      h1 {
+        font-size: 2rem;
       }
     }
   </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Category tab switching
-      const tabs = document.querySelectorAll('.category-tab');
-      tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Remove active class from all tabs
-          tabs.forEach(t => t.classList.remove('active'));
-          // Add active class to clicked tab
-          this.classList.add('active');
-          
-          // Filter commands based on category
-          // This is where you would implement filtering logic
-          // For now, just showing an alert
-          alert('Category switching functionality coming soon!');
-        });
-      });
-      
-      // Search input functionality
-      const searchInput = document.querySelector('.search-input');
-      searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        
-        // Filter commands based on search term
-        // This is where you would implement search logic
-        // For this version, we'll keep it simple
-        const commands = document.querySelectorAll('.command-table tbody tr');
-        commands.forEach(cmd => {
-          const cmdText = cmd.textContent.toLowerCase();
-          if (cmdText.includes(searchTerm)) {
-            cmd.style.display = '';
-          } else {
-            cmd.style.display = 'none';
-          }
-        });
-      });
-    });
-  </script>
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1>Guard-shin</h1>
-        <p>Discord Moderation Bot</p>
+  <div class="background"></div>
+  
+  <header>
+    <nav>
+      <div class="logo">
+        Guard-shin
       </div>
-      
-      <nav class="sidebar-nav">
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a href="index.html" class="nav-link">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a href="commands.html" class="nav-link active">Commands</a>
-          </li>
-          <li class="nav-item">
-            <a href="premium.html" class="nav-link">Premium</a>
-          </li>
-          <li class="nav-item">
-            <a href="support.html" class="nav-link">Support</a>
-          </li>
-        </ul>
-      </nav>
-      
-      <div class="sidebar-footer">
-        <a href="https://discord.com/oauth2/authorize?client_id=1361873604882731008&scope=bot&permissions=8" class="add-bot-btn" target="_blank" rel="noopener noreferrer">
-          Add to Discord
-        </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="commands.html" class="active">Commands</a>
+        <a href="documentation.html">Documentation</a>
+        <a href="premium.html">Premium</a>
+        <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a>
       </div>
-    </aside>
+    </nav>
+  </header>
+  
+  <main>
+    <h1>Bot Commands</h1>
     
-    <!-- Main Content -->
-    <main class="main-content">
-      <header class="page-header">
-        <h2>Commands</h2>
-        <p>Browse and learn how to use all available Guard-shin commands</p>
-      </header>
-      
-      <!-- Search Bar -->
-      <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search commands..." aria-label="Search commands">
-      </div>
-      
-      <!-- Category Tabs -->
-      <div class="category-tabs">
-        <div class="category-tab active">All Commands</div>
-        <div class="category-tab">Moderation</div>
-        <div class="category-tab">Security</div>
-        <div class="category-tab">Utility</div>
-        <div class="category-tab">Configuration</div>
-        <div class="category-tab">Premium</div>
-      </div>
-      
-      <!-- Commands List -->
-      <div class="card">
-        <div style="overflow-x: auto;">
-          <table class="command-table">
-            <thead>
-              <tr>
-                <th style="width: 20%">Command</th>
-                <th style="width: 50%">Description</th>
-                <th style="width: 30%">Usage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Moderation Commands -->
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!ban</span>
-                </td>
-                <td>
-                  <div class="command-description">Ban a user from the server with an optional reason.</div>
-                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
-                </td>
-                <td><code>!ban @user [reason]</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!unban</span>
-                </td>
-                <td>
-                  <div class="command-description">Unban a user from the server.</div>
-                  <div class="command-usage">Options: user (User ID)</div>
-                </td>
-                <td><code>!unban 123456789012345678</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!kick</span>
-                </td>
-                <td>
-                  <div class="command-description">Kick a user from the server with an optional reason.</div>
-                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
-                </td>
-                <td><code>!kick @user [reason]</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!mute</span>
-                </td>
-                <td>
-                  <div class="command-description">Mute a user, preventing them from sending messages.</div>
-                  <div class="command-usage">Options: user (User), duration (String, optional), reason (String, optional)</div>
-                </td>
-                <td><code>!mute @user 1h spamming</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!unmute</span>
-                </td>
-                <td>
-                  <div class="command-description">Unmute a previously muted user.</div>
-                  <div class="command-usage">Options: user (User)</div>
-                </td>
-                <td><code>!unmute @user</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Moderation">
-                <td>
-                  <span class="command-name">!warn</span>
-                </td>
-                <td>
-                  <div class="command-description">Issue a warning to a user and log it.</div>
-                  <div class="command-usage">Options: user (User), reason (String, optional)</div>
-                </td>
-                <td><code>!warn @user inappropriate language</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Premium Configuration">
-                <td>
-                  <span class="command-name">!autorole</span>
-                  <span class="premium-badge">Premium</span>
-                </td>
-                <td>
-                  <div class="command-description">Automatically assign roles to new members.</div>
-                  <div class="command-usage">Options: status (String), role (Role)</div>
-                </td>
-                <td><code>!autorole enable @Member</code></td>
-              </tr>
-              
-              <tr class="command-row" data-category="Security">
-                <td>
-                  <span class="command-name">!lockdown</span>
-                </td>
-                <td>
-                  <div class="command-description">Lock down a channel or the entire server, preventing members from sending messages.</div>
-                  <div class="command-usage">Options: channel (Channel, optional), reason (String, optional)</div>
-                </td>
-                <td><code>!lockdown #general raid in progress</code></td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="search-bar">
+      <input type="text" id="commandSearch" placeholder="Search commands..." onkeyup="searchCommands()">
+    </div>
+    
+    <div class="tabs">
+      <button class="tab-button active" onclick="openTab('moderation')">Moderation</button>
+      <button class="tab-button" onclick="openTab('automod')">Auto Moderation</button>
+      <button class="tab-button" onclick="openTab('verification')">Verification</button>
+      <button class="tab-button" onclick="openTab('music')">Music</button>
+      <button class="tab-button" onclick="openTab('utility')">Utility</button>
+      <button class="tab-button" onclick="openTab('admin')">Admin</button>
+      <button class="tab-button" onclick="openTab('config')">Configuration</button>
+      <button class="tab-button" onclick="openTab('premium')">Premium</button>
+    </div>
+    
+    <div id="moderation" class="tab-content active">
+      <div class="command-group">
+        <h2>Server Moderation</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">ban</h3>
+            <p class="command-description">Ban a user from the server with an optional reason.</p>
+            <div class="command-usage">/ban user:[user] reason:[optional reason]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">kick</h3>
+            <p class="command-description">Kick a user from the server with an optional reason.</p>
+            <div class="command-usage">/kick user:[user] reason:[optional reason]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">mute</h3>
+            <p class="command-description">Temporarily mute a user in the server.</p>
+            <div class="command-usage">/mute user:[user] duration:[time] reason:[optional reason]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">warn</h3>
+            <p class="command-description">Warn a user and add to their warning count.</p>
+            <div class="command-usage">/warn user:[user] reason:[reason]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">purge</h3>
+            <p class="command-description">Delete a specific number of messages from a channel.</p>
+            <div class="command-usage">/purge amount:[number] user:[optional user]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">unban</h3>
+            <p class="command-description">Unban a user from the server.</p>
+            <div class="command-usage">/unban user:[user ID or username]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">warnings</h3>
+            <p class="command-description">View warnings for a specific user.</p>
+            <div class="command-usage">/warnings user:[user]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">timeout</h3>
+            <p class="command-description">Timeout a user for a specified duration.</p>
+            <div class="command-usage">/timeout user:[user] duration:[time] reason:[optional reason]</div>
+          </div>
         </div>
       </div>
-      
-      <!-- Premium Info -->
-      <div class="premium-info">
-        <h3>Premium Commands</h3>
-        <p>Some commands are marked with a <span class="premium-badge">Premium</span> badge, indicating they are only available to servers with a premium subscription. <a href="premium.html">Upgrade to premium</a> to unlock all features!</p>
+    </div>
+    
+    <div id="automod" class="tab-content">
+      <div class="command-group">
+        <h2>Auto Moderation Settings</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">automod setup</h3>
+            <p class="command-description">Setup automatic moderation for your server.</p>
+            <div class="command-usage">/automod setup</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">automod filter</h3>
+            <p class="command-description">Configure word and phrase filters for your server.</p>
+            <div class="command-usage">/automod filter add:[word/phrase]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">automod antispam</h3>
+            <p class="command-description">Configure anti-spam settings for your server.</p>
+            <div class="command-usage">/automod antispam [enable/disable] threshold:[number]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">automod links</h3>
+            <p class="command-description">Configure link filtering for your server.</p>
+            <div class="command-usage">/automod links [allow/deny] whitelist:[domains]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">automod antiraid</span></h3>
+            <p class="command-description">Configure anti-raid protection settings.</p>
+            <div class="command-usage">/automod antiraid threshold:[number] action:[action]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">automod logs</h3>
+            <p class="command-description">Set a channel for auto-moderation logs.</p>
+            <div class="command-usage">/automod logs channel:[channel]</div>
+          </div>
+        </div>
       </div>
-    </main>
-  </div>
+    </div>
+    
+    <div id="verification" class="tab-content">
+      <div class="command-group">
+        <h2>Verification System</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">verify setup</h3>
+            <p class="command-description">Set up the verification system for your server.</p>
+            <div class="command-usage">/verify setup role:[role] channel:[channel]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">verify captcha</h3>
+            <p class="command-description">Enable or disable captcha verification.</p>
+            <div class="command-usage">/verify captcha [enable/disable]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">verify message</h3>
+            <p class="command-description">Set the verification message for new members.</p>
+            <div class="command-usage">/verify message [text]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">verify logs</h3>
+            <p class="command-description">Set a channel for verification logs.</p>
+            <div class="command-usage">/verify logs channel:[channel]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="music" class="tab-content">
+      <div class="command-group">
+        <h2>Music System</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">play</h3>
+            <p class="command-description">Play a song or playlist from YouTube, Spotify, or SoundCloud.</p>
+            <div class="command-usage">/play query:[song name or URL]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">pause</h3>
+            <p class="command-description">Pause the currently playing song.</p>
+            <div class="command-usage">/pause</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">resume</h3>
+            <p class="command-description">Resume the paused song.</p>
+            <div class="command-usage">/resume</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">stop</h3>
+            <p class="command-description">Stop the player and clear the queue.</p>
+            <div class="command-usage">/stop</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">skip</h3>
+            <p class="command-description">Skip the current song.</p>
+            <div class="command-usage">/skip</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">queue</h3>
+            <p class="command-description">View the current song queue.</p>
+            <div class="command-usage">/queue</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">shuffle</h3>
+            <p class="command-description">Shuffle the current song queue.</p>
+            <div class="command-usage">/shuffle</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">volume</h3>
+            <p class="command-description">Change the player volume.</p>
+            <div class="command-usage">/volume level:[1-100]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="utility" class="tab-content">
+      <div class="command-group">
+        <h2>Utility Commands</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">help</h3>
+            <p class="command-description">Display available commands and how to use them.</p>
+            <div class="command-usage">/help command:[optional specific command]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">ping</h3>
+            <p class="command-description">Check the bot's response time and latency.</p>
+            <div class="command-usage">/ping</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">userinfo</h3>
+            <p class="command-description">Display information about a user.</p>
+            <div class="command-usage">/userinfo user:[user]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">serverinfo</h3>
+            <p class="command-description">Display information about the server.</p>
+            <div class="command-usage">/serverinfo</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">avatar</h3>
+            <p class="command-description">Get a user's avatar.</p>
+            <div class="command-usage">/avatar user:[user]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">stats</h3>
+            <p class="command-description">Display bot statistics.</p>
+            <div class="command-usage">/stats</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="admin" class="tab-content">
+      <div class="command-group">
+        <h2>Administrative Commands</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">lockdown</h3>
+            <p class="command-description">Lock a channel or the entire server.</p>
+            <div class="command-usage">/lockdown channel:[channel] reason:[optional reason]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">unlock</h3>
+            <p class="command-description">Unlock a previously locked channel.</p>
+            <div class="command-usage">/unlock channel:[channel]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">slowmode</h3>
+            <p class="command-description">Set slowmode for a channel.</p>
+            <div class="command-usage">/slowmode channel:[channel] seconds:[time in seconds]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">role</h3>
+            <p class="command-description">Add or remove a role from a user.</p>
+            <div class="command-usage">/role add/remove user:[user] role:[role]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">massrole</h3>
+            <p class="command-description">Add or remove a role from multiple users.</p>
+            <div class="command-usage">/massrole add/remove role:[role] [filter options]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="config" class="tab-content">
+      <div class="command-group">
+        <h2>Configuration Commands</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">prefix</h3>
+            <p class="command-description">Change the bot's prefix for this server.</p>
+            <div class="command-usage">/prefix set:[new prefix]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">logs</h3>
+            <p class="command-description">Configure logging channels for different events.</p>
+            <div class="command-usage">/logs mod/member/server channel:[channel]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">welcome</h3>
+            <p class="command-description">Set up welcome messages for new members.</p>
+            <div class="command-usage">/welcome channel:[channel] message:[message]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">goodbye</h3>
+            <p class="command-description">Set up goodbye messages for leaving members.</p>
+            <div class="command-usage">/goodbye channel:[channel] message:[message]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">permissions</h3>
+            <p class="command-description">Configure command permissions for roles.</p>
+            <div class="command-usage">/permissions command:[command] role:[role] allow/deny</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="premium" class="tab-content">
+      <div class="command-group">
+        <h2>Premium Features</h2>
+        <div class="commands-list">
+          <div class="command-card">
+            <h3 class="command-name">autorole <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Automatically assign roles to new members.</p>
+            <div class="command-usage">/autorole add/remove role:[role]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">reactionroles <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Create reaction role menus for self-assign roles.</p>
+            <div class="command-usage">/reactionroles create title:[title] description:[desc]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">ticketsystem <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Set up a support ticket system.</p>
+            <div class="command-usage">/ticketsystem setup channel:[channel]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">customwelcome <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Create custom welcome images for new members.</p>
+            <div class="command-usage">/customwelcome background:[url] text:[text]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">autoresponder <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Set up auto-responses to specific triggers.</p>
+            <div class="command-usage">/autoresponder add trigger:[text] response:[text]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">sticky <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Create sticky messages that stay at the bottom of a channel.</p>
+            <div class="command-usage">/sticky channel:[channel] message:[text]</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">analytics <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">View detailed server analytics and statistics.</p>
+            <div class="command-usage">/analytics</div>
+          </div>
+          
+          <div class="command-card">
+            <h3 class="command-name">levelingsystem <span class="premium-badge">Premium</span></h3>
+            <p class="command-description">Set up a member activity and leveling system.</p>
+            <div class="command-usage">/levelingsystem setup</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="commands.html">Commands</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:support@witherco.org">Contact</a>
+    </div>
+    <p>&copy; 2025 WitherCo. All rights reserved.</p>
+  </footer>
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Category switching functionality
-      const categoryTabs = document.querySelectorAll('.category-tab');
-      const commandRows = document.querySelectorAll('.command-row');
+    function openTab(tabName) {
+      // Hide all tab content
+      const tabContents = document.getElementsByClassName('tab-content');
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+      }
       
-      // Add click listeners to category tabs
-      categoryTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-          // Remove active class from all tabs
-          categoryTabs.forEach(t => t.classList.remove('active'));
-          
-          // Add active class to clicked tab
-          this.classList.add('active');
-          
-          const selectedCategory = this.textContent.trim();
-          
-          // Show/hide commands based on category
-          commandRows.forEach(row => {
-            if (selectedCategory === 'All Commands') {
-              row.style.display = ''; // Show all
-            } else if (selectedCategory === 'Premium') {
-              // Show commands with Premium badge
-              if (row.querySelector('.premium-badge')) {
-                row.style.display = '';
-              } else {
-                row.style.display = 'none';
-              }
-            } else {
-              // Show commands that match the category
-              const rowCategory = row.getAttribute('data-category');
-              if (rowCategory && rowCategory.includes(selectedCategory)) {
-                row.style.display = '';
-              } else {
-                row.style.display = 'none';
-              }
-            }
-          });
-        });
-      });
+      // Remove active class from all tab buttons
+      const tabButtons = document.getElementsByClassName('tab-button');
+      for (let i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].classList.remove('active');
+      }
       
-      // Initialize with All Commands selected
-      categoryTabs[0].click();
-    });
+      // Show the specific tab content
+      document.getElementById(tabName).classList.add('active');
+      
+      // Add active class to the clicked button
+      const activeButton = document.querySelector(`.tab-button[onclick="openTab('${tabName}')"]`);
+      activeButton.classList.add('active');
+    }
+    
+    function searchCommands() {
+      // Get search input value
+      const searchInput = document.getElementById('commandSearch').value.toLowerCase();
+      
+      // Get all command cards
+      const commandCards = document.getElementsByClassName('command-card');
+      
+      // Loop through all command cards
+      for (let i = 0; i < commandCards.length; i++) {
+        const commandName = commandCards[i].querySelector('.command-name').textContent.toLowerCase();
+        const commandDesc = commandCards[i].querySelector('.command-description').textContent.toLowerCase();
+        
+        // Check if command name or description includes search input
+        if (commandName.includes(searchInput) || commandDesc.includes(searchInput)) {
+          commandCards[i].style.display = '';
+        } else {
+          commandCards[i].style.display = 'none';
+        }
+      }
+    }
   </script>
 </body>
 </html>

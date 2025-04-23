@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Messages - Guard-shin Bot</title>
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #0f0f0f;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    .background {
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.05;
+      z-index: -1;
+    }
+    
+    header {
+      background-color: #1a1a1a;
+      padding: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #30cfd0;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .nav-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+      color: #30cfd0;
+    }
+    
+    .nav-links a.active {
+      color: #30cfd0;
+      border-bottom: 2px solid #30cfd0;
+    }
+    
+    main {
+      flex: 1;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin: 0 0 1.5rem;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .welcome-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+    
+    .welcome-settings {
+      flex: 1;
+      min-width: 300px;
+    }
+    
+    .welcome-preview {
+      flex: 1;
+      min-width: 300px;
+      background-color: #1a1a1a;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .welcome-card {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 16 / 9;
+      background-color: #333;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .welcome-card-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    
+    .welcome-card-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #30cfd0;
+      background-color: #555;
+      position: absolute;
+      bottom: 70px;
+      left: 1.5rem;
+    }
+    
+    .welcome-card-text {
+      margin-left: 100px;
+    }
+    
+    .welcome-card-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0 0 0.5rem;
+    }
+    
+    .welcome-card-message {
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0.8;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #333;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      font-size: 1rem;
+    }
+    
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #30cfd0;
+      box-shadow: 0 0 0 3px rgba(48, 207, 208, 0.2);
+    }
+    
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: #30cfd0;
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+    
+    .color-picker {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .color-preview {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #333;
+    }
+    
+    .background-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .background-option {
+      height: 60px;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .background-option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .background-option.active {
+      box-shadow: 0 0 0 3px #30cfd0;
+    }
+    
+    .save-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 2rem;
+    }
+    
+    .save-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .premium-label {
+      background: linear-gradient(135deg, #ffcc00 0%, #ff6b6b 100%);
+      color: #000;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      margin-left: 0.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .welcome-message-example {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #1a1a1a;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      line-height: 1.6;
+    }
+    
+    .variables-list {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+    
+    .variable-item {
+      font-family: monospace;
+      padding: 0.5rem;
+      background-color: #1a1a1a;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .variable-item:hover {
+      background-color: #2a2a2a;
+    }
+    
+    footer {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      text-align: center;
+      margin-top: auto;
+    }
+    
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+    
+    .footer-links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #30cfd0;
+    }
+    
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .welcome-container {
+        flex-direction: column;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  
+  <header>
+    <nav>
+      <div class="logo">
+        Guard-shin
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="commands.html">Commands</a>
+        <a href="documentation.html">Documentation</a>
+        <a href="premium.html">Premium</a>
+        <a href="welcome.html" class="active">Welcome System</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="https://discord.gg/g3rFbaW6gw" target="_blank">Support</a>
+      </div>
+    </nav>
+  </header>
+  
+  <main>
+    <h1>Welcome System</h1>
+    
+    <div class="welcome-container">
+      <div class="welcome-settings">
+        <div class="form-group toggle-group">
+          <label class="toggle-switch">
+            <input type="checkbox" id="welcome-enabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span>Enable Welcome Messages</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="welcome-channel">Welcome Channel</label>
+          <select id="welcome-channel">
+            <option value="general">general</option>
+            <option value="welcome">welcome</option>
+            <option value="lobby" selected>lobby</option>
+            <option value="introductions">introductions</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="welcome-message">Welcome Message</label>
+          <textarea id="welcome-message" rows="4">Welcome {user} to {server}! You are our {count} member. Enjoy your stay!</textarea>
+          
+          <div class="welcome-message-example">
+            Example: Welcome <span style="color: #30cfd0;">@NewUser</span> to <span style="color: #30cfd0;">Server Name</span>! You are our <span style="color: #30cfd0;">127th</span> member. Enjoy your stay!
+          </div>
+          
+          <p>Available variables:</p>
+          <div class="variables-list">
+            <div class="variable-item">{user}</div>
+            <div class="variable-item">{server}</div>
+            <div class="variable-item">{count}</div>
+            <div class="variable-item">{user.name}</div>
+            <div class="variable-item">{user.id}</div>
+            <div class="variable-item">{server.id}</div>
+          </div>
+        </div>
+        
+        <div class="section-title">
+          <h2>Custom Welcome Image</h2>
+          <span class="premium-label">Premium</span>
+        </div>
+        
+        <div class="form-group toggle-group">
+          <label class="toggle-switch">
+            <input type="checkbox" id="custom-image-enabled" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span>Enable Custom Welcome Image</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="image-text">Welcome Text</label>
+          <input type="text" id="image-text" value="Welcome to the server!">
+        </div>
+        
+        <div class="form-group">
+          <label for="text-color">Text Color</label>
+          <div class="color-picker">
+            <input type="color" id="text-color" value="#ffffff">
+            <div class="color-preview" style="background-color: #ffffff;"></div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>Background Image</label>
+          <div class="background-options">
+            <div class="background-option active" style="background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);"></div>
+            <div class="background-option" style="background: linear-gradient(135deg, #ff6b6b 0%, #ffe066 100%);"></div>
+            <div class="background-option" style="background: linear-gradient(135deg, #232526 0%, #414345 100%);"></div>
+            <div class="background-option" style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa') center/cover;"></div>
+            <div class="background-option" style="background: url('https://images.unsplash.com/photo-1475274047050-1d0c0975c63e') center/cover;"></div>
+            <div class="background-option" style="background: url('https://images.unsplash.com/photo-1464802686167-b939a6910659') center/cover;"></div>
+          </div>
+        </div>
+        
+        <button class="save-btn">Save Changes</button>
+      </div>
+      
+      <div class="welcome-preview">
+        <h2>Preview</h2>
+        
+        <div class="welcome-card" style="background: linear-gradient(135deg, #330867 0%, #30cfd0 100%);">
+          <div class="welcome-card-overlay">
+            <div class="welcome-card-avatar"></div>
+            <div class="welcome-card-text">
+              <h3 class="welcome-card-name">NewUser#0000</h3>
+              <p class="welcome-card-message">Welcome to the server!</p>
+            </div>
+          </div>
+        </div>
+        
+        <p>Channel Preview:</p>
+        <div style="background-color: #2a2a2a; padding: 1rem; border-radius: 0.5rem; width: 100%; max-width: 500px;">
+          <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #555;"></div>
+            <div>
+              <div style="font-weight: bold; color: #30cfd0;">Guard-shin Bot</div>
+              <div>Welcome <span style="color: #5865f2;">@NewUser</span> to <span style="font-weight: bold;">Server Name</span>! You are our 127th member. Enjoy your stay!</div>
+            </div>
+          </div>
+          <img src="" alt="Welcome Card" style="width: 100%; height: 200px; border-radius: 0.25rem; background: linear-gradient(135deg, #330867 0%, #30cfd0 100%); margin-top: 0.5rem;" id="preview-card">
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="commands.html">Commands</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="premium.html">Premium</a>
+      <a href="welcome.html">Welcome System</a>
+      <a href="analytics.html">Analytics</a>
+      <a href="mailto:support@witherco.org">Contact</a>
+    </div>
+    <p>&copy; 2025 WitherCo. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Background option selection
+    const backgroundOptions = document.querySelectorAll('.background-option');
+    const welcomeCard = document.querySelector('.welcome-card');
+    const previewCard = document.getElementById('preview-card');
+    
+    backgroundOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove active class from all options
+        backgroundOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add active class to clicked option
+        option.classList.add('active');
+        
+        // Update welcome card background
+        welcomeCard.style.background = option.style.background;
+        previewCard.style.background = option.style.background;
+      });
+    });
+    
+    // Text color update
+    const textColorInput = document.getElementById('text-color');
+    const colorPreview = document.querySelector('.color-preview');
+    const welcomeCardMessage = document.querySelector('.welcome-card-message');
+    
+    textColorInput.addEventListener('input', () => {
+      const color = textColorInput.value;
+      colorPreview.style.backgroundColor = color;
+      welcomeCardMessage.style.color = color;
+    });
+    
+    // Welcome text update
+    const imageTextInput = document.getElementById('image-text');
+    
+    imageTextInput.addEventListener('input', () => {
+      welcomeCardMessage.textContent = imageTextInput.value;
+    });
+    
+    // Toggle custom image
+    const customImageToggle = document.getElementById('custom-image-enabled');
+    
+    customImageToggle.addEventListener('change', () => {
+      previewCard.style.display = customImageToggle.checked ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html>
